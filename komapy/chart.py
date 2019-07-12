@@ -1,4 +1,5 @@
 import re
+
 from cached_property import cached_property
 
 import matplotlib.pyplot as plt
@@ -36,6 +37,34 @@ SUPPORTED_NAMES = [
     'magnitude',
 ]
 
+SUPPORTED_TYPES = {
+    # Basic plotting
+    'line': 'plot',
+    'plot': 'plot',
+    'errorbar': 'errorbar',
+    'plot_date': 'plot_date',
+    'step': 'step',
+    'log': 'loglog',
+    'loglog': 'loglog',
+    'semilogx': 'semilogx',
+    'semilogy': 'semilogy',
+    'bar': 'bar',
+    'barh': 'barh',
+    'stem': 'stem',
+    'eventplot': 'eventplot',
+
+    # Spectral plotting
+    'acorr': 'acorr',
+    'angle_spectrum': 'angle_spectrum',
+    'cohere': 'cohere',
+    'csd': 'csd',
+    'magnitude_spectrum': 'magnitude_spectrum',
+    'phase_spectrum': 'phase_spectrum',
+    'psd': 'psd',
+    'specgram': 'specgram',
+    'xcorr': 'xcorr',
+}
+
 
 def apply_theme(name):
     """Apply matplotlib plot theme."""
@@ -62,23 +91,27 @@ class SeriesConfig(object):
     """A series config object."""
 
     required_parameters = ['name', 'fields']
+    _available_parameters = {
+        'name': None,
+        'query_params': {},
+        'fields': [],
+        'plot_params': {},
+        'labels': {},
+        'locator': {},
+        'formatter': {},
+        'aggregation': [],
+        'secondary': False,
+        'legend': {},
+        'title': None,
+        'type': 'line',
+    }
 
     def __init__(self, **kwargs):
-        self.type = kwargs.get('type', 'line')
-        if self.type == 'line':
-            self.type = 'plot'
-
-        self.name = kwargs.get('name')
-        self.query_params = kwargs.get('query_params', {})
-        self.fields = kwargs.get('fields', [])
-        self.plot_params = kwargs.get('plot_params', {})
-        self.labels = kwargs.get('labels', {})
-        self.locator = kwargs.get('locator', {})
-        self.formatter = kwargs.get('formatter', {})
-        self.aggregation = kwargs.get('aggregation', [])
-        self.secondary = kwargs.get('secondary', False)
-        self.legend = kwargs.get('legend', {})
-        self.title = kwargs.get('title')
+        for key, value in self._available_parameters.items():
+            if key in kwargs:
+                setattr(self, key, kwargs[key])
+            else:
+                setattr(self, key, value)
 
         self._check_required_parameters(kwargs)
 
@@ -91,6 +124,11 @@ class SeriesConfig(object):
         """Validate name attribute."""
         if self.name not in SUPPORTED_NAMES:
             raise ChartError('Unknown parameter name {}'.format(self.name))
+
+    def validate_type(self):
+        """Validate type attribute."""
+        if self.type not in SUPPORTED_TYPES:
+            raise ChartError('Unsupported plot type {}'.format(self.name))
 
     def validate_fields(self):
         """Validate fields attribute."""
@@ -212,33 +250,7 @@ def set_axis_label(axis, which='x', params=None):
 
 
 def normalize_series(series):
-    supported_types = {
-        # Basic plotting
-        'line': 'plot',
-        'plot': 'plot',
-        'errorbar': 'errorbar',
-        'plot_date': 'plot_date',
-        'step': 'step',
-        'log': 'loglog',
-        'loglog': 'loglog',
-        'semilogx': 'semilogx',
-        'semilogy': 'semilogy',
-        'bar': 'bar',
-        'barh': 'barh',
-        'stem': 'stem',
-        'eventplot': 'eventplot',
-
-        # Spectral plotting
-        'acorr': 'acorr',
-        'angle_spectrum': 'angle_spectrum',
-        'cohere': 'cohere',
-        'csd': 'csd',
-        'magnitude_spectrum': 'magnitude_spectrum',
-        'phase_spectrum': 'phase_spectrum',
-        'psd': 'psd',
-        'specgram': 'specgram',
-        'xcorr': 'xcorr',
-    }
+    pass
 
 
 def build_series(axis, params):
@@ -252,7 +264,7 @@ def build_series(axis, params):
     ydata = dataframe_or_empty(data, config.fields[1])
 
     gca = axis.twinx() if config.secondary else axis
-    plot = getattr(gca, config.type)
+    plot = getattr(gca, SUPPORTED_TYPES[config.type])
     series = plot(xdata, ydata, **config.plot_params)
 
     set_axis_label(gca, 'x', config.labels.get('x'))
@@ -335,22 +347,55 @@ class Chart(object):
     def _build_figure(self):
         self.figure = plt.figure()
 
+    def _build_axes_rank(self):
+        share = []
+        for index in range(self.num_subplots):
+            if self.layout.type == 'grid':
+                options = self.layout.data[index]['grid'].get('options', {})
+            else:
+                options = self.layout.data[index].get('options', {})
+            sharex = options.get('sharex', -1)
+            share.append(sharex)
+            sharey = options.get('sharey', -1)
+            share.append(sharey)
+
+        results = [(share.count(index), index)
+                   for index in range(self.num_subplots)]
+
+        return sorted(results, reverse=True)
+
     def _build_axes(self):
+        keys = ['sharex', 'sharey']
+
         if self.layout.type == 'grid':
             layout_size = self.layout.size
 
-            for layout in self.layout.data:
-                grid = layout['grid']
+            rank = self._build_axes_rank()
+            for _, index in rank:
+                grid = self.layout.data[index]['grid']
                 location = grid['location']
                 options = grid.get('options', {})
-                self.axes.append(plt.subplot2grid(
-                    layout_size, location, fig=self.figure, **options))
+
+                for key in keys:
+                    share_index = options.get(key)
+                    if share_index:
+                        options.update({key: self.axes[share_index]})
+                self.axes[index] = plt.subplot2grid(
+                    layout_size, location, **options)
         else:
             num_columns, column_index = 1, 0
             layout_size = [self.num_subplots, num_columns]
             options = self.layout.options
 
-            for row_index in range(self.num_subplots):
+            self.axes[column_index] = plt.subplot2grid(
+                layout_size, [column_index, column_index], fig=self.figure)
+
+            for key in keys:
+                share_value = options.get(key)
+                if share_value:
+                    options.update({key: self.axes[column_index]})
+
+            for row_index in range(column_index + 1, self.num_subplots):
                 self.axes.append(plt.subplot2grid(
                     layout_size, [row_index, column_index], fig=self.figure,
                     **options))
@@ -359,6 +404,9 @@ class Chart(object):
         """Render chart object."""
 
         apply_theme(self.theme)
+
+        self.axes = [None] * self.num_subplots
+
         self._build_figure()
         self._build_axes()
 
@@ -367,8 +415,6 @@ class Chart(object):
 
         for axis, layout in zip(self.axes, self.layout.data):
             self._build_layout(axis, layout)
-
-        self.figure.autofmt_xdate()
 
     def save(self, filename):
         """Export chart object to file."""
