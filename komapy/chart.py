@@ -291,17 +291,9 @@ class Chart(object):
     """A chart object."""
 
     def __init__(self, **config):
-        # self.starttime = config.get('starttime')
-        # self.endtime = config.get('endtime')
-
         self.title = config.get('title')
         self.theme = config.get('theme', 'classic')
         self.legend = config.get('legend', {})
-
-        # self.dpi = config.get('dpi', 72)
-        # self.width = config.get('width', 640)
-        # self.height = config.get('height', 480)
-        # self.subplot_height = config.get('subplot_height', 72)
 
         config_layout = config.get('layout', {})
         self.layout = LayoutConfig(**config_layout)
@@ -383,22 +375,13 @@ class Chart(object):
                 self.axes[index] = plt.subplot2grid(
                     layout_size, location, **options)
         else:
-            num_columns, column_index = 1, 0
-            layout_size = [self.num_subplots, num_columns]
+            num_columns = 1
             options = self.layout.options
 
-            self.axes[column_index] = plt.subplot2grid(
-                layout_size, [column_index, column_index], fig=self.figure)
-
-            for key in keys:
-                share_value = options.get(key)
-                if share_value:
-                    options.update({key: self.axes[column_index]})
-
-            for row_index in range(column_index + 1, self.num_subplots):
-                self.axes.append(plt.subplot2grid(
-                    layout_size, [row_index, column_index], fig=self.figure,
-                    **options))
+            self.figure, self.axes = plt.subplots(
+                self.num_subplots,
+                num_columns,
+                **options)
 
     def render(self):
         """Render chart object."""
@@ -410,7 +393,10 @@ class Chart(object):
         self._build_figure()
         self._build_axes()
 
-        if not self.axes:
+        if len(self.axes) == 1:
+            self.axes = list(self.axes)
+
+        if not self.num_subplots:
             return
 
         for axis, layout in zip(self.axes, self.layout.data):
