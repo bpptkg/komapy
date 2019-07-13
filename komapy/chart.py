@@ -1,5 +1,7 @@
 import re
 
+from functools import partial
+from collections import OrderedDict
 from cached_property import cached_property
 
 import matplotlib.pyplot as plt
@@ -8,11 +10,10 @@ import matplotlib.gridspec as gridspec
 
 from pandas.plotting import register_matplotlib_converters
 
-from .client import fetch_as_dataframe
-from .utils import resolve_timestamp
+from . import client
+from . import processing
+from . import utils
 from .exceptions import ChartError
-from .processing import dataframe_or_empty
-
 
 register_matplotlib_converters()
 
@@ -90,7 +91,7 @@ def get_validation_methods(root_class):
 class SeriesConfig(object):
     """A series config object."""
 
-    required_parameters = ['name', 'fields']
+    required_parameters = ['fields']
     _available_parameters = {
         'name': None,
         'query_params': {},
@@ -104,6 +105,10 @@ class SeriesConfig(object):
         'legend': {},
         'title': None,
         'type': 'line',
+        'xaxis_date': False,
+        'url': None,
+        'csv': None,
+        'csv_params': {},
     }
 
     def __init__(self, **kwargs):
@@ -122,8 +127,9 @@ class SeriesConfig(object):
 
     def validate_name(self):
         """Validate name attribute."""
-        if self.name not in SUPPORTED_NAMES:
-            raise ChartError('Unknown parameter name {}'.format(self.name))
+        if self.name:
+            if self.name not in SUPPORTED_NAMES:
+                raise ChartError('Unknown parameter name {}'.format(self.name))
 
     def validate_type(self):
         """Validate type attribute."""
@@ -233,7 +239,8 @@ def set_axis_legend(axis, params=None):
     """Set axis legend."""
     config = params or {}
 
-    axis.legend(**config)
+    if config:
+        axis.legend(**config)
 
 
 def set_axis_label(axis, which='x', params=None):
@@ -253,19 +260,55 @@ def normalize_series(series):
     pass
 
 
+def resolve_data(config):
+    sources = OrderedDict([
+        ('csv', {
+            'resolver': processing.read_csv,
+            'options': 'csv_options'
+        }),
+        ('url', {
+            'resolver': client.fetch_url_as_dataframe,
+            'options': 'query_params'
+        }),
+        ('name', {
+            'resolver': client.fetch_bma_as_dataframe,
+            'options': 'query_params'
+        }),
+    ])
+
+    for name in sources:
+        source = getattr(config, name, None)
+        if source:
+            resolve = sources[name]['resolver']
+            options = sources[name]['options']
+            break
+
+    if source:
+        resource = resolve(source, **options)
+        func = partial(processing.dataframe_or_empty, resource)
+        plot_data = [
+            utils.resolve_timestamp(data)
+            if config.xaxis_date else data for data in map(func, config.fields)
+        ]
+    else:
+        plot_data = [
+            utils.resolve_timestamp(field)
+            if config.xaxis_date else field for field in config.fields
+        ]
+
+    return plot_data
+
+
 def build_series(axis, params):
     """Build series plot on the axis based on series data."""
 
     config = SeriesConfig(**params)
-    data = fetch_as_dataframe(config.name, config.query_params)
-
-    xdata = dataframe_or_empty(data, config.fields[0])
-    xdata = resolve_timestamp(xdata)
-    ydata = dataframe_or_empty(data, config.fields[1])
+    plot_data = resolve_data(config)
 
     gca = axis.twinx() if config.secondary else axis
     plot = getattr(gca, SUPPORTED_TYPES[config.type])
-    series = plot(xdata, ydata, **config.plot_params)
+
+    series = partial(plot, *plot_data, **config.plot_params)()
 
     set_axis_label(gca, 'x', config.labels.get('x'))
     set_axis_label(gca, 'y', config.labels.get('y'))
@@ -282,7 +325,6 @@ def build_series(axis, params):
 
     gca.set_title(config.title)
     set_axis_legend(gca, config.legend)
-    gca.xaxis_date()
 
     return series, gca
 
@@ -393,11 +435,11 @@ class Chart(object):
         self._build_figure()
         self._build_axes()
 
-        if len(self.axes) == 1:
-            self.axes = list(self.axes)
-
         if not self.num_subplots:
             return
+
+        if self.num_subplots == 1:
+            self.axes = [self.axes]
 
         for axis, layout in zip(self.axes, self.layout.data):
             self._build_layout(axis, layout)
