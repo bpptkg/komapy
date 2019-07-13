@@ -332,7 +332,7 @@ def build_series(axis, params):
 class Chart(object):
     """A chart object."""
 
-    def __init__(self, **config):
+    def __init__(self, config):
         self.title = config.get('title')
         self.theme = config.get('theme', 'classic')
         self.legend = config.get('legend', {})
@@ -379,7 +379,7 @@ class Chart(object):
         return subplot_series, subplot_axes
 
     def _build_figure(self):
-        self.figure = plt.figure()
+        self.figure = plt.figure(**self.figure_options)
 
     def _build_axes_rank(self):
         share = []
@@ -421,9 +421,7 @@ class Chart(object):
             options = self.layout.options
 
             self.figure, self.axes = plt.subplots(
-                self.num_subplots,
-                num_columns,
-                **options)
+                self.num_subplots, num_columns, **options)
 
     def render(self):
         """Render chart object."""
