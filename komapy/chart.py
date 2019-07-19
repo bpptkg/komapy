@@ -66,6 +66,85 @@ SUPPORTED_TYPES = {
     'xcorr': 'xcorr',
 }
 
+SUPPORTED_CUSTOMIZERS = {
+    # Appearance
+    'grid': 'grid',
+    'axis_off': 'set_axis_off',
+    'axis_on': 'set_axis_on',
+    'frame': 'set_frame_on',
+    'axis_below': 'set_axisbelow',
+    'facecolor': 'set_facecolor',
+
+    # Property cycle
+    'prop_cycle': 'set_prop_cycle',
+
+    # Axis limits and direction
+    'invert_xaxis': 'invert_xaxis',
+    'invert_yaxis': 'invert_yaxis',
+    'xlimit': 'set_xlim',
+    'ylimit': 'set_ylim',
+    'xbound': 'set_xbound',
+    'ybound': 'set_ybound',
+
+    # Axis labels, title, legends
+    'xlabel': 'set_xlabel',
+    'ylabel': 'set_ylabel',
+    'title': 'set_title',
+    'legend': 'legend',
+
+    # Axis scales
+    'xscale': 'set_xscale',
+    'yscale': 'set_yscale',
+
+    # Autoscaling and margins
+    'margins': 'margins',
+    'xmargin': 'set_xmargin',
+    'ymargin': 'set_ymargin',
+    'relim': 'relim',
+    'autoscale': 'autoscale',
+    'autoscale_view': 'autoscale_view',
+    'autoscale_on': 'set_autoscale_on',
+    'autoscalex_on': 'set_autoscalex_on',
+    'autoscaley_on': 'set_autoscaley_on',
+
+    # Aspect ratio
+    'aspect': 'set_aspect',
+    'adjustable': 'set_adjustable',
+
+    # Ticks and tick labels
+    'xticks': 'set_xticks',
+    'xticklabels': 'set_xticklabels',
+    'yticks': 'set_yticks',
+    'yticklabels': 'set_yticklabels',
+    'xaxis_date': 'xaxis_date',
+    'yaxis_date': 'yaxis_date',
+    'minorticks_off': 'minorticks_off',
+    'minorticks_on': 'minorticks_on',
+    'ticklabel_format': 'ticklabel_format',
+    'tick_params': 'tick_params',
+    'locator_params': 'locator_params',
+
+    # Axis position
+    'ancor': 'set_anchor',
+    'position': 'set_position',
+
+    # Async/Event based
+    'callback': 'add_callback',
+
+    # General artist properties
+    'agg_filter': 'set_agg_filter',
+    'alpha': 'set_alpha',
+    'animated': 'set_animated',
+    'clip_on': 'set_clip_on',
+    'gid': 'set_gid',
+    'label': 'set_label',
+    'rasterized': 'set_rasterized',
+    'sketch_params': 'set_sketch_params',
+    'snap': 'set_snap',
+    'artist_url': 'set_url',
+    'zorder': 'set_zorder',
+}
+
 
 def apply_theme(name):
     """Apply matplotlib plot theme."""
@@ -101,7 +180,7 @@ class SeriesConfig(object):
         'locator': {},
         'formatter': {},
         'aggregation': [],
-        'secondary': False,
+        'secondary': None,
         'legend': {},
         'title': None,
         'type': 'line',
@@ -109,6 +188,7 @@ class SeriesConfig(object):
         'url': None,
         'csv': None,
         'csv_params': {},
+        'grid': {},
     }
 
     def __init__(self, **kwargs):
@@ -280,11 +360,11 @@ def resolve_data(config):
         source = getattr(config, name, None)
         if source:
             resolve = sources[name]['resolver']
-            options = sources[name]['options']
+            options = getattr(config, sources[name]['options'], {})
             break
 
     if source:
-        resource = resolve(source, **options)
+        resource = resolve(source, options)
         func = partial(processing.dataframe_or_empty, resource)
         plot_data = [
             utils.resolve_timestamp(data)
@@ -299,15 +379,51 @@ def resolve_data(config):
     return plot_data
 
 
+def build_secondary_axis(axis, on='x'):
+    """Build twin secondary axis."""
+    methods = {
+        'x': 'twinx',
+        'y': 'twiny',
+    }
+    method = getattr(axis, methods[on])
+    return method()
+
+
+def customize_axis(axis, params):
+    config = params.copy()
+
+    for name in config:
+        if name in SUPPORTED_CUSTOMIZERS:
+            modifier = config[name]
+            if isinstance(modifier, dict):
+                value = modifier.get('value')
+                if isinstance(value, list):
+                    args = [value]
+                else:
+                    args = []
+
+                kwargs = modifier.get('options', {})
+            elif isinstance(modifier, list):
+                args = list(modifier)
+                kwargs = {}
+            else:
+                args = [modifier]
+                kwargs = {}
+
+            method_name = getattr(axis, SUPPORTED_CUSTOMIZERS[name])
+            customizer = partial(method_name, *args, **kwargs)
+            customizer()
+
+
 def build_series(axis, params):
     """Build series plot on the axis based on series data."""
 
     config = SeriesConfig(**params)
     plot_data = resolve_data(config)
 
-    gca = axis.twinx() if config.secondary else axis
+    gca = build_secondary_axis(
+        axis, on=config.secondary) if config.secondary else axis
     plot = getattr(gca, SUPPORTED_TYPES[config.type])
-
     series = partial(plot, *plot_data, **config.plot_params)()
 
     set_axis_label(gca, 'x', config.labels.get('x'))
@@ -325,6 +441,8 @@ def build_series(axis, params):
 
     gca.set_title(config.title)
     set_axis_legend(gca, config.legend)
+
+    customize_axis(axis, params)
 
     return series, gca
 
@@ -448,3 +566,9 @@ class Chart(object):
         plt.title(self.title)
         plt.tight_layout()
         plt.savefig(filename, **self.save_options)
+
+    def clear(self):
+        """Clear all chart axes and figures."""
+
+        if self.figure:
+            plt.close(self.figure)
