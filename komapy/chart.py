@@ -335,10 +335,6 @@ def set_axis_label(axis, which='x', params=None):
     method(config.get('text'), **config.get('style', {}))
 
 
-def normalize_series(series):
-    pass
-
-
 def resolve_data(config):
     sources = OrderedDict([
         ('csv', {
