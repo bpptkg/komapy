@@ -1,8 +1,8 @@
 import json
-import bmaclient
-
 from six.moves.urllib.request import urlopen
 from six.moves.urllib.parse import urlencode
+
+import bmaclient
 
 from . import processing
 from . import exceptions

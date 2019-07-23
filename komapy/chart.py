@@ -116,8 +116,6 @@ SUPPORTED_CUSTOMIZERS = {
     'xticklabels': 'set_xticklabels',
     'yticks': 'set_yticks',
     'yticklabels': 'set_yticklabels',
-    'xaxis_date': 'xaxis_date',
-    'yaxis_date': 'yaxis_date',
     'minorticks_off': 'minorticks_off',
     'minorticks_on': 'minorticks_on',
     'ticklabel_format': 'ticklabel_format',
@@ -185,6 +183,7 @@ class SeriesConfig(object):
         'title': None,
         'type': 'line',
         'xaxis_date': False,
+        'yaxis_date': False,
         'url': None,
         'csv': None,
         'csv_params': {},
@@ -363,18 +362,25 @@ def resolve_data(config):
             options = getattr(config, sources[name]['options'], {})
             break
 
+    plot_data = []
     if source:
         resource = resolve(source, options)
         func = partial(processing.dataframe_or_empty, resource)
-        plot_data = [
-            utils.resolve_timestamp(data)
-            if config.xaxis_date else data for data in map(func, config.fields)
-        ]
+        for i, field in enumerate(map(func, config.fields)):
+            if i == 0 and config.xaxis_date:
+                plot_data.append(utils.resolve_timestamp(field))
+            elif i == 1 and config.yaxis_date:
+                plot_data.append(utils.resolve_timestamp(field))
+            else:
+                plot_data.append(field)
     else:
-        plot_data = [
-            utils.resolve_timestamp(field)
-            if config.xaxis_date else field for field in config.fields
-        ]
+        for i, field in enumerate(config.fields):
+            if i == 0 and config.xaxis_date:
+                plot_data.append(utils.resolve_timestamp(field))
+            elif i == 1 and config.yaxis_date:
+                plot_data.append(utils.resolve_timestamp(field))
+            else:
+                plot_data.append(field)
 
     return plot_data
 
