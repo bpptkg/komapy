@@ -1,4 +1,6 @@
+import numpy as np
 import pandas as pd
+from matplotlib import cm
 
 
 def dataframe_from_dictionary(entry):
@@ -24,3 +26,13 @@ def read_csv(*args, **kwargs):
 def read_excel(*args, **kwargs):
     """Read excel file."""
     return pd.read_excel(*args, **kwargs)
+
+
+def get_rgb_color(num_sample, index, colormap='tab10'):
+    """
+    Get RGB color at current index for number of sample from matplotlib
+    color map.
+    """
+    space = np.linspace(0, 1, num_sample)
+    cmap = cm.get_cmap(colormap)
+    return cmap(space[index])
