@@ -145,18 +145,6 @@ SUPPORTED_CUSTOMIZERS = {
 }
 
 
-SUPPORTED_EXTENSIONS = {
-    'explosion': {
-        'resolver': 'plot_explosion_line',
-        'label': 'Letusan',
-    },
-    'dome': {
-        'resolver': 'plot_dome_appearance',
-        'label': 'Kubah lava tampak',
-    },
-}
-
-
 def apply_theme(name):
     """Apply matplotlib plot theme."""
     if name in plt.style.available:
@@ -407,13 +395,13 @@ def customize_axis(axis, params):
         if name in SUPPORTED_CUSTOMIZERS:
             modifier = config[name]
             if isinstance(modifier, dict):
-                value = modifier.get('value')
+                value = modifier.pop('value', None)
                 if isinstance(value, list):
                     args = [value]
                 else:
                     args = []
 
-                kwargs = modifier.get('options', {})
+                kwargs = modifier
             elif isinstance(modifier, list):
                 args = list(modifier)
                 kwargs = {}
@@ -571,25 +559,29 @@ class Chart(object):
 
     def _build_extension_series(self, axis):
         handles = []
-        handle = None
+        labels = []
         plot = self.extensions.get('plot', {})
 
         for key, value in plot.items():
-            if key in SUPPORTED_EXTENSIONS:
+            if key in extensions.SUPPORTED_EXTENSIONS:
                 if value.pop('show', False):
                     method = getattr(
-                        extensions, SUPPORTED_EXTENSIONS[key]['resolver'])
+                        extensions,
+                        extensions.SUPPORTED_EXTENSIONS[key]['resolver'])
+
+                    labels.append(value.pop(
+                        'label',
+                        extensions.SUPPORTED_EXTENSIONS[key]['label']))
+
                     handle = method(axis, self.starttime,
                                     self.endtime, **value)
                     handles.append(handle)
 
-        return handles
+        return handles, labels
 
     def _build_extension_plot(self, axis):
-        handles = self._build_extension_series(axis)
+        handles, labels = self._build_extension_series(axis)
         legend = self.extensions.pop('legend', {})
-        labels = [value['label']
-                  for _, value in SUPPORTED_EXTENSIONS.items()]
 
         if legend:
             show = legend.pop('show', False)

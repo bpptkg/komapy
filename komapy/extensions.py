@@ -5,6 +5,18 @@ from .processing import dataframe_or_empty
 from .utils import resolve_timestamp
 
 
+SUPPORTED_EXTENSIONS = {
+    'explosion': {
+        'resolver': 'plot_explosion_line',
+        'label': 'Letusan',
+    },
+    'dome': {
+        'resolver': 'plot_dome_appearance',
+        'label': 'Kubah lava tampak',
+    },
+}
+
+
 def plot_explosion_line(axis, starttime, endtime, **options):
     """
     Plot Merapi explosion line on current axis.
