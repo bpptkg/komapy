@@ -71,7 +71,7 @@ SUPPORTED_TYPES = {
 
 SUPPORTED_CUSTOMIZERS = {
     # Appearance
-    'grid': 'grid',
+    'showgrid': 'grid',
     'axis_off': 'set_axis_off',
     'axis_on': 'set_axis_on',
     'frame': 'set_frame_on',
@@ -92,8 +92,6 @@ SUPPORTED_CUSTOMIZERS = {
     # Axis labels, title, legends
     'xlabel': 'set_xlabel',
     'ylabel': 'set_ylabel',
-    'title': 'set_title',
-    'legend': 'legend',
 
     # Axis scales
     'xscale': 'set_xscale',
@@ -172,7 +170,7 @@ class SeriesConfig(object):
     """A series config object."""
 
     required_parameters = ['fields']
-    _available_parameters = {
+    available_parameters = {
         'name': None,
         'query_params': {},
         'fields': [],
@@ -194,7 +192,7 @@ class SeriesConfig(object):
     }
 
     def __init__(self, **kwargs):
-        for key, value in self._available_parameters.items():
+        for key, value in self.available_parameters.items():
             if key in kwargs:
                 setattr(self, key, kwargs[key])
             else:
