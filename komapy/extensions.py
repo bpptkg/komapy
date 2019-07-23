@@ -12,7 +12,7 @@ def plot_explosion_line(axis, starttime, endtime, **options):
     Exposion date is fetched from seismic bulletin database. All event dates
     are treated as local timezone, i.e. Asia/Jakarta.
     """
-    handler = None
+    handle = None
 
     params = {
         'eventtype': 'EXPLOSION',
@@ -22,15 +22,15 @@ def plot_explosion_line(axis, starttime, endtime, **options):
 
     eventdate = resolve_timestamp(dataframe_or_empty(data, 'eventdate'))
     if eventdate.empty:
-        return handler
+        return handle
     else:
         eventdate = eventdate.dt.tz_localize(None).dt.to_pydatetime()
 
     for timestamp in eventdate:
         if starttime <= timestamp and timestamp <= endtime:
-            handler = axis.axvline(timestamp, **options)
+            handle = axis.axvline(timestamp, label='Letusan', **options)
 
-    return handler
+    return handle
 
 
 def plot_dome_appearance(axis, starttime, endtime, **options):
@@ -39,9 +39,9 @@ def plot_dome_appearance(axis, starttime, endtime, **options):
 
     Merapi dome appears at 2018-08-01 Asia/Jakarta timezone.
     """
-    handler = None
+    handle = None
 
     timestamp = datetime.datetime(2018, 8, 1)
     if starttime <= timestamp and timestamp >= endtime:
-        handler = axis.axvline(timestamp, **options)
-    return handler
+        handle = axis.axvline(timestamp, **options)
+    return handle

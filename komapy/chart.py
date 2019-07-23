@@ -11,6 +11,7 @@ import matplotlib.gridspec as gridspec
 from pandas.plotting import register_matplotlib_converters
 
 from . import client
+from . import extensions
 from . import processing
 from . import utils
 from .exceptions import ChartError
@@ -141,6 +142,18 @@ SUPPORTED_CUSTOMIZERS = {
     'snap': 'set_snap',
     'artist_url': 'set_url',
     'zorder': 'set_zorder',
+}
+
+
+SUPPORTED_EXTENSIONS = {
+    'explosion': {
+        'resolver': 'plot_explosion_line',
+        'label': 'Letusan',
+    },
+    'dome': {
+        'resolver': 'plot_dome_appearance',
+        'label': 'Kubah lava tampak',
+    },
 }
 
 
@@ -449,16 +462,20 @@ class Chart(object):
     """A chart object."""
 
     def __init__(self, config):
-        self.config = config
+        self.config = config.copy()
         self.title = config.get('title')
         self.theme = config.get('theme', 'classic')
         self.legend = config.get('legend', {})
+
+        self.starttime = utils.to_pydatetime(config.get('starttime'))
+        self.endtime = utils.to_pydatetime(config.get('endtime'))
 
         config_layout = config.get('layout', {})
         self.layout = LayoutConfig(**config_layout)
 
         self.figure_options = config.get('figure_options', {})
         self.save_options = config.get('save_options', {})
+        self.extensions = config.get('extensions', {})
 
         self.figure = None
         self.axes = []
@@ -480,7 +497,9 @@ class Chart(object):
         """Get number of subplots."""
         return len(self.layout.data)
 
-    def _build_series_legend(self, axis, handles, labels, options):
+    def _build_series_legend(self, axis, handles, labels, params=None):
+        options = params or {}
+
         if options.pop('show', False):
             axis.legend(handles, labels, **options)
 
@@ -550,6 +569,33 @@ class Chart(object):
             self.figure, self.axes = plt.subplots(
                 self.num_subplots, num_columns, **options)
 
+    def _build_extension_series(self, axis):
+        handles = []
+        handle = None
+        plot = self.extensions.get('plot', {})
+
+        for key, value in plot.items():
+            if key in SUPPORTED_EXTENSIONS:
+                if value.pop('show', False):
+                    method = getattr(
+                        extensions, SUPPORTED_EXTENSIONS[key]['resolver'])
+                    handle = method(axis, self.starttime,
+                                    self.endtime, **value)
+                    handles.append(handle)
+
+        return handles
+
+    def _build_extension_plot(self, axis):
+        handles = self._build_extension_series(axis)
+        legend = self.extensions.pop('legend', {})
+        labels = [value['label']
+                  for _, value in SUPPORTED_EXTENSIONS.items()]
+
+        if legend:
+            show = legend.pop('show', False)
+            if show:
+                self.figure.legend(handles, labels, **legend)
+
     def render(self):
         """Render chart object."""
 
@@ -568,6 +614,7 @@ class Chart(object):
 
         for axis, layout in zip(self.axes, self.layout.data):
             self._build_layout(axis, layout)
+            self._build_extension_plot(axis)
 
     def save(self, filename):
         """Export chart object to file."""
