@@ -318,7 +318,7 @@ def set_axis_legend(axis, params=None):
     """Set axis legend."""
     config = params or {}
 
-    if config:
+    if config.pop('show', False):
         axis.legend(**config)
 
 
@@ -362,25 +362,21 @@ def resolve_data(config):
             options = getattr(config, sources[name]['options'], {})
             break
 
-    plot_data = []
     if source:
         resource = resolve(source, options)
         func = partial(processing.dataframe_or_empty, resource)
-        for i, field in enumerate(map(func, config.fields)):
-            if i == 0 and config.xaxis_date:
-                plot_data.append(utils.resolve_timestamp(field))
-            elif i == 1 and config.yaxis_date:
-                plot_data.append(utils.resolve_timestamp(field))
-            else:
-                plot_data.append(field)
+        iterator = map(func, config.fields)
     else:
-        for i, field in enumerate(config.fields):
-            if i == 0 and config.xaxis_date:
-                plot_data.append(utils.resolve_timestamp(field))
-            elif i == 1 and config.yaxis_date:
-                plot_data.append(utils.resolve_timestamp(field))
-            else:
-                plot_data.append(field)
+        iterator = config.fields
+
+    plot_data = []
+    for i, field in enumerate(iterator):
+        if i == 0 and config.xaxis_date:
+            plot_data.append(utils.resolve_timestamp(field))
+        elif i == 1 and config.yaxis_date:
+            plot_data.append(utils.resolve_timestamp(field))
+        else:
+            plot_data.append(field)
 
     return plot_data
 
@@ -430,7 +426,7 @@ def build_series(axis, params):
     gca = build_secondary_axis(
         axis, on=config.secondary) if config.secondary else axis
     plot = getattr(gca, SUPPORTED_TYPES[config.type])
-    series = partial(plot, *plot_data, **config.plot_params)()
+    partial(plot, *plot_data, **config.plot_params)()
 
     set_axis_label(gca, 'x', config.labels.get('x'))
     set_axis_label(gca, 'y', config.labels.get('y'))
@@ -450,13 +446,14 @@ def build_series(axis, params):
 
     customize_axis(axis, params)
 
-    return series, gca
+    return gca
 
 
 class Chart(object):
     """A chart object."""
 
     def __init__(self, config):
+        self.config = config
         self.title = config.get('title')
         self.theme = config.get('theme', 'classic')
         self.legend = config.get('legend', {})
@@ -487,20 +484,30 @@ class Chart(object):
         """Get number of subplots."""
         return len(self.layout.data)
 
+    def _build_series_legend(self, axis, handles, labels, options):
+        if options.pop('show', False):
+            axis.legend(handles, labels, **options)
+
     def _build_layout(self, axis, layout):
         if not layout.get('series'):
-            return None, None
+            return None
 
-        subplot_series = []
         subplot_axes = []
+        subplot_handles = []
+        subplot_labels = []
 
         for series_data in layout['series']:
-            series, gca = build_series(axis, series_data)
-
-            subplot_series.append(series)
+            gca = build_series(axis, series_data)
             subplot_axes.append(gca)
 
-        return subplot_series, subplot_axes
+            handle, label = gca.get_legend_handles_labels()
+            subplot_handles += handle
+            subplot_labels += label
+
+        self._build_series_legend(
+            gca, subplot_handles, subplot_labels, layout.get('legend', {}))
+
+        return subplot_axes
 
     def _build_figure(self):
         self.figure = plt.figure(**self.figure_options)
@@ -570,7 +577,7 @@ class Chart(object):
         """Export chart object to file."""
 
         plt.title(self.title)
-        plt.tight_layout()
+        plt.tight_layout(**self.config.get('tight_layout', {}))
         plt.savefig(filename, **self.save_options)
 
     def clear(self):
