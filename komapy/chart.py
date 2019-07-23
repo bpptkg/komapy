@@ -606,7 +606,10 @@ class Chart(object):
 
                     handle = method(axis, self.starttime,
                                     self.endtime, **value)
-                    handles.append(handle)
+                    if handle:
+                        handles.append(handle)
+                    else:
+                        labels.pop()
 
         return handles, labels
 

@@ -40,7 +40,7 @@ def plot_explosion_line(axis, starttime, endtime, **options):
 
     for timestamp in eventdate:
         if starttime <= timestamp and timestamp <= endtime:
-            handle = axis.axvline(timestamp, label='Letusan', **options)
+            handle = axis.axvline(timestamp, **options)
 
     return handle
 
@@ -54,6 +54,6 @@ def plot_dome_appearance(axis, starttime, endtime, **options):
     handle = None
 
     timestamp = datetime.datetime(2018, 8, 1)
-    if starttime <= timestamp and timestamp >= endtime:
+    if starttime <= timestamp and timestamp <= endtime:
         handle = axis.axvline(timestamp, **options)
     return handle
