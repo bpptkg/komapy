@@ -2,6 +2,7 @@ import re
 import copy
 
 from functools import partial
+from functools import lru_cache
 from collections import OrderedDict
 from cached_property import cached_property
 
@@ -341,6 +342,7 @@ def set_axis_label(axis, which='x', params=None):
     method(config.get('text'), **config.get('style', {}))
 
 
+@lru_cache(maxsize=128)
 def resolve_data(config):
     """
     Resolve plot data.
