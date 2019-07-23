@@ -1,4 +1,5 @@
 import re
+import copy
 
 from functools import partial
 from collections import OrderedDict
@@ -467,6 +468,7 @@ class Chart(object):
 
         self.figure = None
         self.axes = []
+        self.rendered_axes = []
 
         self._validate()
 
@@ -560,7 +562,7 @@ class Chart(object):
     def _build_extension_series(self, axis):
         handles = []
         labels = []
-        plot = self.extensions.get('plot', {})
+        plot = copy.deepcopy(self.extensions.get('plot', {}))
 
         for key, value in plot.items():
             if key in extensions.SUPPORTED_EXTENSIONS:
@@ -594,6 +596,7 @@ class Chart(object):
         apply_theme(self.theme)
 
         self.axes = [None] * self.num_subplots
+        self.rendered_axes = []
 
         self._build_figure()
         self._build_axes()
@@ -605,7 +608,8 @@ class Chart(object):
             self.axes = [self.axes]
 
         for axis, layout in zip(self.axes, self.layout.data):
-            self._build_layout(axis, layout)
+            subplot_axes = self._build_layout(axis, layout)
+            self.rendered_axes.append(subplot_axes)
             self._build_extension_plot(axis)
 
     def save(self, filename):
