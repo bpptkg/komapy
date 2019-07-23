@@ -3,6 +3,21 @@ import pandas as pd
 from matplotlib import cm
 
 
+SUPPORTED_AGGREGATIONS = {
+    'cumsum': 'cumsum',
+    'add': 'add',
+    'subtract': 'subtract',
+    'multiply': 'multiply',
+    'divide': 'divide',
+    'power': 'power',
+
+    'sub': 'subtract',
+    'mul': 'multiply',
+    'div': 'divide',
+    'pow': 'power'
+}
+
+
 def dataframe_from_dictionary(entry):
     """Create Pandas DataFrame from list of dictionary."""
     return pd.DataFrame(entry)
@@ -36,3 +51,44 @@ def get_rgb_color(num_sample, index, colormap='tab10'):
     space = np.linspace(0, 1, num_sample)
     cmap = cm.get_cmap(colormap)
     return cmap(space[index])
+
+
+def cumsum(data, params=None):
+    """Cumulative sum function aggregation."""
+    kwargs = params or {}
+    return data.cumsum(**kwargs)
+
+
+def add(data, params=None):
+    """Add function aggregation."""
+    kwargs = params or {}
+    constant = kwargs.get('by', 0)
+    return data + constant
+
+
+def subtract(data, params=None):
+    """Subtract function aggregation."""
+    kwargs = params or {}
+    constant = kwargs.get('by', 0)
+    return data - constant
+
+
+def multiply(data, params=None):
+    """Multiply function aggregation."""
+    kwargs = params or {}
+    factor = kwargs.get('by', 1.0)
+    return data * factor
+
+
+def divide(data, params=None):
+    """Divide function aggregation."""
+    kwargs = params or {}
+    factor = kwargs.get('by', 1.0)
+    return data / factor
+
+
+def power(data, params=None):
+    """Power function aggregation."""
+    kwargs = params or {}
+    factor = kwargs.get('by', 1.0)
+    return data ** factor

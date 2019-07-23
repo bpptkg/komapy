@@ -179,7 +179,7 @@ class SeriesConfig(object):
         'labels': {},
         'locator': {},
         'formatter': {},
-        'aggregation': [],
+        'aggregation': {},
         'secondary': None,
         'legend': {},
         'title': None,
@@ -223,7 +223,7 @@ class SeriesConfig(object):
             raise ChartError('Series fields must be set')
 
     def validate(self):
-        """Validate all attributes."""
+        """Validate all config attributes."""
         validation_methods = get_validation_methods(SeriesConfig)
 
         for method in validation_methods:
@@ -231,6 +231,7 @@ class SeriesConfig(object):
 
 
 class LayoutConfig(object):
+    """A layout config object."""
 
     def __init__(self, **kwargs):
         self.type = kwargs.get('type', 'default')
@@ -239,6 +240,7 @@ class LayoutConfig(object):
         self.options = kwargs.get('options', {})
 
     def validate_size(self):
+        """Validate layout size attribute."""
         if self.type == 'grid':
             if not self.size:
                 raise ChartError(
@@ -249,6 +251,7 @@ class LayoutConfig(object):
                 raise ChartError('Layout size length must be 2')
 
     def validate_data(self):
+        """Validate layout data attribute."""
         if self.type == 'grid':
             for layout in self.data:
                 grid = layout.get('grid')
@@ -266,6 +269,7 @@ class LayoutConfig(object):
                     raise ChartError("Layout grid location length must be 2")
 
     def validate(self):
+        """Validate all config attributes."""
         validation_methods = get_validation_methods(LayoutConfig)
 
         for method in validation_methods:
@@ -338,6 +342,13 @@ def set_axis_label(axis, which='x', params=None):
 
 
 def resolve_data(config):
+    """
+    Resolve plot data.
+
+    Plot data is resolved in the following order, CSV, JSON URL, and BMA API
+    name. Each of sources has certain resolver. If none of the sources found
+    in the chart config, data source is treated as plain object.
+    """
     sources = OrderedDict([
         ('csv', {
             'resolver': processing.read_csv,
@@ -375,6 +386,22 @@ def resolve_data(config):
             plot_data.append(utils.resolve_timestamp(field))
         else:
             plot_data.append(field)
+
+    agg_field = config.aggregation.pop('on', None)
+    index = agg_field
+    if agg_field:
+        if source:
+            index = config.fields.index(agg_field)
+        func = config.aggregation.get('func', [])
+        if not func:
+            return plot_data
+
+        for item in func:
+            for name, params in item.items():
+                if name in processing.SUPPORTED_AGGREGATIONS:
+                    method = getattr(
+                        processing, processing.SUPPORTED_AGGREGATIONS[name])
+                    plot_data[index] = method(plot_data[index], params)
 
     return plot_data
 
