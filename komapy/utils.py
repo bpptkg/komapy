@@ -1,5 +1,6 @@
 import base64
 import uuid
+import pytz
 from dateutil import parser
 
 
@@ -19,7 +20,21 @@ def to_pydatetime(*args, **kwargs):
     Convert date string to Python non-aware datetime.
     """
     date_obj = parser.parse(*args, **kwargs)
-    return date_obj
+    if kwargs.get('timezone'):
+        tzinfo = pytz.timezone(kwargs['timezone'])
+    else:
+        tzinfo = pytz.utc
+    return date_obj.replace(tzinfo=date_obj.tzinfo or tzinfo)
+
+
+def to_pydatetime_from_dictionary(data, keys):
+    """Convert date string to Python datetime whose key in keys."""
+    return [
+        dict(
+            (key, to_pydatetime(value) if key in keys else value)
+            for key, value in item.items()
+        ) for item in data
+    ]
 
 
 def generate_url_safe_filename(extension='png'):
@@ -29,3 +44,33 @@ def generate_url_safe_filename(extension='png'):
         name.bytes).decode('utf-8').rstrip('=\n')
     return '{filename}.{extension}'.format(
         filename=filename, extension=extension)
+
+
+def compute_middletime(starttime, endtime):
+    """Calculate middle time between two timestamp."""
+    if isinstance(starttime, str):
+        start = to_pydatetime(starttime)
+    else:
+        start = starttime
+
+    if isinstance(endtime, str):
+        end = to_pydatetime(endtime)
+    else:
+        end = endtime
+    delta = (end - start) / 2.0
+    return start + delta
+
+
+def compute_middletime_from_list(starttime, endtime):
+    """Calculate middle time between two list of timestamps."""
+    return [
+        compute_middletime(start, end)
+        for start, end in zip(starttime, endtime)
+    ]
+
+
+def time_to_offset(starttime, endtime, middletime):
+    """Transform middle time to offset."""
+    nominator = (middletime - starttime).total_seconds()
+    denominator = (endtime - starttime).total_seconds()
+    return float(nominator) / float(denominator)

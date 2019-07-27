@@ -417,6 +417,9 @@ def build_secondary_axis(axis, on='x'):
 
 
 def customize_axis(axis, params):
+    """
+    Customize axis based-on given params.
+    """
     config = params.copy()
 
     for name in config:
@@ -482,6 +485,7 @@ class Chart(object):
         self.title = config.get('title')
         self.theme = config.get('theme', 'classic')
         self.legend = config.get('legend', {})
+        self.timezone = config.get('timezone', 'UTC')
 
         self.starttime = utils.to_pydatetime(config.get('starttime'))
         self.endtime = utils.to_pydatetime(config.get('endtime'))
