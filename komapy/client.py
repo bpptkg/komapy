@@ -10,11 +10,29 @@ import bmaclient
 
 from . import processing
 from . import exceptions
+from .settings import app_settings
+
+
+def set_api_key(key):
+    """
+    Set BMA API key to enable accessing the API.
+    """
+    app_settings.api_key = key
+
+
+def set_access_token(token):
+    """
+    Set BMA access token to enable accessing the API.
+    """
+    app_settings.access_token = token
 
 
 def fetch_bma_as_dictionary(name, params=None):
     """Make a request to the BMA API and return data as Python dictionary."""
-    api = bmaclient.MonitoringAPI(api_key='1JPZxKW5.RCpwvwK5O4T5hYFTzfPpSp9o2PdTtRwa')
+    api = bmaclient.MonitoringAPI(
+        api_key=app_settings.api_key,
+        access_token=app_settings.access_token)
+
     method = api.get_fetch_method(name)
     if not method:
         raise exceptions.ChartError('Unknown parameter name {}'.format(name))
