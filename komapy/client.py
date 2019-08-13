@@ -10,7 +10,7 @@ from . import exceptions
 
 def fetch_bma_as_dictionary(name, params=None):
     """Make a request to the BMA API and return data as Python dictionary."""
-    api = bmaclient.MonitoringAPI()
+    api = bmaclient.MonitoringAPI(api_key='1JPZxKW5.RCpwvwK5O4T5hYFTzfPpSp9o2PdTtRwa')
     method = api.get_fetch_method(name)
     if not method:
         raise exceptions.ChartError('Unknown parameter name {}'.format(name))

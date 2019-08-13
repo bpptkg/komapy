@@ -1,3 +1,4 @@
+import re
 import base64
 import uuid
 import pytz
@@ -74,3 +75,18 @@ def time_to_offset(starttime, endtime, middletime):
     nominator = (middletime - starttime).total_seconds()
     denominator = (endtime - starttime).total_seconds()
     return float(nominator) / float(denominator)
+
+
+def get_validation_methods(root_class):
+    """Get all validation metods in the root class."""
+    re_validate_template = re.compile(r'validate_(?P<name>\w+)')
+
+    validation_methods = []
+    for item in root_class.__dict__:
+        matched = re_validate_template.match(item)
+        if matched:
+            name = matched.groupdict().get('name')
+            method_name = 'validate_{}'.format(name)
+            validation_methods.append(method_name)
+
+    return validation_methods

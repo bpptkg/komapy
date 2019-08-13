@@ -2,5 +2,6 @@ __pycache__
 *.pyc
 build/
 dist/
-test_settings.py
+test_settings*.py
 figure.png
+.vscode
