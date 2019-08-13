@@ -1,3 +1,7 @@
+"""
+KomaPy chart layout.
+"""
+
 import re
 
 from .exceptions import ChartError

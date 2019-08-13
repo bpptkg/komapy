@@ -1,3 +1,7 @@
+"""
+KomaPy data fetcher and reader.
+"""
+
 import json
 from six.moves.urllib.request import urlopen
 from six.moves.urllib.parse import urlencode

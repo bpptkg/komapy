@@ -1,3 +1,7 @@
+"""
+KomaPy extension plots.
+"""
+
 import datetime
 
 from .client import fetch_bma_as_dataframe

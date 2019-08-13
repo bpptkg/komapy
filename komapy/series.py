@@ -1,3 +1,7 @@
+"""
+KomaPy chart series.
+"""
+
 from functools import partial
 
 from .constants import SUPPORTED_NAMES, SUPPORTED_TYPES

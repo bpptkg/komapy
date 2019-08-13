@@ -1,3 +1,7 @@
+"""
+Matplotlib axes customization wrapper.
+"""
+
 from functools import partial
 from functools import lru_cache
 from collections import OrderedDict

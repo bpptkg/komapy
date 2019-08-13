@@ -1,3 +1,43 @@
+"""
+KomaPy Chart.
+
+KomaPy chart design philosophy is only use config to create customizable chart.
+It wraps matplotlib axes object and provides BMA data fetching mechanism that
+allow user to create customizable chart with ease and simplicity.
+
+Example:
+
+from komapy import Chart
+
+chart = Chart({
+    'title': 'RB2',
+    'theme': 'seaborn',
+    'layout': {
+        'data': [
+            {
+                'series': [
+                    {
+                        'name': 'edm',
+                        'query_params': {
+                            'benchmark': 'BAB0',
+                            'reflector': 'RB2',
+                            'start_at': '2019-04-01',
+                            'end_at': '2019-08-01',
+                            'ci': True
+                        },
+                        'fields': ['timestamp', 'slope_distance'],
+                        'xaxis_date': True
+                    }
+                ]
+            }
+        ]
+    }
+})
+
+chart.render()
+chart.save('RB2.png')
+"""
+
 import copy
 from cached_property import cached_property
 

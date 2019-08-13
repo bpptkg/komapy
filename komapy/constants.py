@@ -1,3 +1,7 @@
+"""
+KomaPy contants.
+"""
+
 TIME_ZONE = 'Asia/Jakarta'
 
 SUPPORTED_NAMES = [
