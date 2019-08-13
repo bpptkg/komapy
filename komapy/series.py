@@ -83,22 +83,12 @@ def build_series(axis, params):
     plot = getattr(gca, SUPPORTED_TYPES[config.type])
     partial(plot, *plot_data, **config.plot_params)()
 
-    set_axis_label(gca, 'x', config.labels.get('x'))
-    set_axis_label(gca, 'y', config.labels.get('y'))
-
-    set_axis_locator(gca, on='x', which='major',
-                     params=config.locator.get('major'))
-    set_axis_locator(gca, on='y', which='minor',
-                     params=config.locator.get('minor'))
-
-    set_axis_formatter(gca, on='x', which='major',
-                       params=config.formatter.get('major'))
-    set_axis_formatter(gca, on='y', which='minor',
-                       params=config.formatter.get('minor'))
-
-    gca.set_title(config.title)
+    set_axis_label(gca, params=config.labels)
+    set_axis_locator(gca, params=config.locator)
+    set_axis_formatter(gca, params=config.formatter)
     set_axis_legend(gca, config.legend)
 
+    gca.set_title(config.title)
     customize_axis(axis, params)
 
     return gca

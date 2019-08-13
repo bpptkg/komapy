@@ -8,52 +8,139 @@ from . import processing
 from . import client
 from . import utils
 
-from .exceptions import ChartError
 from .constants import SUPPORTED_CUSTOMIZERS
+from .exceptions import ChartError
 
 
-def set_axis_locator(axis, on='x', which='major', params=None):
-    """Set axis locator."""
+def set_axis_locator(axis, params=None):
+    """
+    Set axis locator.
+
+    Example config:
+
+        'locator': {
+            'x': {
+                'major': {
+                    'name': 'MaxNLocator',
+                    'params': [],
+                    'keyword_params': {
+
+                    } 
+                }
+            }
+        }
+    """
     config = params or {}
-    methods = {
+    axis_methods = {
         'x': 'get_xaxis',
         'y': 'get_yaxis',
+    }
+    formatter_methods = {
         'major': 'set_major_locator',
         'minor': 'set_minor_locator',
     }
+    supported_locator = [
+        'AutoLocator',
+        'MaxNLocator',
+        'LinearLocator',
+        'LogLocator',
+        'MultipeLocator',
+        'FixedLocator',
+        'IndexLocator',
+        'NullLocator',
+        'SymmetricalLocator',
+        'LogitLocator',
+        'OldAutoLocator',
+        'AutoMinorLocator',
+    ]
 
-    locator = getattr(matplotlib.ticker, config.get('name', ''), None)
-    if locator:
-        gca = getattr(axis, methods[on])
-        getattr(gca, methods[which])(locator(**config.get('params', {})))
+    for key, value in config.items():
+        if key not in axis_methods:
+            continue
+        for which, data in value.items():
+            if which not in formatter_methods:
+                continue
+            name = data.get('name')
+            if name not in supported_locator:
+                continue
+            locator = getattr(matplotlib.ticker, data.get('name', ''), None)
+            if locator:
+                gca = getattr(axis, axis_methods[key])()
+                getattr(gca, formatter_methods[which])(
+                    locator(*data.get('params', []),
+                            **data.get('keyword_params', {}))
+                )
 
 
-def set_axis_formatter(axis, on='x', which='major', params=None):
-    """Set axis formatter."""
+def set_axis_formatter(axis, params=None):
+    """
+    Set axis formatter.
+
+    Example config:
+
+        'formatter': {
+            'x': {
+                'major': {
+                    'format': '%.3f'
+                },
+                'minor': {
+                    'name': 'PercentFormatter',
+                    'params': [],
+                    'keyword_params': {
+
+                    }
+                }
+            }
+        }
+
+    Default formatter is FormatStrFormatter and it reads 'format' value. Other
+    formatter is specified with params and keyword_params to pass these values
+    into formatter class.
+    """
     config = params or {}
-    methods = {
+    axis_methods = {
         'x': 'get_xaxis',
         'y': 'get_yaxis',
+    }
+    formatter_methods = {
         'major': 'set_major_formatter',
         'minor': 'set_minor_formatter,'
     }
-
-    supported_formatter = [
-        'FormatStrFormatter',
+    supported_formatter = {
+        'NullFormatter',
+        'IndexFormatter',
+        'FixedFormatter',
+        'FuncFormatter',
         'StrMethodFormatter',
-    ]
+        'FormatStrFormatter',
+        'ScalarFormatter',
+        'LogFormatter',
+        'LogFormatterExponent',
+        'LogFormatterMathText',
+        'LogFormatterSciNotation',
+        'LogitFormatter',
+        'EngFormatter',
+        'PercentFormatter',
+    }
 
-    name = config.get('name')
-    if name:
-        if name not in supported_formatter:
-            raise ChartError('Unsupported formatter {}'.format(name))
-    else:
-        return
-
-    formatter = getattr(matplotlib.ticker, name, None)
-    if formatter:
-        gca = getattr(axis, methods[on])
-        getattr(gca, methods[which])(formatter(config.get('format')))
+    for key, value in config.items():
+        if key not in axis_methods:
+            continue
+        gca = getattr(axis, axis_methods[key])()
+        for which, data in value.items():
+            if which in formatter_methods:
+                name = data.get('name', 'FormatStrFormatter')
+                if name not in supported_formatter:
+                    continue
+                formatter = getattr(matplotlib.ticker, name)
+                if name in ['FormatStrFormatter', 'StrMethodFormatter']:
+                    getattr(gca, formatter_methods[which])(
+                        formatter(data.get('format')))
+                else:
+                    getattr(gca, formatter_methods[which])(
+                        formatter(*data.get('params', []),
+                                  **data.get('keyword_params', {}))
+                    )
 
 
 def set_axis_legend(axis, params=None):
@@ -64,8 +151,21 @@ def set_axis_legend(axis, params=None):
         axis.legend(**config)
 
 
-def set_axis_label(axis, which='x', params=None):
-    """Set axis label."""
+def set_axis_label(axis, params=None):
+    """
+    Set axis label.
+
+    Example config:
+
+        'labels': {
+            'x': {
+                'text': 'x'
+                'style': {
+
+                }
+            }
+        }
+    """
     config = params or {}
 
     methods = {
@@ -73,8 +173,11 @@ def set_axis_label(axis, which='x', params=None):
         'y': 'set_ylabel',
     }
 
-    method = getattr(axis, methods[which], None)
-    method(config.get('text'), **config.get('style', {}))
+    for key, value in config:
+        if key not in methods:
+            continue
+        method = getattr(axis, methods[key])
+        method(value.get('text', ''), **value.get('style', {}))
 
 
 def build_secondary_axis(axis, on='x'):
