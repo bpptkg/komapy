@@ -5,3 +5,7 @@ dist/
 test_settings*.py
 *.png
 .vscode
+TODO
+_build
+_static
+_template

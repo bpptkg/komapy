@@ -1,6 +1,6 @@
 # KomaPy
 
-Python library for creating customizable BPPTKG Monitoring API chart
+Python library for creating customizable BPPTKG Monitoring API chart.
 
 ## Requirements
 
