@@ -46,9 +46,9 @@ from pandas.plotting import register_matplotlib_converters
 
 from . import extensions
 from . import utils
-from .constants import TIME_ZONE
 from .exceptions import ChartError
 from .layout import Layout
+from .settings import app_settings
 from .series import Series, build_series
 
 register_matplotlib_converters()
@@ -69,7 +69,7 @@ class Chart(object):
         self.title = config.get('title')
         self.theme = config.get('theme', 'classic')
         self.legend = config.get('legend', {})
-        self.timezone = config.get('timezone', TIME_ZONE)
+        self.timezone = config.get('timezone', app_settings.time_zone)
 
         self.starttime = utils.to_pydatetime(
             config['starttime']) if config.get('starttime') else None

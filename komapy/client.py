@@ -27,6 +27,13 @@ def set_access_token(token):
     app_settings.access_token = token
 
 
+def set_timezone(name):
+    """
+    Set app timezone setting.
+    """
+    app_settings.time_zone = name
+
+
 def fetch_bma_as_dictionary(name, params=None):
     """Make a request to the BMA API and return data as Python dictionary."""
     api = bmaclient.MonitoringAPI(

@@ -23,6 +23,7 @@ SUPPORTED_NAMES = [
     'bulletin',
     'energy',
     'magnitude',
+    'slope',
 ]
 
 SUPPORTED_TYPES = {
