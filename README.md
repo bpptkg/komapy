@@ -2,18 +2,17 @@
 
 Python library for creating customizable BPPTKG Monitoring API chart
 
-
 ## Requirements
 
 * Python 3.5+
 * numpy
 * matplotlib
 * pandas
+* cached_property
 
 KomaPy also depends on library developed at internal BPPTKG project:
 
 * bmaclient
-
 
 ## Installation
 
@@ -34,8 +33,8 @@ Install dependency packages:
 Install `bmaclient` package. You can download the package from GitLab
 repository:
 
-    tar -xvf bmaclient-v0.0.2.tar.gz
-    cd bmaclient-v0.0.2/
+    tar -xvf bmaclient-v0.1.0.tar.gz
+    cd bmaclient-v0.1.0/
     pip install -r requirements.txt
     python setup.py install
 
@@ -43,22 +42,18 @@ Install the package:
 
     python setup.py install
 
-
 ## Documentation
 
 See full documentation and tutorials at `docs/` directory.
-
 
 ## Contributing
 
 See `CONTRIBUTING.md` to learn how to contribute to this project.
 
-
 ## Support
 
 This project is maintained by Indra Rudianto. If you have any question about
 this project, you can contact him at <indrarudianto.official@gmail.com>.
-
 
 ## License
 
