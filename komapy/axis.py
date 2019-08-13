@@ -10,6 +10,7 @@ import matplotlib.ticker
 
 from . import processing
 from . import client
+from . import transforms
 from . import utils
 
 from .constants import SUPPORTED_CUSTOMIZERS
@@ -273,17 +274,32 @@ def resolve_data(config):
     agg_field = config.aggregation.pop('on', None)
     index = agg_field
     if agg_field:
-        if source:
-            index = config.fields.index(agg_field)
         func = config.aggregation.get('func', [])
         if not func:
             return plot_data
+        if source:
+            index = config.fields.index(agg_field)
 
         for item in func:
-            for name, params in item.items():
+            for name, callable_or_params in item.items():
                 if name in processing.SUPPORTED_AGGREGATIONS:
                     method = getattr(
                         processing, processing.SUPPORTED_AGGREGATIONS[name])
-                    plot_data[index] = method(plot_data[index], params)
+                    plot_data[index] = method(
+                        plot_data[index], callable_or_params)
+                else:
+                    method = callable_or_params
+                    if not callable(method):
+                        continue
+                    plot_data[index] = method(plot_data[index])
+
+    if config.transform:
+        for callback in config.transform:
+            if isinstance(callback, str):
+                if callback in transforms.SUPPORTED_TRANSFORMS:
+                    callback = getattr(transforms, callback)
+                    plot_data = callback(plot_data, config)
+            elif isinstance(callback, callable):
+                plot_data = callback(plot_data, config)
 
     return plot_data
