@@ -11,3 +11,6 @@ chart engine. So, happy charting.
     quickstart
     subplots
     multiple_series
+    data_fetching
+    data_transformation
+    data_aggregation
