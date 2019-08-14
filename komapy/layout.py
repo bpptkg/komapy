@@ -2,8 +2,6 @@
 KomaPy chart layout.
 """
 
-import re
-
 from .exceptions import ChartError
 from .utils import get_validation_methods
 

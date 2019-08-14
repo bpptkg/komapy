@@ -189,19 +189,24 @@ class Chart(object):
         plot = copy.deepcopy(self.extensions.get('plot', {}))
 
         for key, value in plot.items():
-            if not extensions.SUPPORTED_EXTENSIONS.get(key):
-                continue
-
             if value.pop('show', False):
-                method = getattr(
-                    extensions,
-                    extensions.SUPPORTED_EXTENSIONS[key]['resolver'])
+                if key in extensions.SUPPORTED_EXTENSIONS:
+                    method = getattr(
+                        extensions,
+                        extensions.SUPPORTED_EXTENSIONS[key]['resolver'])
+                    labels.append(value.pop(
+                        'label',
+                        extensions.SUPPORTED_EXTENSIONS[key]['label']))
+                    handle = method(axis, self.starttime,
+                                    self.endtime, **value)
+                else:
+                    handle = None
+                    method = value.pop('resolver', None)
+                    labels.append(value.pop('label', ''))
+                    if isinstance(method, callable):
+                        handle = method(axis, self.starttime,
+                                        self.endtime, **value)
 
-                labels.append(value.pop(
-                    'label',
-                    extensions.SUPPORTED_EXTENSIONS[key]['label']))
-
-                handle = method(axis, self.starttime, self.endtime, **value)
                 if handle:
                     handles.append(handle)
                 else:

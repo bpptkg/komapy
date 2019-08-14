@@ -81,6 +81,9 @@ def build_series(axis, params):
     """Build series plot on the axis based on series data."""
 
     config = Series(**params)
+    if isinstance(config.fields, callable):
+        return config.fields(axis)
+
     plot_data = resolve_data(config)
 
     gca = build_secondary_axis(
