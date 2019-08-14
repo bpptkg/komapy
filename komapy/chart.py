@@ -250,7 +250,10 @@ class Chart(object):
     def save(self, filename):
         """Export chart object to file."""
 
-        self.figure.suptitle(self.title)
+        if self.num_subplots > 1:
+            self.figure.suptitle(self.title)
+        else:
+            plt.title(self.title)
         plt.tight_layout(**self.config.get('tight_layout', {}))
         plt.savefig(filename, **self.save_options)
 

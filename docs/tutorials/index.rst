@@ -9,3 +9,5 @@ chart engine. So, happy charting.
     :maxdepth: 1
 
     quickstart
+    subplots
+    multiple_series
