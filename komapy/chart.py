@@ -40,6 +40,7 @@ chart.save('RB2.png')
 
 import copy
 from cached_property import cached_property
+from collections import Callable
 
 import matplotlib.pyplot as plt
 from pandas.plotting import register_matplotlib_converters
@@ -203,7 +204,7 @@ class Chart(object):
                     handle = None
                     method = value.pop('resolver', None)
                     labels.append(value.pop('label', ''))
-                    if isinstance(method, callable):
+                    if isinstance(method, Callable):
                         handle = method(axis, self.starttime,
                                         self.endtime, **value)
 

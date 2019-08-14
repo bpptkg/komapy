@@ -4,7 +4,7 @@ Matplotlib axes customization wrapper.
 
 from functools import partial
 from functools import lru_cache
-from collections import OrderedDict
+from collections import OrderedDict, Callable
 
 import matplotlib.ticker
 
@@ -299,7 +299,7 @@ def resolve_data(config):
                 if callback in transforms.SUPPORTED_TRANSFORMS:
                     callback = getattr(transforms, callback)
                     plot_data = callback(plot_data, config)
-            elif isinstance(callback, callable):
+            elif isinstance(callback, Callable):
                 plot_data = callback(plot_data, config)
 
     return plot_data

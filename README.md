@@ -4,11 +4,8 @@ Python library for creating customizable BPPTKG Monitoring API chart.
 
 ## Requirements
 
-* Python 3.5+
-* numpy
-* matplotlib
-* pandas
-* cached_property
+KomaPy depends on Python 3.5+ and several packages. You can see them in
+`requirements.txt` file.
 
 KomaPy also depends on library developed at internal BPPTKG project:
 

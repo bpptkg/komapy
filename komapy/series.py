@@ -3,6 +3,7 @@ KomaPy chart series.
 """
 
 from functools import partial
+from collections import Callable
 
 from .constants import SUPPORTED_NAMES, SUPPORTED_TYPES
 from .exceptions import ChartError
@@ -81,7 +82,7 @@ def build_series(axis, params):
     """Build series plot on the axis based on series data."""
 
     config = Series(**params)
-    if isinstance(config.fields, callable):
+    if isinstance(config.fields, Callable):
         return config.fields(axis)
 
     plot_data = resolve_data(config)
