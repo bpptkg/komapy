@@ -250,7 +250,7 @@ class Chart(object):
     def save(self, filename):
         """Export chart object to file."""
 
-        plt.title(self.title)
+        self.figure.suptitle(self.title)
         plt.tight_layout(**self.config.get('tight_layout', {}))
         plt.savefig(filename, **self.save_options)
 
