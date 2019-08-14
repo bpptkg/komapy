@@ -20,7 +20,7 @@
 project = 'KomaPy'
 copyright = '2019, BPPTKG'
 author = 'Indra Rudianto'
-
+release = '0.1.0'
 
 # -- General configuration ---------------------------------------------------
 

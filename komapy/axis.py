@@ -236,7 +236,7 @@ def resolve_data(config):
     sources = OrderedDict([
         ('csv', {
             'resolver': processing.read_csv,
-            'options': 'csv_options'
+            'options': 'csv_params'
         }),
         ('url', {
             'resolver': client.fetch_url_as_dataframe,
