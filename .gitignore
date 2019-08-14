@@ -3,7 +3,7 @@ __pycache__
 build/
 dist/
 test_settings*.py
-*.png
+figure.png
 .vscode
 TODO
 _build
