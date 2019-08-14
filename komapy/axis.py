@@ -178,7 +178,7 @@ def set_axis_label(axis, params=None):
         'y': 'set_ylabel',
     }
 
-    for key, value in config:
+    for key, value in config.items():
         if key not in methods:
             continue
         method = getattr(axis, methods[key])
