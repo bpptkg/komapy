@@ -271,27 +271,33 @@ def resolve_data(config):
         else:
             plot_data.append(field)
 
-    agg_field = config.aggregation.pop('on', None)
-    index = agg_field
-    if agg_field:
-        func = config.aggregation.get('func', [])
-        if not func:
-            return plot_data
-        if source:
-            index = config.fields.index(agg_field)
+    if config.aggregation:
+        for item in config.aggregation:
+            callback = item.get('func')
+            if callback is None:
+                raise ChartError(
+                    'Function name or callable must be set '
+                    'if using data aggregation')
 
-        for item in func:
-            for name, callable_or_params in item.items():
-                if name in processing.SUPPORTED_AGGREGATIONS:
-                    method = getattr(
-                        processing, processing.SUPPORTED_AGGREGATIONS[name])
-                    plot_data[index] = method(
-                        plot_data[index], callable_or_params)
-                else:
-                    method = callable_or_params
-                    if not callable(method):
-                        continue
-                    plot_data[index] = method(plot_data[index])
+            agg_field = item.get('field')
+            if agg_field is None:
+                raise ChartError('Field name must be set '
+                                 'if using data aggregation')
+            if source:
+                index = config.fields.index(agg_field)
+            else:
+                index = agg_field
+
+            params = item.get('params', {})
+
+            if isinstance(callback, Callable):
+                plot_data[index] = callback(plot_data[index], params)
+            elif isinstance(callback, str):
+                if callback in processing.SUPPORTED_AGGREGATIONS:
+                    callback = getattr(
+                        processing,
+                        processing.SUPPORTED_AGGREGATIONS[callback])
+                    plot_data[index] = callback(plot_data[index], params)
 
     if config.transform:
         for callback in config.transform:

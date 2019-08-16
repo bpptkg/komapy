@@ -26,7 +26,7 @@ class Series(object):
         'labels': {},
         'locator': {},
         'formatter': {},
-        'aggregation': {},
+        'aggregation': [],
         'transform': [],
         'secondary': None,
         'legend': {},
