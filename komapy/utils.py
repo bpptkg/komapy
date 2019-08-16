@@ -24,12 +24,13 @@ def to_pydatetime(*args, **kwargs):
     """
     Convert date string to Python non-aware datetime.
     """
+    timezone = kwargs.pop('timezone', None)
     date_obj = parser.parse(*args, **kwargs)
-    if kwargs.get('timezone'):
-        tzinfo = pytz.timezone(kwargs['timezone'])
+    if timezone:
+        tzinfo = pytz.timezone(timezone)
     else:
         tzinfo = pytz.utc
-    return date_obj.replace(tzinfo=date_obj.tzinfo or tzinfo)
+    return tzinfo.localize(date_obj)
 
 
 def to_pydatetime_from_dictionary(data, keys):

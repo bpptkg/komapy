@@ -276,18 +276,18 @@ def resolve_data(config):
         else:
             plot_data.append(field)
 
-    if config.aggregation:
-        for item in config.aggregation:
+    if config.aggregations:
+        for item in config.aggregations:
             callback = item.get('func')
             if callback is None:
                 raise ChartError(
                     'Function name or callable must be set '
-                    'if using data aggregation')
+                    'if using data aggregations')
 
             agg_field = item.get('field')
             if agg_field is None:
                 raise ChartError('Field name must be set '
-                                 'if using data aggregation')
+                                 'if using data aggregations')
             if source:
                 index = config.fields.index(agg_field)
             else:
@@ -304,8 +304,8 @@ def resolve_data(config):
                         processing.SUPPORTED_AGGREGATIONS[callback])
                     plot_data[index] = callback(plot_data[index], params)
 
-    if config.transform:
-        for callback in config.transform:
+    if config.transforms:
+        for callback in config.transforms:
             if isinstance(callback, str):
                 if callback in transforms.SUPPORTED_TRANSFORMS:
                     callback = getattr(transforms, callback)

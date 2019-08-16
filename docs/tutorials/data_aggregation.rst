@@ -22,7 +22,7 @@ etc. See the following example:
         },
         'fields': ['timestamp', 'energy'],
         'xaxis_date': True,
-        'aggregation': [
+        'aggregations': [
             {
                 'func': 'cumsum',
                 'field': 'energy',

@@ -72,11 +72,6 @@ class Chart(object):
         self.legend = config.get('legend', {})
         self.timezone = config.get('timezone', app_settings.time_zone)
 
-        self.starttime = utils.to_pydatetime(
-            config['starttime']) if config.get('starttime') else None
-        self.endtime = utils.to_pydatetime(
-            config['endtime']) if config.get('endtime') else None
-
         config_layout = config.get('layout', {})
         self.layout = Layout(**config_layout)
 
@@ -188,36 +183,43 @@ class Chart(object):
             self.figure, self.axes = plt.subplots(
                 self.num_subplots, num_columns, **options)
 
-    def _build_extension_series(self, axis):
-        if not self.starttime:
+    def _build_extension_series(self, axis, starttime, endtime):
+        if not starttime:
             raise ChartError(
                 'Parameter starttime is required to build extension series')
-        if not self.endtime:
+        if not endtime:
             raise ChartError(
                 'Parameter endtime is required to build extension series')
 
         handles = []
         labels = []
-        plot = copy.deepcopy(self.extensions.get('plot', {}))
+        plot = copy.deepcopy(self.extensions.get('plot', []))
 
-        for key, value in plot.items():
-            if value.pop('show', False):
-                if key in extensions.SUPPORTED_EXTENSIONS:
+        for item in plot:
+            name = item.pop('name', None)
+            if name is None:
+                raise ChartError(
+                    'Parameter name is required to build extension series')
+
+            if isinstance(name, Callable):
+                method = name
+                labels.append(item.pop('label', ''))
+                handle = method(axis, starttime, endtime, **item)
+            else:
+                if name not in extensions.supported_extensions:
+                    continue
+                resolver = extensions.supported_extensions[name]['resolver']
+                if isinstance(resolver, Callable):
+                    method = resolver
+                elif isinstance(resolver, str):
                     method = getattr(
                         extensions,
-                        extensions.SUPPORTED_EXTENSIONS[key]['resolver'])
-                    labels.append(value.pop(
-                        'label',
-                        extensions.SUPPORTED_EXTENSIONS[key]['label']))
-                    handle = method(axis, self.starttime,
-                                    self.endtime, **value)
-                else:
-                    handle = None
-                    method = value.pop('resolver', None)
-                    labels.append(value.pop('label', ''))
-                    if isinstance(method, Callable):
-                        handle = method(axis, self.starttime,
-                                        self.endtime, **value)
+                        extensions.supported_extensions[name]['resolver'])
+
+                labels.append(item.pop(
+                    'label',
+                    extensions.supported_extensions[name].get('label', '')))
+                handle = method(axis, starttime, endtime, **item)
 
                 if handle:
                     handles.append(handle)
@@ -228,7 +230,18 @@ class Chart(object):
 
     def _build_extension_plot(self, axis):
         if self.extensions:
-            handles, labels = self._build_extension_series(axis)
+            starttime = utils.to_pydatetime(
+                self.extensions['starttime'],
+                timezone=self.timezone
+            ) if self.extensions.get('starttime') else None
+
+            endtime = utils.to_pydatetime(
+                self.extensions['endtime'],
+                timezone=self.timezone
+            ) if self.extensions.get('endtime') else None
+
+            handles, labels = self._build_extension_series(
+                axis, starttime, endtime)
             legend = self.extensions.pop('legend', {})
 
             if legend:

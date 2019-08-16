@@ -66,7 +66,7 @@ Then add that transformation function to series config:
         },
         'fields': ['timestamp', 'slope_distance'],
         'xaxis_date': True,
-        'transform': [
+        'transforms': [
             slope_correction,
         ]
     }
