@@ -14,3 +14,5 @@ chart engine. So, happy charting.
     data_fetching
     data_transformation
     data_aggregation
+    extending_plot
+    using_external_configuration
