@@ -95,10 +95,14 @@ class Chart(object):
 
         for layout in self.layout.data:
             layout_series = layout.get('series')
-            if layout_series:
+            if isinstance(layout_series, list):
                 for params in layout_series:
                     config = Series(**params)
                     config.validate()
+            elif isinstance(layout_series, dict):
+                params = layout_series
+                config = Series(**params)
+                config.validate()
 
     @cached_property
     def num_subplots(self):
@@ -112,15 +116,22 @@ class Chart(object):
             axis.legend(handles, labels, **options)
 
     def _build_layout(self, axis, layout):
-        if not layout.get('series'):
-            return None
-
         subplot_axes = []
+        if not layout.get('series'):
+            return subplot_axes
+
         subplot_handles = []
         subplot_labels = []
+        if isinstance(layout['series'], list):
+            for series_data in layout['series']:
+                gca = build_series(axis, series_data)
+                subplot_axes.append(gca)
 
-        for series_data in layout['series']:
-            gca = build_series(axis, series_data)
+                handle, label = gca.get_legend_handles_labels()
+                subplot_handles += handle
+                subplot_labels += label
+        elif isinstance(layout['series'], dict):
+            gca = build_series(axis, layout['series'])
             subplot_axes.append(gca)
 
             handle, label = gca.get_legend_handles_labels()
