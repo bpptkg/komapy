@@ -134,14 +134,19 @@ def set_axis_formatter(axis, params=None):
         gca = getattr(axis, axis_methods[key])()
         for which, data in value.items():
             if which in formatter_methods:
-                name = data.get('name', 'FormatStrFormatter')
-                if name not in supported_formatter:
-                    continue
-                formatter = getattr(matplotlib.ticker, name)
-                if name in ['FormatStrFormatter', 'StrMethodFormatter']:
+                tick_format = data.get('format')
+                if tick_format:
+                    name = data.get('name', 'FormatStrFormatter')
+                    formatter = getattr(matplotlib.ticker, name)
                     getattr(gca, formatter_methods[which])(
                         formatter(data.get('format')))
                 else:
+                    name = data.get('name')
+                    if name is None:
+                        raise ChartError(
+                            'Parameter name is required '
+                            'if using non-default formatter')
+                    formatter = getattr(matplotlib.ticker, name)
                     getattr(gca, formatter_methods[which])(
                         formatter(*data.get('params', []),
                                   **data.get('keyword_params', {}))
