@@ -12,11 +12,11 @@ chart = Chart({
                 'series': {
                     'name': 'edm',
                     'query_params': {
-                            'benchmark': 'BAB0',
-                            'reflector': 'RB2',
-                            'start_at': '2019-04-01',
-                            'end_at': '2019-08-01',
-                            'ci': True
+                        'benchmark': 'BAB0',
+                        'reflector': 'RB2',
+                        'start_at': '2019-04-01',
+                        'end_at': '2019-08-01',
+                        'ci': True
                     },
                     'fields': [
                         'timestamp',
