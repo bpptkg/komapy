@@ -2,12 +2,15 @@
 KomaPy processing engine.
 """
 
+from collections import Callable
 import numpy as np
 import pandas as pd
 from matplotlib import cm
 
+from .exceptions import ChartError
 
-SUPPORTED_AGGREGATIONS = {
+
+supported_aggregations = {
     'cumsum': 'cumsum',
     'add': 'add',
     'subtract': 'subtract',
@@ -20,6 +23,19 @@ SUPPORTED_AGGREGATIONS = {
     'div': 'divide',
     'pow': 'power'
 }
+
+
+def register_aggregation(name, resolver):
+    """
+    Register data aggregation function.
+    """
+    if not isinstance(resolver, Callable):
+        raise ChartError('Data aggregation resolver must be callable')
+
+    if name in supported_aggregations:
+        raise ChartError('Data aggregation name already exists')
+
+    supported_aggregations[name] = resolver
 
 
 def dataframe_from_dictionary(entry):

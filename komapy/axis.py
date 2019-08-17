@@ -278,8 +278,8 @@ def resolve_data(config):
 
     if config.aggregations:
         for item in config.aggregations:
-            callback = item.get('func')
-            if callback is None:
+            func = item.get('func')
+            if func is None:
                 raise ChartError(
                     'Function name or callable must be set '
                     'if using data aggregations')
@@ -295,22 +295,32 @@ def resolve_data(config):
 
             params = item.get('params', {})
 
-            if isinstance(callback, Callable):
+            if isinstance(func, str):
+                if func not in processing.supported_aggregations:
+                    continue
+
+                resolver = processing.supported_aggregations[func]
+                if isinstance(resolver, str):
+                    callback = getattr(processing, resolver)
+                elif isinstance(resolver, Callable):
+                    callback = resolver
                 plot_data[index] = callback(plot_data[index], params)
-            elif isinstance(callback, str):
-                if callback in processing.SUPPORTED_AGGREGATIONS:
-                    callback = getattr(
-                        processing,
-                        processing.SUPPORTED_AGGREGATIONS[callback])
-                    plot_data[index] = callback(plot_data[index], params)
+            elif isinstance(func, Callable):
+                plot_data[index] = callback(plot_data[index], params)
 
     if config.transforms:
-        for callback in config.transforms:
-            if isinstance(callback, str):
-                if callback in transforms.SUPPORTED_TRANSFORMS:
-                    callback = getattr(transforms, callback)
-                    plot_data = callback(plot_data, config)
-            elif isinstance(callback, Callable):
+        for name in config.transforms:
+            if isinstance(name, str):
+                if name not in transforms.supported_transforms:
+                    continue
+
+                resolver = transforms.supported_transforms[name]
+                if isinstance(resolver, str):
+                    callback = getattr(transforms, resolver)
+                elif isinstance(resolver, Callable):
+                    callback = resolver
+                plot_data = callback(plot_data, config)
+            elif isinstance(name, Callable):
                 plot_data = callback(plot_data, config)
 
     return plot_data

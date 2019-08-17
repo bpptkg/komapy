@@ -2,13 +2,28 @@
 KomaPy data transforms module.
 """
 
+from collections import Callable
 import pandas as pd
 
 from .client import fetch_bma_as_dataframe
+from .exceptions import ChartError
 
-SUPPORTED_TRANSFORMS = {
+supported_transforms = {
     'slope_correction': 'slope_correction',
 }
+
+
+def register_transform(name, resolver):
+    """
+    Register data transform function.
+    """
+    if not isinstance(resolver, Callable):
+        raise ChartError('Data transform resolver must be callable')
+
+    if name in supported_transforms:
+        raise ChartError('Data transform name already exists')
+
+    supported_transforms[name] = resolver
 
 
 def slope_correction(data, config):
