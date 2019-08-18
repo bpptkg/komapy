@@ -12,6 +12,16 @@ from . import processing
 from . import exceptions
 from .settings import app_settings
 
+__all__ = [
+    'set_api_key',
+    'set_access_token',
+    'set_api_host',
+    'fetch_bma_as_dictionary',
+    'fetch_bma_as_dataframe',
+    'fetch_url_as_dictionary',
+    'fetch_url_as_dataframe',
+]
+
 
 def set_api_key(key):
     """

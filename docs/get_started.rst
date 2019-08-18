@@ -9,7 +9,7 @@ key before making any chart instance:
 
 .. code-block:: python
 
-    from komapy import set_api_key
+    from komapy.client import set_api_key
 
     set_api_key('API_KEY')
 

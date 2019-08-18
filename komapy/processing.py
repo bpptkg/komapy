@@ -9,6 +9,9 @@ from matplotlib import cm
 
 from .exceptions import ChartError
 
+__all__ = [
+    'register_aggregation',
+]
 
 supported_aggregations = {
     'cumsum': 'cumsum',

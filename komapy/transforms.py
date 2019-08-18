@@ -8,6 +8,10 @@ import pandas as pd
 from .client import fetch_bma_as_dataframe
 from .exceptions import ChartError
 
+__all__ = [
+    'register_transform',
+]
+
 supported_transforms = {
     'slope_correction': 'slope_correction',
 }

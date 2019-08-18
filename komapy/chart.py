@@ -54,6 +54,10 @@ from .series import Series, build_series
 
 register_matplotlib_converters()
 
+__all__ = [
+    'Chart',
+]
+
 
 def apply_theme(name):
     """Apply matplotlib plot theme."""
