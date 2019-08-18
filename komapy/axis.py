@@ -44,7 +44,7 @@ def set_axis_locator(axis, params=None):
         'major': 'set_major_locator',
         'minor': 'set_minor_locator',
     }
-    supported_locator = [
+    supported_locators = [
         'AutoLocator',
         'MaxNLocator',
         'LinearLocator',
@@ -66,8 +66,11 @@ def set_axis_locator(axis, params=None):
             if which not in formatter_methods:
                 continue
             name = data.get('name')
-            if name not in supported_locator:
-                continue
+            if name is None:
+                raise ChartError(
+                    'Parameter name is required if using axis locator')
+            if name not in supported_locators:
+                raise ChartError('Unsupported locator class {}'.format(name))
             locator = getattr(matplotlib.ticker, data.get('name', ''), None)
             if locator:
                 gca = getattr(axis, axis_methods[key])()
@@ -111,7 +114,7 @@ def set_axis_formatter(axis, params=None):
         'major': 'set_major_formatter',
         'minor': 'set_minor_formatter,'
     }
-    supported_formatter = {
+    supported_formatters = {
         'NullFormatter',
         'IndexFormatter',
         'FixedFormatter',
@@ -146,6 +149,9 @@ def set_axis_formatter(axis, params=None):
                         raise ChartError(
                             'Parameter name is required '
                             'if using non-default formatter')
+                    if name not in supported_formatters:
+                        raise ChartError(
+                            'Unsupported formatter class {}'.format(name))
                     formatter = getattr(matplotlib.ticker, name)
                     getattr(gca, formatter_methods[which])(
                         formatter(*data.get('params', []),
