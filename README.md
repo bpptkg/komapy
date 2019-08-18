@@ -9,7 +9,7 @@ KomaPy depends on Python 3.5+ and several packages. You can see them in
 
 KomaPy also depends on library developed at internal BPPTKG project:
 
-* bmaclient
+* bmaclient>=0.1.0
 
 ## Installation
 
@@ -38,6 +38,45 @@ repository:
 Install the package:
 
     python setup.py install
+
+## Quick Start
+
+Here it is a quick start example:
+
+```python
+from komapy import Chart
+from komapy.client import set_api_key
+
+set_api_key('YOUR_API_KEY')
+
+chart = Chart({
+    'title': 'RB2',
+    'theme': 'seaborn',
+    'layout': {
+        'data': [
+            {
+                'series': [
+                    {
+                        'name': 'edm',
+                        'query_params': {
+                            'benchmark': 'BAB0',
+                            'reflector': 'RB2',
+                            'start_at': '2019-04-01',
+                            'end_at': '2019-08-01',
+                            'ci': True
+                        },
+                        'fields': ['timestamp', 'slope_distance'],
+                        'xaxis_date': True
+                    }
+                ]
+            }
+        ]
+    }
+})
+
+chart.render()
+chart.save('RB2.png')
+```
 
 ## Documentation
 

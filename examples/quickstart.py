@@ -1,5 +1,5 @@
-from komapy import set_api_key
 from komapy import Chart
+from komapy.client import set_api_key
 
 set_api_key('YOUR_API_KEY')
 
