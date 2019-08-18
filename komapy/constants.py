@@ -24,6 +24,7 @@ SUPPORTED_NAMES = [
     'energy',
     'magnitude',
     'slope',
+    'users',
 ]
 
 SUPPORTED_TYPES = {
