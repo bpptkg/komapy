@@ -1,5 +1,5 @@
 __pycache__
-*.pyc
+*.py[co]
 build/
 dist/
 test_*
@@ -9,3 +9,4 @@ TODO
 _build
 _static
 _template
+*.egg-info
