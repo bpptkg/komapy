@@ -54,7 +54,12 @@ chart.save('RB2.png')
 
 ## Documentation
 
-See full documentation and tutorials at `docs/` directory.
+Full documentation and tutorials are available at `docs/` directory. You can
+build the documentation by running these commands:
+
+    cd /path/to/komapy/
+    pip install -r requirements.txt
+    sphinx-build -b html docs/ /path/to/build/ 
 
 ## Contributing
 

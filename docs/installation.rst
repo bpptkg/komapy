@@ -2,14 +2,21 @@
 Installation
 ============
 
-Download the latest version from GitLab repository and unpack the archive, for
-example:
+KomaPy package is available on PyPI. You can install it by typing this command:
 
 .. code-block:: bash
 
-    tar -xvf komapy-v0.1.0.tar.gz
+    pip install -U komapy
 
-Make Python virtual environment and activate the virtual environment:
+You can also install KomaPy from our GitLab repository. Download the latest
+version from GitLab repository and unpack the archive:
+
+.. code-block:: bash
+
+    tar -xvf komapy-v<major>.<minor>.<patch>.tar.gz
+
+Where ``major``, ``minor``, and ``patch`` are KomaPy semantic versioning number.
+Then, make Python virtual environment and activate the virtual environment:
 
 .. code-block:: bash
 
@@ -23,18 +30,8 @@ Install dependency packages:
     cd /path/to/komapy/
     pip install -r requirements.txt
 
-Install `bmaclient` package. You can download the package from GitLab
-repository:
-
-.. code-block:: bash
-
-    tar -xvf bmaclient-v0.1.0.tar.gz
-    cd bmaclient-v0.1.0/
-    pip install -r requirements.txt
-    python setup.py install
-
 Install the package:
 
 .. code-block:: bash
 
-    python setup.py install
+    pip install -e .

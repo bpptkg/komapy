@@ -80,7 +80,7 @@ axes are shared on x, so the x axis tick label only drawn on the last axis.
 You can see that the plot title is overlapping with plot area. You can fix that
 by adding ``tight_layout`` property:
 
-.. code_block:: python
+.. code-block:: python
 
     from komapy import Chart, set_api_key
 

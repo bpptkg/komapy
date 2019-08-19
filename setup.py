@@ -20,7 +20,8 @@ setup(
     install_requires=[
         'pandas',
         'matplotlib',
-        'cached_property'
+        'cached_property',
+        'bmaclient>=0.1.0',
     ],
     author='Indra Rudianto',
     author_email='indrarudianto.official@gmail.com',
