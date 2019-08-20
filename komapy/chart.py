@@ -39,7 +39,6 @@ chart.save('RB2.png')
 """
 
 import copy
-from cached_property import cached_property
 from collections import Callable
 
 import matplotlib.pyplot as plt
@@ -103,7 +102,7 @@ class Chart(object):
                 config = Series(**params)
                 config.validate()
 
-    @cached_property
+    @property
     def num_subplots(self):
         """Get number of subplots."""
         return len(self.layout.data)

@@ -8,7 +8,6 @@ KomaPy requires the following packages:
 * numpy>=1.16.2
 * matplotlib>=3.0.0
 * pandas>=0.24.2
-* cached_property
 * sphinx>=2.0.1
 * sphinx_rtd_theme>=0.4.3
 
