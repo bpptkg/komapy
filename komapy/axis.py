@@ -7,6 +7,7 @@ from functools import lru_cache
 from collections import OrderedDict, Callable
 
 import matplotlib.ticker
+import matplotlib.dates
 
 from . import processing
 from . import client
@@ -44,20 +45,6 @@ def set_axis_locator(axis, params=None):
         'major': 'set_major_locator',
         'minor': 'set_minor_locator',
     }
-    supported_locators = [
-        'AutoLocator',
-        'MaxNLocator',
-        'LinearLocator',
-        'LogLocator',
-        'MultipeLocator',
-        'FixedLocator',
-        'IndexLocator',
-        'NullLocator',
-        'SymmetricalLocator',
-        'LogitLocator',
-        'OldAutoLocator',
-        'AutoMinorLocator',
-    ]
 
     for key, value in config.items():
         if key not in axis_methods:
@@ -69,9 +56,14 @@ def set_axis_locator(axis, params=None):
             if name is None:
                 raise ChartError(
                     'Parameter name is required if using axis locator')
-            if name not in supported_locators:
+
+            locator = getattr(matplotlib.ticker, name, None)
+            if locator is None:
+                locator = getattr(matplotlib.dates, name, None)
+
+            if locator is None:
                 raise ChartError('Unsupported locator class {}'.format(name))
-            locator = getattr(matplotlib.ticker, data.get('name', ''), None)
+
             if locator:
                 gca = getattr(axis, axis_methods[key])()
                 getattr(gca, formatter_methods[which])(
@@ -114,22 +106,6 @@ def set_axis_formatter(axis, params=None):
         'major': 'set_major_formatter',
         'minor': 'set_minor_formatter,'
     }
-    supported_formatters = {
-        'NullFormatter',
-        'IndexFormatter',
-        'FixedFormatter',
-        'FuncFormatter',
-        'StrMethodFormatter',
-        'FormatStrFormatter',
-        'ScalarFormatter',
-        'LogFormatter',
-        'LogFormatterExponent',
-        'LogFormatterMathText',
-        'LogFormatterSciNotation',
-        'LogitFormatter',
-        'EngFormatter',
-        'PercentFormatter',
-    }
 
     for key, value in config.items():
         if key not in axis_methods:
@@ -149,10 +125,15 @@ def set_axis_formatter(axis, params=None):
                         raise ChartError(
                             'Parameter name is required '
                             'if using non-default formatter')
-                    if name not in supported_formatters:
+
+                    formatter = getattr(matplotlib.ticker, name, None)
+                    if formatter is None:
+                        formatter = getattr(matplotlib.dates, name, None)
+
+                    if formatter is None:
                         raise ChartError(
                             'Unsupported formatter class {}'.format(name))
-                    formatter = getattr(matplotlib.ticker, name)
+
                     getattr(gca, formatter_methods[which])(
                         formatter(*data.get('params', []),
                                   **data.get('keyword_params', {}))
