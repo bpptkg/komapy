@@ -39,6 +39,7 @@ chart.save('RB2.png')
 """
 
 import copy
+from functools import partial
 from collections import Callable
 
 import matplotlib.pyplot as plt
@@ -46,10 +47,16 @@ from pandas.plotting import register_matplotlib_converters
 
 from . import extensions
 from . import utils
+from .cache import ResolverCache
+from .constants import SUPPORTED_TYPES
 from .exceptions import ChartError
 from .layout import Layout
 from .settings import app_settings
-from .series import Series, build_series
+from .series import Series
+from .axis import (
+    resolve_data, set_axis_formatter, set_axis_label, set_axis_legend,
+    set_axis_locator, customize_axis, build_secondary_axis
+)
 
 register_matplotlib_converters()
 
@@ -86,6 +93,7 @@ class Chart(object):
         self.axes = []
         self.rendered_axes = []
 
+        self._cache = {}
         self._validate()
 
     def _validate(self):
@@ -107,6 +115,39 @@ class Chart(object):
         """Get number of subplots."""
         return len(self.layout.data)
 
+    def _resolve_data(self, series):
+        config = ResolverCache.get_resolver_cache_config(series)
+        cached_resolver = ResolverCache(config)
+        cache_key = hash(cached_resolver)
+        if cache_key in self._cache:
+            return self._cache[cache_key]
+
+        plot_data = resolve_data(series)
+        self._cache[cache_key] = plot_data
+        return plot_data
+
+    def _build_series(self, axis, params):
+        series = Series(**params)
+        if isinstance(series.fields, Callable):
+            return series.fields(axis)
+
+        plot_data = self._resolve_data(series)
+
+        gca = build_secondary_axis(
+            axis, on=series.secondary) if series.secondary else axis
+        plot = getattr(gca, SUPPORTED_TYPES[series.type])
+        partial(plot, *plot_data, **series.plot_params)()
+
+        set_axis_label(gca, params=series.labels)
+        set_axis_locator(gca, params=series.locator)
+        set_axis_formatter(gca, params=series.formatter)
+        set_axis_legend(gca, series.legend)
+
+        gca.set_title(series.title)
+        customize_axis(axis, params)
+
+        return gca
+
     def _build_series_legend(self, axis, handles, labels, params=None):
         options = params or {}
 
@@ -122,14 +163,14 @@ class Chart(object):
         subplot_labels = []
         if isinstance(layout['series'], list):
             for series_data in layout['series']:
-                gca = build_series(axis, series_data)
+                gca = self._build_series(axis, series_data)
                 subplot_axes.append(gca)
 
                 handle, label = gca.get_legend_handles_labels()
                 subplot_handles += handle
                 subplot_labels += label
         elif isinstance(layout['series'], dict):
-            gca = build_series(axis, layout['series'])
+            gca = self._build_series(axis, layout['series'])
             subplot_axes.append(gca)
 
             handle, label = gca.get_legend_handles_labels()
@@ -289,3 +330,9 @@ class Chart(object):
 
         if self.figure:
             plt.close(self.figure)
+
+    def cache_clear(self):
+        """
+        Clear all chart caches.
+        """
+        self._cache.clear()

@@ -2,16 +2,9 @@
 KomaPy chart series.
 """
 
-from functools import partial
-from collections import Callable
-
 from .constants import SUPPORTED_NAMES, SUPPORTED_TYPES
 from .exceptions import ChartError
 from .utils import get_validation_methods
-from .axis import (
-    resolve_data, set_axis_formatter, set_axis_label, set_axis_legend,
-    set_axis_locator, customize_axis, build_secondary_axis
-)
 
 
 class Series(object):
@@ -76,28 +69,3 @@ class Series(object):
 
         for method in validation_methods:
             getattr(self, method)()
-
-
-def build_series(axis, params):
-    """Build series plot on the axis based on series data."""
-
-    config = Series(**params)
-    if isinstance(config.fields, Callable):
-        return config.fields(axis)
-
-    plot_data = resolve_data(config)
-
-    gca = build_secondary_axis(
-        axis, on=config.secondary) if config.secondary else axis
-    plot = getattr(gca, SUPPORTED_TYPES[config.type])
-    partial(plot, *plot_data, **config.plot_params)()
-
-    set_axis_label(gca, params=config.labels)
-    set_axis_locator(gca, params=config.locator)
-    set_axis_formatter(gca, params=config.formatter)
-    set_axis_legend(gca, config.legend)
-
-    gca.set_title(config.title)
-    customize_axis(axis, params)
-
-    return gca
