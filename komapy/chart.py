@@ -78,7 +78,7 @@ class Chart(object):
         self.config = copy.deepcopy(config)
 
         self.title = config.get('title')
-        self.theme = config.get('theme', 'classic')
+        self.theme = config.get('theme')
         self.legend = config.get('legend', {})
         self.timezone = config.get('timezone', app_settings.time_zone)
 
