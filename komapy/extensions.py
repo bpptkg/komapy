@@ -16,7 +16,7 @@ __all__ = [
     'plot_dome_appearance',
 ]
 
-supported_extensions = {
+extension_registers = {
     'explosion': {
         'resolver': 'plot_explosion_line',
         'label': '',
@@ -35,10 +35,10 @@ def register_extension(name, resolver, **kwargs):
     if not isinstance(resolver, Callable):
         raise ChartError('Extension plot resolver must be callable')
 
-    if name in supported_extensions:
+    if name in extension_registers:
         raise ChartError('Extension plot name already exists')
 
-    supported_extensions[name] = dict(resolver=resolver, **kwargs)
+    extension_registers[name] = dict(resolver=resolver, **kwargs)
 
 
 def plot_explosion_line(axis, starttime, endtime, **options):

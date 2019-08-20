@@ -52,7 +52,7 @@ from .constants import SUPPORTED_TYPES
 from .exceptions import ChartError
 from .layout import Layout
 from .settings import app_settings
-from .series import Series
+from .series import Series, addon_registers
 from .axis import (
     resolve_data, set_axis_formatter, set_axis_label, set_axis_legend,
     set_axis_locator, customize_axis, build_secondary_axis
@@ -126,6 +126,13 @@ class Chart(object):
         self._cache[cache_key] = plot_data
         return plot_data
 
+    def _build_addons(self, axis, addons):
+        for addon in addons:
+            name = addon.pop('name', None)
+            if name in addon_registers:
+                callback = addon_registers[name]
+                callback(axis, **addon)
+
     def _build_series(self, axis, params):
         series = Series(**params)
         if isinstance(series.fields, Callable):
@@ -145,6 +152,9 @@ class Chart(object):
 
         gca.set_title(series.title)
         customize_axis(axis, params)
+
+        if series.addons:
+            self._build_addons(gca, series.addons)
 
         return gca
 
@@ -250,19 +260,19 @@ class Chart(object):
                 labels.append(item.pop('label', ''))
                 handle = method(axis, starttime, endtime, **item)
             else:
-                if name not in extensions.supported_extensions:
+                if name not in extensions.extension_registers:
                     continue
-                resolver = extensions.supported_extensions[name]['resolver']
+                resolver = extensions.extension_registers[name]['resolver']
                 if isinstance(resolver, Callable):
                     method = resolver
                 elif isinstance(resolver, str):
                     method = getattr(
                         extensions,
-                        extensions.supported_extensions[name]['resolver'])
+                        extensions.extension_registers[name]['resolver'])
 
                 labels.append(item.pop(
                     'label',
-                    extensions.supported_extensions[name].get('label', '')))
+                    extensions.extension_registers[name].get('label', '')))
                 handle = method(axis, starttime, endtime, **item)
 
                 if handle:

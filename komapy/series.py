@@ -2,9 +2,28 @@
 KomaPy chart series.
 """
 
+from collections import Callable
+
 from .constants import SUPPORTED_NAMES, SUPPORTED_TYPES
 from .exceptions import ChartError
 from .utils import get_validation_methods
+
+addon_registers = {
+
+}
+
+
+def register_addon(name, resolver):
+    """
+    Register add-on function.
+    """
+    if not isinstance(resolver, Callable):
+        raise ChartError('Add-on resolver must be callable')
+
+    if name in addon_registers:
+        raise ChartError('Add-on name already exists')
+
+    addon_registers[name] = resolver
 
 
 class Series(object):
@@ -31,6 +50,7 @@ class Series(object):
         'csv': None,
         'csv_params': {},
         'grid': {},
+        'addons': [],
     }
 
     def __init__(self, **kwargs):

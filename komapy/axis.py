@@ -298,10 +298,10 @@ def resolve_data(config):
     if config.transforms:
         for name in config.transforms:
             if isinstance(name, str):
-                if name not in transforms.supported_transforms:
+                if name not in transforms.transform_registers:
                     continue
 
-                resolver = transforms.supported_transforms[name]
+                resolver = transforms.transform_registers[name]
                 if isinstance(resolver, str):
                     callback = getattr(transforms, resolver)
                 elif isinstance(resolver, Callable):

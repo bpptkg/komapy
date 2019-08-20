@@ -12,7 +12,7 @@ __all__ = [
     'register_transform',
 ]
 
-supported_transforms = {
+transform_registers = {
     'slope_correction': 'slope_correction',
 }
 
@@ -24,10 +24,10 @@ def register_transform(name, resolver):
     if not isinstance(resolver, Callable):
         raise ChartError('Data transform resolver must be callable')
 
-    if name in supported_transforms:
+    if name in transform_registers:
         raise ChartError('Data transform name already exists')
 
-    supported_transforms[name] = resolver
+    transform_registers[name] = resolver
 
 
 def slope_correction(data, config):
