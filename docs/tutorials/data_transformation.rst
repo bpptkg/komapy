@@ -85,3 +85,34 @@ Then add that transformation function to series config:
 
     chart.render()
     chart.save('figure.png')
+
+You can register your own data transformation function in order to add the
+function by its registered name instead of adding the function directly in the
+series config:
+
+.. code-block:: python
+
+    from komapy.transforms import register_transform
+
+    register_transform('slope_correction', slope_correction)
+
+Then, in the chart series config, you can access your own data transform
+function by its registered name:
+
+.. code-block:: python
+
+    series = {
+        'name': 'edm',
+        'query_params': {
+            'start_at': '2019-04-01',
+            'end_at': '2019-08-01',
+            'benchmark': 'BAB0',
+            'reflector': 'RB2',
+            'ci': True
+        },
+        'fields': ['timestamp', 'slope_distance'],
+        'xaxis_date': True,
+        'transforms': [
+            'slope_correction',
+        ]
+    }
