@@ -49,24 +49,22 @@ def plot_explosion_line(axis, starttime, endtime, **options):
     are treated as local timezone, i.e. Asia/Jakarta.
     """
     handle = None
-    start = starttime.replace(tzinfo=None)
-    end = endtime.replace(tzinfo=None)
+    date_format = r'%Y-%m-%d %H:%M:%S'
 
     params = {
         'eventtype': 'EXPLOSION',
         'nolimit': True,
+        'eventdate__gte': starttime.strftime(date_format),
+        'eventdate__lt': endtime.strftime(date_format)
     }
     data = fetch_bma_as_dataframe('bulletin', params)
 
     eventdate = resolve_timestamp(dataframe_or_empty(data, 'eventdate'))
     if eventdate.empty:
         return handle
-    else:
-        eventdate = eventdate.dt.tz_localize(None).dt.to_pydatetime()
 
     for timestamp in eventdate:
-        if start <= timestamp and timestamp <= end:
-            handle = axis.axvline(timestamp, **options)
+        handle = axis.axvline(timestamp, **options)
 
     return handle
 
