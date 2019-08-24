@@ -57,19 +57,19 @@ def set_axis_locator(axis, params=None):
                 raise ChartError(
                     'Parameter name is required if using axis locator')
 
-            locator = getattr(matplotlib.ticker, name, None)
-            if locator is None:
-                locator = getattr(matplotlib.dates, name, None)
+            for attr in [matplotlib.ticker, matplotlib.dates]:
+                locator = getattr(attr, name, None)
+                if locator:
+                    break
 
             if locator is None:
                 raise ChartError('Unsupported locator class {}'.format(name))
 
-            if locator:
-                gca = getattr(axis, axis_methods[key])()
-                getattr(gca, formatter_methods[which])(
-                    locator(*data.get('params', []),
-                            **data.get('keyword_params', {}))
-                )
+            gca = getattr(axis, axis_methods[key])()
+            getattr(gca, formatter_methods[which])(
+                locator(*data.get('params', []),
+                        **data.get('keyword_params', {}))
+            )
 
 
 def set_axis_formatter(axis, params=None):
