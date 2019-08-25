@@ -15,8 +15,13 @@ Let's create an chart using KomaPy chart engine:
     chart.render()
     chart.save('figure.png')
 
-This will create empty figure named ``figure.png``. Now let's add a chart series
-to plot ``seismicity`` data:
+This will create an empty figure named ``figure.png``. After you've wrote your
+chart config, you have to call ``render`` method in order to render the chart.
+Render method will build Matplotlib figure, axis, make a request to the BMA API,
+and plot the data to the axis instance. ``save`` method will save the chart
+object into image or other file type depending on the file extension name.
+
+Now let's add a chart series to plot ``seismicity`` data:
 
 .. code-block:: python
 

@@ -7,7 +7,7 @@ tick formatting API. The formatter operates on a single tick value. Default
 formatter that KomaPy uses is ``FormatStrFormatter``. See the following example
 on how to use axis formatter in KomaPy chart.
 
-Let's create a single EDM plot as follows:
+Let's create a single EDM plot:
 
 .. code-block:: python
 
@@ -43,7 +43,7 @@ Let's create a single EDM plot as follows:
 
 .. image:: images/axis_formatter/af1.png
 
-Now add fomatter entry in the series config as follows:
+Now add fomatter entry in the series config:
 
 .. code-block:: python
 

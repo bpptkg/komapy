@@ -8,9 +8,9 @@ correction after data had been resolved. You can specify one or more
 transformation functions in the list. KomaPy will apply the transformation
 function in the order.
 
-Input argument for transformation function is resolved ``data`` (a list of plot
-data with type of Pandas DataFrame) and series ``config``. The function returns
-a list of transformed plot data.
+Input arguments for transformation function are resolved ``data`` (a list of
+plot data with type of Pandas DataFrame) and a series ``config``. The function
+returns a list of transformed plot data.
 
 Here it the example of transformation function to apply EDM slope distance
 correction:
@@ -51,7 +51,7 @@ correction:
         return [data[0], corrected_data]
 
 
-Then add that transformation function to series config:
+Then add that transformation function to the series config:
 
 .. code-block:: python
 

@@ -2,12 +2,12 @@
 Data Fetching
 =============
 
-Most of plot data can be fetch just by providing BMA API name like ``doas``,
+Most of plot data can be fetched just by providing BMA API name like ``doas``,
 ``edm``, ``tiltmeter``, etc. Field lookup filtering on the BMA API can be
-provided within field ``query_params``. KomaPy will do data query for you, so
-you don't need to do it yourself. You just need to specify which data field you
-want to plot. Maybe you want to plot ``timestamp`` vs ``slope_distance``, or
-maybe you want to plot ``eventdate`` vs ``duration``. See the following example:
+provided within field ``query_params``. KomaPy will do data query for you. You
+just need to specify which data field you want to plot. Maybe you want to plot
+``timestamp`` vs ``slope_distance``, or maybe you want to plot ``eventdate`` vs
+``duration``. See the following example:
 
 .. code-block:: python
 
@@ -74,7 +74,8 @@ Another example of using JSON URL:
     }
 
 If you set multiple data resolver in the series config, KomaPy will resolve the
-data in the following order: CSV, JSON URL, and BMA API name.
+data in the following order: CSV, JSON URL, and BMA API name. On it resolved the
+data, the other resolvers will be left untouched.
 
 If you want to plot Python object using KomaPy, you can directly pass it to the
 ``fields`` list. For example:

@@ -4,8 +4,8 @@ Data Aggregation
 
 Data aggregation allows to manipulate plot data for specific field without
 affecting another field before it get rendered into the chart object. Some
-example include computing cumulative sum, multiplying data with constant factor,
-etc. See the following example:
+example include computing cumulative sum, multiplying data with a constant
+factor, etc. See the following example:
 
 .. code-block:: python
 
@@ -50,10 +50,10 @@ etc. See the following example:
 
 Data aggregation contains a list of dictionary entry of aggregation function.
 Aggregation ``func`` is the name of aggregation function. If its type equal to
-string, KomaPy will assume that it is a built-in aggreation function. You can
+string, KomaPy will assume that it is a built-in aggregation function. You can
 set it to the some callbable function to build your custom aggreation function.
 Aggregation ``field`` is required to tell KomaPy on what data field the callback
-should process. This can be a name of data field in the ``fields`` list or
+should target. This can be a name of data field in the ``fields`` list or
 integer index if you use plain data. You can specify optional callback
 parameters in ``params``. Here it is an example of cumulative sum aggregation
 function:

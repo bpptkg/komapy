@@ -3,7 +3,7 @@ Extension Plot
 ==============
 
 Extension plot is a feature provided by KomaPy to accommodate non-series data
-plot in chart object. One example is to plot vertical axis line indicating
+plot in a chart object. One example is to plot vertical axis line indicating
 explosion event. Another example is to plot other data that should be drawn on
 each subplot figures, so you don't have to write chart config in each series.
 
@@ -67,7 +67,7 @@ To make extension plot you need to set ``starttime`` and ``endtime`` fields. It
 indicates on what time range an explosion lines are drawn. Extension plot entry
 is added in ``plot`` field. Each entry has at least ``name`` field. It could be
 a string of built-ins extension plot functions or callable function if you want
-to build your own extension plot. Other parameters may be set like ``label``,
+to build your own extension plot. Other parameters can be set like ``label``,
 ``color``, etc.
 
 If you want to create your own extension plot, you can assign ``name`` field to

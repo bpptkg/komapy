@@ -3,8 +3,8 @@ Extending Plot
 ==============
 
 In some situations, you may want to extend and customize axis for advanced
-usage. KomaPy provides several a way to accommodate them. You can extend plot
-using a function with current axis as an argument and return the axis. Here it
+usage. KomaPy provides several ways to accommodate them. You can extend plot
+using a function with current axis as an argument and return that axis. Here it
 is an example of extending plot using function:
 
 .. code-block:: python

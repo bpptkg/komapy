@@ -2,8 +2,8 @@
 Tutorials
 =========
 
-In this section we will demonstrate on how to create a chart using KomaPy
-chart engine. So, happy charting.
+In this section we will demonstrate how to create a chart using KomaPy chart
+engine. So, happy charting.
 
 .. toctree::
     :maxdepth: 1

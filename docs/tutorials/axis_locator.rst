@@ -6,7 +6,7 @@ Axis locator enable you to customize tick location. The locators handle
 autoscaling of the view limits based on the data limits. Axis locator in KomaPy
 act as a wrapper of Matplotlib tick locator API.
 
-Let's create a single EDM plot as follows:
+Let's create a single EDM plot:
 
 .. code-block:: python
 
