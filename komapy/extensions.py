@@ -12,8 +12,6 @@ from .utils import resolve_timestamp
 
 __all__ = [
     'register_extension',
-    'plot_explosion_line',
-    'plot_dome_appearance',
 ]
 
 extension_registers = {

@@ -24,6 +24,8 @@ def set_axis_locator(axis, params=None):
 
     Example config:
 
+    .. code-block:: python
+
         'locator': {
             'x': {
                 'major': {
@@ -77,6 +79,8 @@ def set_axis_formatter(axis, params=None):
     Set axis formatter.
 
     Example config:
+
+    .. code-block:: python
 
         'formatter': {
             'x': {
@@ -153,6 +157,8 @@ def set_axis_label(axis, params=None):
     Set axis label.
 
     Example config:
+
+    .. code-block:: python
 
         'labels': {
             'x': {

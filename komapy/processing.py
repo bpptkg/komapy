@@ -11,6 +11,12 @@ from .exceptions import ChartError
 
 __all__ = [
     'register_aggregation',
+    'dataframe_from_dictionary',
+    'empty_dataframe',
+    'dataframe_or_empty',
+    'read_csv',
+    'read_excel',
+    'get_rgb_color',
 ]
 
 supported_aggregations = {

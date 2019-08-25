@@ -17,3 +17,4 @@ allow user to create customizable chart with ease and simplicity.
     contributing
     support
     license
+    references/index

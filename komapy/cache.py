@@ -8,16 +8,18 @@ class ResolverCache(object):
     It takes a single argument, i.e config, which is a dictionary of data
     resolver settings. Here it is an example:
 
-    config = {
-        'name': 'edm',
-        'benchmark': 'BAB0',
-        'reflector': 'RB2',
-        'start_at': '2019-04-01',
-        'end_at': '2019-08-01',
-        'ci': True,
-    }
+    .. code-block:: python
 
-    Key 'csv', 'url', and 'name' is reserved as data resolver sources. Other
+        config = {
+            'name': 'edm',
+            'benchmark': 'BAB0',
+            'reflector': 'RB2',
+            'start_at': '2019-04-01',
+            'end_at': '2019-08-01',
+            'ci': True,
+        }
+
+    Key ``csv``, ``url``, and ``name`` is reserved as data resolver sources. Other
     keys left as optional parameters.
     """
 
