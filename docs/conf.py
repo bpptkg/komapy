@@ -1,3 +1,5 @@
+import datetime
+
 # Configuration file for the Sphinx documentation builder.
 #
 # This file only contains a selection of the most common options. For a full
@@ -18,7 +20,7 @@
 # -- Project information -----------------------------------------------------
 
 project = 'KomaPy'
-copyright = '2019, BPPTKG'
+copyright = '{}, BPPTKG'.format(datetime.datetime.now().year)
 author = 'Indra Rudianto'
 release = '0.1.0'
 
