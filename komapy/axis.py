@@ -3,7 +3,6 @@ Matplotlib axes customization wrapper.
 """
 
 from functools import partial
-from functools import lru_cache
 from collections import OrderedDict, Callable
 
 import matplotlib.ticker
@@ -21,6 +20,11 @@ from .exceptions import ChartError
 def set_axis_locator(axis, params=None):
     """
     Set axis locator.
+
+    :param axis: Matplotlib axis instance.
+    :type axis: :class:`matplotlib.axes.Axes`
+    :param params: Axis locator parameters.
+    :type params: dict, optional
 
     Example config:
 
@@ -77,6 +81,11 @@ def set_axis_locator(axis, params=None):
 def set_axis_formatter(axis, params=None):
     """
     Set axis formatter.
+
+    :param axis: Matplotlib axis instance.
+    :type axis: :class:`matplotlib.axes.Axes`
+    :param params: Axis formatter parameters.
+    :type params: dict, optional
 
     Example config:
 
@@ -145,7 +154,14 @@ def set_axis_formatter(axis, params=None):
 
 
 def set_axis_legend(axis, params=None):
-    """Set axis legend."""
+    """
+    Set axis legend.
+    
+    :param axis: Matplotlib axis instance.
+    :type axis: :class:`matplotlib.axes.Axes`
+    :param params: Axis legend parameters.
+    :type params: dict, optional
+    """
     config = params or {}
 
     if config.pop('show', False):
@@ -155,6 +171,11 @@ def set_axis_legend(axis, params=None):
 def set_axis_label(axis, params=None):
     """
     Set axis label.
+
+    :param axis: Matplotlib axis instance.
+    :type axis: :class:`matplotlib.axes.Axes`
+    :param params: Axis label parameters.
+    :type params: dict, optional
 
     Example config:
 
@@ -184,7 +205,14 @@ def set_axis_label(axis, params=None):
 
 
 def build_secondary_axis(axis, on='x'):
-    """Build twin secondary axis."""
+    """
+    Build twin secondary axis.
+    
+    :param axis: Matplotlib axis instance.
+    :type axis: :class:`matplotlib.axes.Axes`
+    :param on: Name of axis to build secondary axis (x, y).
+    :type on: str, default: x
+    """
     methods = {
         'x': 'twinx',
         'y': 'twiny',
@@ -196,6 +224,11 @@ def build_secondary_axis(axis, on='x'):
 def customize_axis(axis, params):
     """
     Customize axis based-on given params.
+
+    :param axis: Matplotlib axis instance.
+    :type axis: :class:`matplotlib.axes.Axes`
+    :param params: Axis modifier parameters.
+    :type params: dict
     """
     config = params.copy()
 
@@ -222,7 +255,6 @@ def customize_axis(axis, params):
             customizer()
 
 
-@lru_cache(maxsize=128)
 def resolve_data(config):
     """
     Resolve plot data.
@@ -230,6 +262,9 @@ def resolve_data(config):
     Plot data is resolved in the following order, CSV, JSON URL, and BMA API
     name. Each of sources has certain resolver. If none of the sources found
     in the chart config, data source is treated as plain object.
+
+    :param config: KomaPy series config instance.
+    :type config: :class:`komapy.series.Series`
     """
     sources = OrderedDict([
         ('csv', {
