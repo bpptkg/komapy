@@ -3,6 +3,7 @@ KomaPy processing engine.
 """
 
 from collections import Callable
+
 import numpy as np
 import pandas as pd
 from matplotlib import cm

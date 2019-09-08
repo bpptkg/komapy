@@ -41,24 +41,22 @@ Example:
 """
 
 import copy
-from functools import partial
 from collections import Callable
+from functools import partial
 
 import matplotlib.pyplot as plt
 from pandas.plotting import register_matplotlib_converters
 
-from . import extensions
-from . import utils
+from . import extensions, utils
+from .axis import (build_secondary_axis, customize_axis, resolve_data,
+                   set_axis_formatter, set_axis_label, set_axis_legend,
+                   set_axis_locator)
 from .cache import ResolverCache
 from .constants import SUPPORTED_TYPES
 from .exceptions import ChartError
 from .layout import Layout
-from .settings import app_settings
 from .series import Series, addon_registers
-from .axis import (
-    resolve_data, set_axis_formatter, set_axis_label, set_axis_legend,
-    set_axis_locator, customize_axis, build_secondary_axis
-)
+from .settings import app_settings
 
 register_matplotlib_converters()
 

@@ -2,17 +2,13 @@
 Matplotlib axes customization wrapper.
 """
 
+from collections import Callable, OrderedDict
 from functools import partial
-from collections import OrderedDict, Callable
 
-import matplotlib.ticker
 import matplotlib.dates
+import matplotlib.ticker
 
-from . import processing
-from . import client
-from . import transforms
-from . import utils
-
+from . import client, processing, transforms, utils
 from .constants import SUPPORTED_CUSTOMIZERS
 from .exceptions import ChartError
 

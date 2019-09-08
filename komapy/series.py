@@ -5,11 +5,7 @@ KomaPy chart series.
 from collections import Callable, OrderedDict
 from functools import partial
 
-from . import client
-from . import processing
-from . import utils
-from . import transforms
-
+from . import client, processing, transforms, utils
 from .constants import SUPPORTED_NAMES, SUPPORTED_TYPES
 from .exceptions import ChartError
 from .utils import get_validation_methods

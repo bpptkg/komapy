@@ -3,6 +3,7 @@ KomaPy data transforms module.
 """
 
 from collections import Callable
+
 import pandas as pd
 
 from .client import fetch_bma_as_dataframe

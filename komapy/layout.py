@@ -5,6 +5,7 @@ KomaPy chart layout.
 from .exceptions import ChartError
 from .utils import get_validation_methods
 
+
 class Layout(object):
     """A layout object."""
 

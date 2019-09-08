@@ -2,9 +2,10 @@
 KomaPy utility module.
 """
 
-import re
 import base64
+import re
 import uuid
+
 import pytz
 from dateutil import parser
 

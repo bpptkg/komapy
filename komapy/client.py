@@ -3,13 +3,12 @@ KomaPy data fetcher and reader.
 """
 
 import json
-from six.moves.urllib.request import urlopen
-from six.moves.urllib.parse import urlencode
 
 import bmaclient
+from six.moves.urllib.parse import urlencode
+from six.moves.urllib.request import urlopen
 
-from . import processing
-from . import exceptions
+from . import exceptions, processing
 from .settings import app_settings
 
 __all__ = [
