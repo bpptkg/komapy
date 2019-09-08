@@ -255,16 +255,16 @@ def customize_axis(axis, params):
             customizer()
 
 
-def resolve_data(config):
+def resolve_data(series):
     """
     Resolve plot data.
 
     Plot data is resolved in the following order, CSV, JSON URL, and BMA API
     name. Each of sources has certain resolver. If none of the sources found
-    in the chart config, data source is treated as plain object.
+    in the chart series, data source is treated as plain object.
 
-    :param config: KomaPy series config instance.
-    :type config: :class:`komapy.series.Series`
+    :param series: KomaPy series config instance.
+    :type series: :class:`komapy.series.Series`
     """
     sources = OrderedDict([
         ('csv', {
@@ -282,30 +282,30 @@ def resolve_data(config):
     ])
 
     for name in sources:
-        source = getattr(config, name, None)
+        source = getattr(series, name, None)
         if source:
             resolve = sources[name]['resolver']
-            options = getattr(config, sources[name]['options'], {})
+            options = getattr(series, sources[name]['options'], {})
             break
 
     if source:
         resource = resolve(source, options)
         func = partial(processing.dataframe_or_empty, resource)
-        iterator = map(func, config.fields)
+        iterator = map(func, series.fields)
     else:
-        iterator = config.fields
+        iterator = series.fields
 
     plot_data = []
     for i, field in enumerate(iterator):
-        if i == 0 and config.xaxis_date:
+        if i == 0 and series.xaxis_date:
             plot_data.append(utils.resolve_timestamp(field))
-        elif i == 1 and config.yaxis_date:
+        elif i == 1 and series.yaxis_date:
             plot_data.append(utils.resolve_timestamp(field))
         else:
             plot_data.append(field)
 
-    if config.aggregations:
-        for item in config.aggregations:
+    if series.aggregations:
+        for item in series.aggregations:
             func = item.get('func')
             if func is None:
                 raise ChartError(
@@ -317,7 +317,7 @@ def resolve_data(config):
                 raise ChartError('Field name must be set '
                                  'if using data aggregations')
             if source:
-                index = config.fields.index(agg_field)
+                index = series.fields.index(agg_field)
             else:
                 index = agg_field
 
@@ -336,8 +336,8 @@ def resolve_data(config):
             elif isinstance(func, Callable):
                 plot_data[index] = callback(plot_data[index], params)
 
-    if config.transforms:
-        for name in config.transforms:
+    if series.transforms:
+        for name in series.transforms:
             if isinstance(name, str):
                 if name not in transforms.transform_registers:
                     continue
@@ -347,8 +347,8 @@ def resolve_data(config):
                     callback = getattr(transforms, resolver)
                 elif isinstance(resolver, Callable):
                     callback = resolver
-                plot_data = callback(plot_data, config)
+                plot_data = callback(plot_data, series)
             elif isinstance(name, Callable):
-                plot_data = callback(plot_data, config)
+                plot_data = callback(plot_data, series)
 
     return plot_data
