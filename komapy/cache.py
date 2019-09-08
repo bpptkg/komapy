@@ -6,7 +6,7 @@ class ResolverCache(object):
     An object representing resolver cache.
 
     It takes a single argument, i.e config, which is a dictionary of data
-    resolver settings. Here it is an example:
+    resolver settings. Here it is an example config:
 
     .. code-block:: python
 
@@ -19,8 +19,30 @@ class ResolverCache(object):
             'ci': True,
         }
 
-    Key ``csv``, ``url``, and ``name`` is reserved as data resolver sources. Other
-    keys left as optional parameters.
+    Key ``csv``, ``url``, and ``name`` are reserved as data resolver sources.
+    Other keys left as optional parameters.
+
+    Example:
+
+    .. code-block:: python
+
+        from komapy.series import Series
+        from komapy.axis import resolve_data
+
+        series = Series(name='edm', fields=['timestamp', 'slope_distance'],
+                        xaxis_date=True)
+        cache = []
+
+        def cached_resolver(series):
+            config = ResolverCache.get_resolver_cache_config(series)
+            resolver = ResolverCache(config)
+            key = hash(resolver)
+
+            if key in cache:
+                return cache[key]
+            data = resolve_data(series)
+            cache[key] = data
+            return data
     """
 
     def __init__(self, config):
@@ -39,6 +61,11 @@ class ResolverCache(object):
         """
         Get resolver cache config from KomaPy series instance. It's simply
         takes data resolver key and optional query or csv parameters.
+
+        :param series: KomaPy series config instance.
+        :type series: :class:`komapy.series.Series`
+        :return: Dictionary of :class:`komapy.cache.ResolverCache` config.
+        :rtype: dict
         """
         config = {}
 
