@@ -25,6 +25,9 @@ __all__ = [
 def set_api_key(key):
     """
     Set BMA API key to enable accessing the API.
+
+    :param key: BMA API key.
+    :type key: str
     """
     app_settings.api_key = key
 
@@ -32,6 +35,9 @@ def set_api_key(key):
 def set_access_token(token):
     """
     Set BMA access token to enable accessing the API.
+
+    :param token: BMA API access token.
+    :type token: str
     """
     app_settings.access_token = token
 
@@ -39,6 +45,9 @@ def set_access_token(token):
 def set_timezone(name):
     """
     Set app timezone setting.
+
+    :param name: Time zone name, e.g. Asia/Jakarta.
+    :type name: str
     """
     app_settings.time_zone = name
 
@@ -46,12 +55,24 @@ def set_timezone(name):
 def set_api_host(name):
     """
     Override BMA API default host.
+
+    :param name: Host name or IP address.
+    :type name: str
     """
     app_settings.host = name
 
 
 def fetch_bma_as_dictionary(name, params=None):
-    """Make a request to the BMA API and return data as Python dictionary."""
+    """
+    Make a request to the BMA API and return data as Python dictionary.
+
+    :param name: BMA API name, e.g. doas, edm, tiltmeter, etc.
+    :type name: str
+    :param params: BMA field query filtering parameters.
+    :type params: dict
+    :return: Dictionary of resolved BMA API data.
+    :rtype: dict
+    """
     api = bmaclient.MonitoringAPI(
         api_key=app_settings.api_key,
         access_token=app_settings.access_token)
@@ -66,13 +87,31 @@ def fetch_bma_as_dictionary(name, params=None):
 
 
 def fetch_bma_as_dataframe(name, params=None):
-    """Make a request to the BMA API and return data as Pandas DataFrame."""
+    """
+    Make a request to the BMA API and return data as Pandas DataFrame.
+
+    :param name: BMA API name, e.g. doas, edm, tiltmeter, etc.
+    :type name: str
+    :param params: BMA field query filtering parameters.
+    :type params: dict
+    :return: :class:`pandas.DataFrame` of resolved BMA API data.
+    :rtype: :class:`pandas.DataFrame`
+    """
     response = fetch_bma_as_dictionary(name, params)
     return processing.dataframe_from_dictionary(response)
 
 
 def fetch_url_as_dictionary(url, params=None):
-    """Make a request to the URL and return data as Python dictionary."""
+    """
+    Make a request to the URL and return data as Python dictionary.
+
+    :param url: URL that returns JSON data.
+    :type url: str
+    :param params: URL query filtering parameters.
+    :type params: dict
+    :return: Dictionary of resolved URL content.
+    :rtype: dict
+    """
     full_query_params = '?{}'.format(urlencode(params)) if params else ''
     full_url_with_params = '{url}{query_params}'.format(
         url=url,
@@ -86,6 +125,15 @@ def fetch_url_as_dictionary(url, params=None):
 
 
 def fetch_url_as_dataframe(url, params=None):
-    """Make a request to the URL and return data as Pandas DataFrame."""
+    """
+    Make a request to the URL and return data as Pandas DataFrame.
+    
+    :param url: URL that returns JSON data.
+    :type url: str
+    :param params: URL query filtering parameters.
+    :type params: dict
+    :return: :class:`pandas.DataFrame` of resolved URL content.
+    :rtype: :class:`pandas.DataFrame`
+    """
     response = fetch_url_as_dictionary(url, params)
     return processing.dataframe_from_dictionary(response)
