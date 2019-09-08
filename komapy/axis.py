@@ -268,7 +268,7 @@ def resolve_data(series):
     :return: A list of resolved plot data whose type of
              :class:`pandas.DataFrame` if using CSV, JSON URL, or BMA API name.
              Otherwise, it returns native object.
-    :rtype: :class:`pandas.DataFrame` or native object
+    :rtype: list of :class:`pandas.DataFrame` or native object
     """
     sources = OrderedDict([
         ('csv', {
