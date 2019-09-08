@@ -156,7 +156,7 @@ def set_axis_formatter(axis, params=None):
 def set_axis_legend(axis, params=None):
     """
     Set axis legend.
-    
+
     :param axis: Matplotlib axis instance.
     :type axis: :class:`matplotlib.axes.Axes`
     :param params: Axis legend parameters.
@@ -207,7 +207,7 @@ def set_axis_label(axis, params=None):
 def build_secondary_axis(axis, on='x'):
     """
     Build twin secondary axis.
-    
+
     :param axis: Matplotlib axis instance.
     :type axis: :class:`matplotlib.axes.Axes`
     :param on: Name of axis to build secondary axis (x, y).
@@ -265,6 +265,10 @@ def resolve_data(series):
 
     :param series: KomaPy series config instance.
     :type series: :class:`komapy.series.Series`
+    :return: A list of resolved plot data whose type of
+             :class:`pandas.DataFrame` if using CSV, JSON URL, or BMA API name.
+             Otherwise, it returns native object.
+    :rtype: :class:`pandas.DataFrame` or native object
     """
     sources = OrderedDict([
         ('csv', {
