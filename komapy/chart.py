@@ -116,14 +116,17 @@ class Chart(object):
         return len(self.layout.data)
 
     def _resolve_data(self, series):
-        config = ResolverCache.get_resolver_cache_config(series)
-        cached_resolver = ResolverCache(config)
-        cache_key = hash(cached_resolver)
-        if cache_key in self._cache:
-            return self._cache[cache_key]
+        if self.config.get('use_cache', False):
+            config = ResolverCache.get_resolver_cache_config(series)
+            cached_resolver = ResolverCache(config)
+            cache_key = hash(cached_resolver)
+            if cache_key in self._cache:
+                return self._cache[cache_key]
 
-        plot_data = resolve_data(series)
-        self._cache[cache_key] = plot_data
+            plot_data = resolve_data(series)
+            self._cache[cache_key] = plot_data
+        else:
+            plot_data = resolve_data(series)
         return plot_data
 
     def _build_addons(self, axis, addons):
