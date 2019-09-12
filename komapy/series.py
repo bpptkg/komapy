@@ -472,6 +472,7 @@ class Series(object):
     available_parameters = {
         'addons': [],
         'aggregations': [],
+        'axis': None,
         'csv_params': {},
         'csv': None,
         'fields': [],

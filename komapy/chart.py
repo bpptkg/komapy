@@ -94,6 +94,7 @@ class Chart(object):
         self.rendered_axes = []
 
         self._cache = {}
+        self._plotted_axes = []
         self._validate()
 
     def _validate(self):
@@ -143,8 +144,14 @@ class Chart(object):
 
         plot_data = self._resolve_data(series)
 
-        gca = build_secondary_axis(
-            axis, on=series.secondary) if series.secondary else axis
+        if series.axis:
+            gca = self._plotted_axes[series.axis]
+        else:
+            if series.secondary:
+                gca = build_secondary_axis(axis, on=series.secondary)
+            else:
+                gca = axis
+
         plot = getattr(gca, SUPPORTED_TYPES[series.type])
         partial(plot, *plot_data, **series.plot_params)()
 
@@ -180,8 +187,13 @@ class Chart(object):
                 subplot_axes.append(gca)
 
                 handle, label = gca.get_legend_handles_labels()
-                subplot_handles += handle
-                subplot_labels += label
+                for index, _ in enumerate(handle):
+                    if handle[index] not in subplot_handles:
+                        subplot_handles.append(handle[index])
+                for index, _ in enumerate(label):
+                    if label[index] not in subplot_labels:
+                        subplot_labels.append(label[index])
+                self._plotted_axes.append(gca)
         elif isinstance(layout['series'], dict):
             gca = self._build_series(axis, layout['series'])
             subplot_axes.append(gca)
