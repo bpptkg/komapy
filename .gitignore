@@ -10,3 +10,4 @@ _build
 _static
 _template
 *.egg-info
+archives
