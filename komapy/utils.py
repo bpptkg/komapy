@@ -9,6 +9,8 @@ import uuid
 import pytz
 from dateutil import parser
 
+import pandas as pd
+
 
 def resolve_timestamp(data):
     """
@@ -17,7 +19,7 @@ def resolve_timestamp(data):
     if data.empty:
         return data
 
-    data = data.astype('datetime64[s]')
+    data = pd.to_datetime(data)
     return data
 
 
