@@ -334,6 +334,7 @@ def resolve_data(series):
                     callback = resolver
                 plot_data[index] = callback(plot_data[index], params)
             elif isinstance(func, Callable):
+                callback = func
                 plot_data[index] = callback(plot_data[index], params)
 
     if series.transforms:
@@ -349,6 +350,7 @@ def resolve_data(series):
                     callback = resolver
                 plot_data = callback(plot_data, series)
             elif isinstance(name, Callable):
+                callback = name
                 plot_data = callback(plot_data, series)
 
     return plot_data
