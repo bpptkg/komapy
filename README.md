@@ -2,6 +2,17 @@
 
 Python library for creating customizable BPPTKG Monitoring API chart.
 
+## Use Cases
+
+KomaPy is suitable for the following applications:
+
+* Building automated static chart figure
+* Embedding into a web application for generating pre-defined chart configuration
+* Quick data analysis and visualization
+* Data correlation and processing
+* Generating high quality chart for publication
+* Many more
+
 ## Requirements
 
 KomaPy depends on Python 3.5+ and several packages. You can see them in
