@@ -132,10 +132,18 @@ class Chart(object):
 
     def _build_addons(self, axis, addons):
         for addon in addons:
-            name = addon.pop('name', None)
-            if name in addon_registers:
-                callback = addon_registers[name]
-                callback(axis, **addon)
+            if isinstance(addon, dict):
+                name = addon.pop('name', None)
+                if isinstance(name, str):
+                    if name in addon_registers:
+                        callback = addon_registers[name]
+                        callback(axis, **addon)
+                elif isinstance(name, Callable):
+                    callback = name
+                    callback(axis, **addon)
+            elif isinstance(addon, Callable):
+                callback = addon
+                callback(axis)
 
     def _build_series(self, axis, params):
         series = Series(**params)
