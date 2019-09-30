@@ -16,6 +16,7 @@ SUPPORTED_NAMES = [
     'rsam_infrasound',
     'rsam_seismic_band',
     'thermal',
+    'thermal2',
     'tiltmeter',
     'tiltmeter_raw',
     'tiltborehole',
