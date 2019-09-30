@@ -2,7 +2,6 @@ __pycache__
 *.py[co]
 build/
 dist/
-test_*
 figure.png
 .vscode
 TODO
@@ -11,3 +10,4 @@ _static
 _template
 *.egg-info
 archives
+test_settings/
