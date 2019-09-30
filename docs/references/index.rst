@@ -2,6 +2,17 @@
 References
 ==========
 
+
+Properties
+----------
+
+.. toctree::
+
+    series_props
+
+Modules
+-------
+
 .. toctree::
     :maxdepth: 1
 
