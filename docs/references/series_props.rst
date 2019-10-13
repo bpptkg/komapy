@@ -115,6 +115,53 @@ Example:
 
     series = Series(name='energy', fields=['timestamp', 'energy'])
 
+field_options
+-------------
+
+.. note::
+    New in version 0.2.0
+
+type: dict
+
+default: {}
+
+Optional parameters to be passed to the ``fields`` if the type is a function.
+
+Example:
+
+.. code-block:: python
+
+    def plot_series(axis, **options):
+        if options.get('x'):
+            # Do something with axis if value 'x' is in options.
+        return axis
+
+    series = Series(
+        fields=plot_series,
+        field_options={
+            'x': 2,
+            'y': 3
+        }
+    )
+
+    # or set the field_options in the chart configuration
+
+    config = {
+        'layout': {
+            'data': [
+                {
+                    'series': {
+                        'fields': plot_series,
+                        'field_options': {
+                            'x': 2,
+                            'y': 3
+                        }
+                    }
+                }
+            ]
+        }
+    }
+
 formatter
 ---------
 
