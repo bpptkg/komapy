@@ -364,6 +364,9 @@ class Chart(object):
         if self.figure:
             plt.close(self.figure)
 
+        plt.clf()
+        plt.close('all')
+
     def cache_clear(self):
         """
         Clear all chart caches.
