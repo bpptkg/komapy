@@ -18,4 +18,5 @@ engine. So, happy charting.
     axis_locator
     extension_plot
     extending_plot
+    addons_plot
     using_external_configuration
