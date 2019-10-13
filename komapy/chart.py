@@ -148,7 +148,7 @@ class Chart(object):
     def _build_series(self, axis, params):
         series = Series(**params)
         if isinstance(series.fields, Callable):
-            return series.fields(axis)
+            return series.fields(axis, **series.field_options)
 
         plot_data = self._resolve_data(series)
 

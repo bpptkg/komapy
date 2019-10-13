@@ -78,6 +78,7 @@ class Series(object):
         'csv_params': {},
         'csv': None,
         'fields': [],
+        'field_options': {},
         'formatter': {},
         'grid': {},
         'labels': {},
