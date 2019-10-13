@@ -53,8 +53,8 @@ def slope_correction(data, config):
         return data
 
     slope_data = pd.DataFrame()
-    for item in data:
-        slope_data.join(item)
+    slope_data['timestamp'] = data[0]
+    slope_data['slope_distance'] = data[1]
 
     corrected_data = slope_data.apply(
         lambda item: item.slope_distance + err_data.where(
