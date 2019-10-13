@@ -289,7 +289,7 @@ def resolve_data(series):
             break
 
     if source:
-        resource = resolve(source, options)
+        resource = resolve(source, **options)
         func = partial(processing.dataframe_or_empty, resource)
         iterator = map(func, series.fields)
     else:
