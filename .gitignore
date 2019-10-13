@@ -11,3 +11,5 @@ _template
 *.egg-info
 archives
 test_settings/
+venv3
+venv
