@@ -25,15 +25,19 @@ def resolve_timestamp(data):
 
 def to_pydatetime(*args, **kwargs):
     """
-    Convert date string to Python non-aware datetime.
+    Convert date string to Python datetime. If date string contains a timezone
+    info, it will return datetime aware. If timezone argument is provided, it
+    will convert current timezone from date string to timezone in the argument.
     """
     timezone = kwargs.pop('timezone', None)
     date_obj = parser.parse(*args, **kwargs)
     if timezone:
-        tzinfo = pytz.timezone(timezone)
+        tz = pytz.timezone(timezone)
     else:
-        tzinfo = pytz.utc
-    return tzinfo.localize(date_obj)
+        tz = pytz.utc
+    if date_obj.tzinfo:
+        return date_obj.astimezone(tz)
+    return tz.localize(date_obj)
 
 
 def to_pydatetime_from_dictionary(data, keys):

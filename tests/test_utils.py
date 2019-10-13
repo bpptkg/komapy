@@ -2,7 +2,7 @@ import unittest
 from komapy import utils
 
 
-class TestUtils(unittest.TestCase):
+class UtilsTest(unittest.TestCase):
 
     def test_to_pydatetime_from_dictionary(self):
         data = [
