@@ -12,7 +12,7 @@ def read(filename):
 
 setup(
     name='komapy',
-    version='0.1.0',
+    version='0.2.0',
     description='Python library for creating customizable BPPTKG Monitoring API chart',
     long_description=read('README.md'),
     long_description_content_type='text/markdown',
@@ -20,7 +20,7 @@ setup(
     install_requires=[
         'pandas',
         'matplotlib',
-        'bmaclient>=0.1.0',
+        'bmaclient>=0.2.0',
     ],
     author='Indra Rudianto',
     author_email='indrarudianto.official@gmail.com',
