@@ -55,7 +55,7 @@ def plot_explosion_line(axis, starttime, endtime, **options):
         'eventdate__gte': starttime.strftime(date_format),
         'eventdate__lt': endtime.strftime(date_format)
     }
-    data = fetch_bma_as_dataframe('bulletin', params)
+    data = fetch_bma_as_dataframe('bulletin', **params)
 
     eventdate = resolve_timestamp(dataframe_or_empty(data, 'eventdate'))
     if eventdate.empty:

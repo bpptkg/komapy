@@ -43,7 +43,7 @@ def slope_correction(data, config):
     timestamp__lt = config.query_params.get(
         'timestamp__lt') or config.query_params.get('end_at')
 
-    err_data = fetch_bma_as_dataframe('slope', {
+    err_data = fetch_bma_as_dataframe('slope', **{
         'timestamp__gte': timestamp__gte,
         'timestamp__lt': timestamp__lt,
         'benchmark': config.query_params['benchmark'],

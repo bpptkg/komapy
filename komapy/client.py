@@ -62,7 +62,7 @@ def set_api_host(name):
     app_settings.host = name
 
 
-def fetch_bma_as_dictionary(name, params=None):
+def fetch_bma_as_dictionary(name, **params):
     """
     Make a request to the BMA API and return data as Python dictionary.
 
@@ -82,11 +82,10 @@ def fetch_bma_as_dictionary(name, params=None):
     method = api.get_fetch_method(name)
     if not method:
         raise exceptions.ChartError('Unknown parameter name {}'.format(name))
-    query_params = params or {}
-    return method(**query_params)
+    return method(**params)
 
 
-def fetch_bma_as_dataframe(name, params=None):
+def fetch_bma_as_dataframe(name, **params):
     """
     Make a request to the BMA API and return data as Pandas DataFrame.
 
@@ -97,11 +96,11 @@ def fetch_bma_as_dataframe(name, params=None):
     :return: :class:`pandas.DataFrame` of resolved BMA API data.
     :rtype: :class:`pandas.DataFrame`
     """
-    response = fetch_bma_as_dictionary(name, params)
+    response = fetch_bma_as_dictionary(name, **params)
     return processing.dataframe_from_dictionary(response)
 
 
-def fetch_url_as_dictionary(url, params=None):
+def fetch_url_as_dictionary(url, **params):
     """
     Make a request to the URL and return data as Python dictionary.
 
@@ -124,7 +123,7 @@ def fetch_url_as_dictionary(url, params=None):
     return data
 
 
-def fetch_url_as_dataframe(url, params=None):
+def fetch_url_as_dataframe(url, **params):
     """
     Make a request to the URL and return data as Pandas DataFrame.
     
@@ -135,5 +134,5 @@ def fetch_url_as_dataframe(url, params=None):
     :return: :class:`pandas.DataFrame` of resolved URL content.
     :rtype: :class:`pandas.DataFrame`
     """
-    response = fetch_url_as_dictionary(url, params)
+    response = fetch_url_as_dictionary(url, **params)
     return processing.dataframe_from_dictionary(response)
