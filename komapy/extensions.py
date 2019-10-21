@@ -2,6 +2,7 @@
 KomaPy extension plots.
 """
 
+import uuid
 import datetime
 from collections import Callable
 
@@ -53,7 +54,8 @@ def plot_explosion_line(axis, starttime, endtime, **options):
         'eventtype': 'EXPLOSION',
         'nolimit': True,
         'eventdate__gte': starttime.strftime(date_format),
-        'eventdate__lt': endtime.strftime(date_format)
+        'eventdate__lt': endtime.strftime(date_format),
+        'request_id': uuid.uuid4().hex
     }
     data = fetch_bma_as_dataframe('bulletin', **params)
 
