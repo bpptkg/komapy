@@ -2,10 +2,10 @@
 Add-ons Plot
 ============
 
-Add-ons plot enable you to add other plot to the current axis in particular
-subplot figure. Add-ons plot is a list which contains a dictionary of add-ons
+Add-on plot enable you to add another plot to the current axis in particular
+subplot figure. Add-on plot is a list which contains a dictionary of add-on
 configurations. The only required key is ``name``. Other keys are left as
-optional parameters and will be passed to the particular add-ons resolver.
+optional parameters and will be passed to the particular add-on resolver.
 
 For example:
 
@@ -47,9 +47,9 @@ For example:
     chart.render()
     chart.save('figure.png')
 
-Sometimes, you need to access the addons plot name by its string name instead of
-native function, you can add your addons plot function to the KomaPy global
-addons registers:
+Sometimes, you need to access the add-on plot name by its string name instead of
+native function, you can add your add-on plot function to the KomaPy global
+add-ons registers:
 
 .. code-block:: python
 
