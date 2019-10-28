@@ -13,6 +13,14 @@ API key before making any chart instance:
 
     set_api_key('API_KEY')
 
+You can also use access token (``Bearer`` authorization header) from JWT
+or OAuth2 authentication:
+
+.. code-block:: python
+
+    from komapy.client import set_access_token
+
+    set_access_token('ACCESS_TOKEN')
 
 Now you are ready to create a KomaPy chart. Here it is a simple example to plot
 EDM RB2 data:
@@ -76,4 +84,4 @@ BMA API, and ``query_params`` holds information about data query filtering:
 The property ``fields`` is required and it tells KomaPy that it should plot
 field named ``timestamp`` on x axis, and field named ``slope_distance`` on y
 axis. The property ``xaxis_date`` tells that on the x axis, it should using
-datetime type instead of regular type.
+date time type instead of regular type.
