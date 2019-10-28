@@ -9,7 +9,7 @@ Let's create an chart using KomaPy chart engine:
     from komapy import Chart
 
     chart = Chart({
-        # Write config in here.
+        # Write chart config here.
     })
 
     chart.render()
@@ -49,9 +49,8 @@ Now let's add a chart series to plot ``seismicity`` data:
 .. image:: images/quickstart/q1.png
 
 
-Now let change plot type to ``bar`` plot, and add filter to plot data only on
-time range between ``2019-05-01`` and ``2019-08-01``, and event type equal to
-``ROCKFALL``:
+Now let change plot type to ``bar`` plot, and add filter to plot data between
+``2019-05-01`` and ``2019-08-01``, and event type equal to ``ROCKFALL``:
 
 .. code-block:: python
 
