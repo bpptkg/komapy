@@ -88,6 +88,7 @@ class Chart(object):
         self.figure_options = config.get('figure_options', {})
         self.save_options = config.get('save_options', {})
         self.extensions = config.get('extensions', {})
+        self.tight_layout = config.get('tight_layout', {})
         self.rc_params = config.get('rc_params', {})
 
         self.figure = None
@@ -367,7 +368,7 @@ class Chart(object):
             self.figure.suptitle(self.title)
         else:
             plt.title(self.title)
-        plt.tight_layout(**self.config.get('tight_layout', {}))
+        plt.tight_layout(**self.tight_layout)
         plt.savefig(filename, **self.save_options)
 
     def clear(self):
