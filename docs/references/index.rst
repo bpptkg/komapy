@@ -8,6 +8,7 @@ Properties
 
 .. toctree::
 
+    figure_props
     series_props
 
 Modules
