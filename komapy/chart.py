@@ -134,7 +134,8 @@ class Chart(object):
             plot_data = resolve_data(series, resource=data)
             self._cache[cache_key] = data
         else:
-            plot_data = resolve_data(series)
+            data = self._fetch_resource(series, **kwargs)
+            plot_data = resolve_data(series, resource=data)
         return plot_data
 
     def _build_addons(self, axis, addons):
