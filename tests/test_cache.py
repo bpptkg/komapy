@@ -18,7 +18,7 @@ def bma_fetch_resource(series, **kwargs):
     Mock BMA API name resolver.
     """
     path = os.path.join(FIXTURE_DIR, 'tiltmeter_selokopo.json')
-    with open(path, 'rb') as f:
+    with open(path, 'r') as f:
         data = json.load(f)
 
     return pd.DataFrame(data)
