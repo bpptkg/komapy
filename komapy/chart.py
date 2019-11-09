@@ -48,9 +48,9 @@ import matplotlib.pyplot as plt
 from pandas.plotting import register_matplotlib_converters
 
 from . import extensions, utils
-from .axis import (build_secondary_axis, customize_axis, resolve_data,
-                   set_axis_formatter, set_axis_label, set_axis_legend,
-                   set_axis_locator)
+from .axis import (build_secondary_axis, customize_axis, fetch_resource,
+                   resolve_data, set_axis_formatter, set_axis_label,
+                   set_axis_legend, set_axis_locator)
 from .cache import ResolverCache
 from .constants import SUPPORTED_TYPES
 from .exceptions import ChartError
@@ -88,6 +88,7 @@ class Chart(object):
         self.figure_options = config.get('figure_options', {})
         self.save_options = config.get('save_options', {})
         self.extensions = config.get('extensions', {})
+        self.rc_params = config.get('rc_params', {})
 
         self.figure = None
         self.axes = []
@@ -116,16 +117,22 @@ class Chart(object):
         """Get number of subplots."""
         return len(self.layout.data)
 
-    def _resolve_data(self, series):
+    def _fetch_resource(self, series, **kwargs):
+        return fetch_resource(series, **kwargs)
+
+    def _resolve_data(self, series, **kwargs):
         if self.config.get('use_cache', False):
             config = ResolverCache.get_resolver_cache_config(series)
             cached_resolver = ResolverCache(config)
             cache_key = hash(cached_resolver)
             if cache_key in self._cache:
-                return self._cache[cache_key]
+                data = self._cache[cache_key]
+                plot_data = resolve_data(series, resource=data)
+                return plot_data
 
-            plot_data = resolve_data(series)
-            self._cache[cache_key] = plot_data
+            data = self._fetch_resource(series, **kwargs)
+            plot_data = resolve_data(series, resource=data)
+            self._cache[cache_key] = data
         else:
             plot_data = resolve_data(series)
         return plot_data
@@ -326,9 +333,13 @@ class Chart(object):
                 if show:
                     self.figure.legend(handles, labels, **legend)
 
+    def _update_rc_params(self):
+        plt.rcParams.update(self.rc_params)
+
     def render(self):
         """Render chart object."""
 
+        self._update_rc_params()
         apply_theme(self.theme)
 
         self.axes = [None] * self.num_subplots
