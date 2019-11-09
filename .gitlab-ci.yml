@@ -20,3 +20,8 @@ python37:
   image: python:3.7
   stage: test
   script: tox -e py37
+
+python38:
+  image: python3.8
+  stage: test
+  script: tox -e py38
