@@ -251,20 +251,18 @@ def customize_axis(axis, params):
             customizer()
 
 
-def resolve_data(series):
+def fetch_resource(series, **kwargs):
     """
-    Resolve plot data.
+    Fetch series resource.
 
-    Plot data is resolved in the following order, CSV, JSON URL, and BMA API
-    name. Each of sources has certain resolver. If none of the sources found
-    in the chart series, data source is treated as plain object.
+    Series resource is resolved in the following order, CSV, JSON URL, and BMA
+    API name. If none of the sources found in the chart series configuration,
+    it returns None.
 
     :param series: KomaPy series config instance.
     :type series: :class:`komapy.series.Series`
-    :return: A list of resolved plot data whose type of
-             :class:`pandas.DataFrame` if using CSV, JSON URL, or BMA API name.
-             Otherwise, it returns native object.
-    :rtype: list of :class:`pandas.DataFrame` or native object
+    :return: :class:`pandas.DataFrame` object if using CSV, JSON URL, or
+             BMA API name. Otherwise, it returns None.
     """
     sources = OrderedDict([
         ('csv', {
@@ -290,6 +288,32 @@ def resolve_data(series):
 
     if source:
         resource = resolve(source, **options)
+    else:
+        resource = None
+
+    return resource
+
+
+def resolve_data(series, **kwargs):
+    """
+    Resolve plot data.
+
+    Plot data is resolved in the following order, CSV, JSON URL, and BMA API
+    name. Each of sources has certain resolver. If none of the sources found
+    in the chart series, data source is treated as plain object.
+
+    :param series: KomaPy series config instance.
+    :type series: :class:`komapy.series.Series`
+    :return: A list of resolved plot data whose type of
+             :class:`pandas.DataFrame` if using CSV, JSON URL, or BMA API name.
+             Otherwise, it returns native object.
+    :rtype: list of :class:`pandas.DataFrame` or native object
+    """
+    if kwargs.get('resource') is not None:
+        resource = kwargs.get('resource')
+    else:
+        resource = fetch_resource(series, **kwargs)
+    if resource is not None:
         func = partial(processing.dataframe_or_empty, resource)
         iterator = map(func, series.fields)
     else:
@@ -316,7 +340,7 @@ def resolve_data(series):
             if agg_field is None:
                 raise ChartError('Field name must be set '
                                  'if using data aggregations')
-            if source:
+            if resource is not None:
                 index = series.fields.index(agg_field)
             else:
                 index = agg_field
