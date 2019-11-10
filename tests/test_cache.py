@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 
 from komapy.chart import Chart
+from komapy.cache import ResolverCache
 from komapy.decorators import counter
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -174,6 +175,60 @@ class FetchResourceCacheTest(unittest.TestCase):
         chart = CSVChart(config)
         chart.render()
         self.assertEqual(csv_fetch_resource.count, 1)
+
+
+class ResolverCacheTest(unittest.TestCase):
+
+    def test_cache_config_with_bma_name(self):
+        config = {
+            'name': 'seismicity',
+            'eventdate__gte': '2019-10-01 12:00:00',
+            'eventdate__lt': '2019-10-30 12:00:00',
+            'eventtype': 'MP',
+            'nolimit': True,
+        }
+        another_config = {
+            'eventdate__lt': '2019-10-30 12:00:00',
+            'name': 'seismicity',
+            'nolimit': True,
+            'eventdate__gte': '2019-10-01 12:00:00',
+            'eventtype': 'MP',
+        }
+        cache = ResolverCache(config)
+        another_cache = ResolverCache(another_config)
+        self.assertEqual(hash(cache), hash(another_cache))
+
+    def test_cache_config_with_csv(self):
+        config = {
+            'csv': 'http://api.example.com/data.csv',
+            'delimiter': ';',
+            'columns': ['timestamp', 'x', 'y', 'temperature']
+        }
+        another_config = {
+            'columns': ['timestamp', 'x', 'y', 'temperature'],
+            'delimiter': ';',
+            'csv': 'http://api.example.com/data.csv',
+        }
+        cache = ResolverCache(config)
+        another_cache = ResolverCache(another_config)
+        self.assertEqual(hash(cache), hash(another_cache))
+
+    def test_cache_config_with_url(self):
+        config = {
+            'url': 'http://api.example.com/data/',
+            'timestamp__gte': '2019-11-01 12:00:00',
+            'timestamp__lt': '2019-11-05 12:00:00',
+            'type': 'json',
+        }
+        another_config = {
+            'timestamp__gte': '2019-11-01 12:00:00',
+            'type': 'json',
+            'url': 'http://api.example.com/data/',
+            'timestamp__lt': '2019-11-05 12:00:00',
+        }
+        cache = ResolverCache(config)
+        another_cache = ResolverCache(another_config)
+        self.assertEqual(hash(cache), hash(another_cache))
 
 
 if __name__ == '__main__':

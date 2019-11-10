@@ -54,7 +54,9 @@ class ResolverCache(object):
         return False
 
     def __hash__(self):
-        return hash(frozenset(self.config.items()))
+        casted_config = dict([(str(key), str(value))
+                              for key, value in self.config.items()])
+        return hash(frozenset(casted_config.items()))
 
     @classmethod
     def get_resolver_cache_config(self, series):
