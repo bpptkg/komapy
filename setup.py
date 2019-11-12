@@ -12,7 +12,7 @@ def read(filename):
 
 setup(
     name='komapy',
-    version='0.2.2',
+    version='0.3.0',
     description='Python library for creating customizable BPPTKG Monitoring API chart',
     long_description=read('README.md'),
     long_description_content_type='text/markdown',
