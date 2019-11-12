@@ -100,10 +100,10 @@ rendered image should look like as follows:
 .. image:: images/axis_formatter/af2.png
 
 
-If you want other formatter class, you can pass ``name`` field in the series
+If you want another formatter class, you can pass ``name`` field in the series
 config and provides additional ``params`` (list) and ``keyword_params``
 (dictionary) arguments. Most of Matplotlib axis formatter class will be
-accepted. Here it is the example:
+accepted. Here it is an example:
 
 .. code-block:: python
 

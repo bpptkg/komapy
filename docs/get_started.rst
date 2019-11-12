@@ -60,9 +60,9 @@ EDM RB2 data:
 As you can see, we create an instance of ``Chart`` class and define its
 properties like ``title``, ``theme``, ``layout``, etc. You may want to pay
 attention to the ``layout`` property. A chart layout contains ``data`` property,
-which represent matplotlib subplots figure, and it holds information about
+which represent Matplotlib subplots figure, and it holds information about
 ``series`` property for each figure. A ``series`` property represent a
-matplotlib ``axis`` instance in KomaPy realm.
+Matplotlib ``axis`` instance in KomaPy realm.
 
 In a chart config, you can define one or more layout data, and one or more
 series data. The default chart layout in KomaPy is column-based layout, but you

@@ -3,8 +3,8 @@ KomaPy
 ======
 
 KomaPy is Python library for creating customizable BPPTKG Monitoring API chart.
-KomaPy design philosophy is to only use a config to create customizable chart.
-It wraps matplotlib axes object and provides BMA data fetching mechanism that
+KomaPy design philosophy is only using a config to create a customizable chart.
+It wraps Matplotlib axes object and provides BMA data fetching mechanism that
 allow user to create customizable chart with ease and simplicity.
 
 .. toctree::
