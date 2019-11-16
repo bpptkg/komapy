@@ -134,18 +134,18 @@ class Series(object):
         for method in validation_methods:
             getattr(self, method)()
 
-    def resolve_data(self):
+    def fetch_resource(self, **kwargs):
         """
-        Resolve plot data.
+        Fetch series resource.
 
-        Plot data is resolved in the following order, CSV, JSON URL, and BMA API
-        name. Each of sources has certain resolver. If none of the sources found
-        in the chart series, data source is treated as plain object.
+        Series resource is resolved in the following order, CSV, JSON URL, and
+        BMA API name. If none of the sources found in the chart series
+        configuration, it returns None.
 
-        :return: A list of resolved plot data whose type of
-                 :class:`pandas.DataFrame` if using CSV, JSON URL, or BMA API
-                 name. Otherwise, it returns native object.
-        :rtype: list of :class:`pandas.DataFrame` or native object
+        :param series: KomaPy series config instance.
+        :type series: :class:`komapy.series.Series`
+        :return: :class:`pandas.DataFrame` object if using CSV, JSON URL, or
+                 BMA API name. Otherwise, it returns None.
         """
         sources = OrderedDict([
             ('csv', {
@@ -168,9 +168,30 @@ class Series(object):
                 resolve = sources[name]['resolver']
                 options = getattr(self, sources[name]['options'], {})
                 break
-        
+
         if source:
-            resource = resolve(source, options)
+            resource = resolve(source, **options)
+        else:
+            resource = None
+
+        return resource
+
+    def resolve_data(self, **kwargs):
+        """
+        Resolve plot data.
+
+        Plot data is resolved in the following order, CSV, JSON URL, and BMA API
+        name. Each of sources has certain resolver. If none of the sources found
+        in the chart series, data source is treated as plain object.
+
+        :return: A list of resolved plot data whose type of
+                 :class:`pandas.DataFrame` if using CSV, JSON URL, or BMA API
+                 name. Otherwise, it returns native object.
+        :rtype: list of :class:`pandas.DataFrame` or native object
+        """
+        resource = self.fetch_resource(**kwargs)
+
+        if resource is not None:
             func = partial(processing.dataframe_or_empty, resource)
             iterator = map(func, self.fields)
         else:
@@ -196,8 +217,8 @@ class Series(object):
                 agg_field = item.get('field')
                 if agg_field is None:
                     raise ChartError('Field name must be set '
-                                    'if using data aggregations')
-                if source:
+                                     'if using data aggregations')
+                if resource is not None:
                     index = self.fields.index(agg_field)
                 else:
                     index = agg_field
