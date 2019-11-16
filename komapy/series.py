@@ -89,6 +89,7 @@ class Series(object):
         'query_params': {},
         'secondary': None,
         'title': None,
+        'tertiary': {},
         'transforms': [],
         'type': 'line',
         'url': None,

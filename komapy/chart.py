@@ -48,9 +48,9 @@ import matplotlib.pyplot as plt
 from pandas.plotting import register_matplotlib_converters
 
 from . import extensions, utils
-from .axis import (build_secondary_axis, customize_axis, fetch_resource,
-                   resolve_data, set_axis_formatter, set_axis_label,
-                   set_axis_legend, set_axis_locator)
+from .axis import (build_secondary_axis, build_tertiary_axis, customize_axis,
+                   fetch_resource, resolve_data, set_axis_formatter,
+                   set_axis_label, set_axis_legend, set_axis_locator)
 from .cache import ResolverCache
 from .constants import SUPPORTED_TYPES
 from .exceptions import ChartError
@@ -166,6 +166,8 @@ class Chart(object):
         else:
             if series.secondary:
                 gca = build_secondary_axis(axis, on=series.secondary)
+            elif series.tertiary.get('on'):
+                gca = build_tertiary_axis(axis, **series.tertiary)
             else:
                 gca = axis
 

@@ -217,6 +217,22 @@ def build_secondary_axis(axis, on='x'):
     return method()
 
 
+def build_tertiary_axis(axis, **kwargs):
+    """
+    Build twin tertiary axis.
+
+    :param axis: Matplotlib axis instance.
+    :type axis: :class:`matplotlib.axes.Axes`
+    """
+    on = kwargs.get('on', 'x')
+    side = kwargs.get('side', 'right')
+    position = kwargs.get('position', 'zero')
+
+    gca = build_secondary_axis(axis, on=on)
+    gca.spines[side].set_position(position)
+    return gca
+
+
 def customize_axis(axis, params):
     """
     Customize axis based-on given params.
