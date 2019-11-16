@@ -121,8 +121,16 @@ def set_axis_formatter(axis, params=None, **kwargs):
     instances = {}
     need_locator_instances = [
         matplotlib.dates.AutoDateFormatter,
-        matplotlib.dates.ConciseDateFormatter,
     ]
+
+    try:
+        # ConciseDateFormatter is not supported on Python 3.5 and Matplotlib
+        # below version 3.1.0. So import it only when it is available.
+        from matplotlib.dates import ConciseDateFormatter
+        need_locator_instances.append(matplotlib.dates.ConciseDateFormatter)
+    except ImportError:
+        pass
+
     locators = kwargs.get('locators', {})
 
     def get_locator_instance(locators, on, which):

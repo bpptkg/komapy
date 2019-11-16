@@ -18,7 +18,7 @@ setup(
     long_description_content_type='text/markdown',
     license='MIT',
     install_requires=[
-        'matplotlib>=3.1.0',
+        'matplotlib>=3.0.0',
         'pandas',
         'bmaclient>=0.2.0',
     ],
