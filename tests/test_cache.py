@@ -8,6 +8,7 @@ import pandas as pd
 from komapy.chart import Chart
 from komapy.cache import ResolverCache
 from komapy.decorators import counter
+from komapy.series import Series
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FIXTURE_DIR = os.path.join(BASE_DIR, 'fixtures')
@@ -229,6 +230,43 @@ class ResolverCacheTest(unittest.TestCase):
         cache = ResolverCache(config)
         another_cache = ResolverCache(another_config)
         self.assertEqual(hash(cache), hash(another_cache))
+
+
+class ResolverCacheInstanceCreationTest(unittest.TestCase):
+
+    def test_create_instance_from_series(self):
+        series = Series(
+            type='bar',
+            name='seismicity',
+            query_params={
+                'eventdate__gte': '2019-10-01',
+                'eventdate__lt': '2019-10-30',
+                'eventtype': 'MP',
+                'nolimit': True,
+            },
+            fields=['timestamp', 'count'],
+            xaxis_date=True,
+        )
+        instance = ResolverCache.create_instance_from_series(series)
+        self.assertTrue(isinstance(instance, ResolverCache))
+
+    def test_create_key_from_series(self):
+        series = Series(
+            type='bar',
+            name='seismicity',
+            query_params={
+                'eventdate__gte': '2019-10-01',
+                'eventdate__lt': '2019-10-30',
+                'eventtype': 'ROCKFALL',
+                'nolimit': True,
+            },
+            fields=['timestamp', 'count'],
+            xaxis_date=True,
+        )
+        key = ResolverCache.create_key_from_series(series)
+        instance = ResolverCache(
+            ResolverCache.get_resolver_cache_config(series))
+        self.assertEqual(key, hash(instance))
 
 
 if __name__ == '__main__':
