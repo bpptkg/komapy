@@ -18,8 +18,8 @@ setup(
     long_description_content_type='text/markdown',
     license='MIT',
     install_requires=[
+        'matplotlib>=3.1.0',
         'pandas',
-        'matplotlib',
         'bmaclient>=0.2.0',
     ],
     author='Indra Rudianto',
