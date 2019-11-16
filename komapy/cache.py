@@ -58,8 +58,8 @@ class ResolverCache(object):
                               for key, value in self.config.items()])
         return hash(frozenset(casted_config.items()))
 
-    @classmethod
-    def get_resolver_cache_config(self, series):
+    @staticmethod
+    def get_resolver_cache_config(series):
         """
         Get resolver cache config from KomaPy series instance. It's simply
         takes data resolver key and optional query or csv parameters.
@@ -87,3 +87,28 @@ class ResolverCache(object):
                 break
 
         return config
+
+    @classmethod
+    def create_instance_from_series(cls, series):
+        """
+        Create resolver cache instance from KomaPy series.
+
+        :param series: KomaPy series config instance.
+        :type series: :class:`komapy.series.Series`
+        :return: KomaPy resolver cache instance.
+        :rtype: :class:`komapy.cache.ResolverCache`
+        """
+        config = cls.get_resolver_cache_config(series)
+        return cls(config)
+
+    @classmethod
+    def create_key_from_series(cls, series):
+        """
+        Create resolver cache key from KomaPy series.
+
+        :param series: KomaPy series config instance.
+        :type series: :class:`komapy.series.Series`
+        :return: KomaPy resolver cache key.
+        :rtype: int
+        """
+        return hash(cls.create_instance_from_series(series))
