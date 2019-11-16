@@ -175,8 +175,8 @@ class Chart(object):
         partial(plot, *plot_data, **series.plot_params)()
 
         set_axis_label(gca, params=series.labels)
-        set_axis_locator(gca, params=series.locator)
-        set_axis_formatter(gca, params=series.formatter)
+        locators = set_axis_locator(gca, params=series.locator)
+        set_axis_formatter(gca, params=series.formatter, locators=locators)
         set_axis_legend(gca, series.legend)
 
         gca.set_title(series.title)

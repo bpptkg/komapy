@@ -13,7 +13,7 @@ from .constants import SUPPORTED_CUSTOMIZERS
 from .exceptions import ChartError
 
 
-def set_axis_locator(axis, params=None):
+def set_axis_locator(axis, params=None, **kwargs):
     """
     Set axis locator.
 
@@ -47,6 +47,7 @@ def set_axis_locator(axis, params=None):
         'major': 'set_major_locator',
         'minor': 'set_minor_locator',
     }
+    instances = {}
 
     for key, value in config.items():
         if key not in axis_methods:
@@ -68,13 +69,15 @@ def set_axis_locator(axis, params=None):
                 raise ChartError('Unsupported locator class {}'.format(name))
 
             gca = getattr(axis, axis_methods[key])()
-            getattr(gca, formatter_methods[which])(
-                locator(*data.get('params', []),
-                        **data.get('keyword_params', {}))
-            )
+            instance = locator(*data.get('params', []),
+                               **data.get('keyword_params', {}))
+            instances.update({key: {which: instance}})
+            getattr(gca, formatter_methods[which])(instance)
+
+    return instances
 
 
-def set_axis_formatter(axis, params=None):
+def set_axis_formatter(axis, params=None, **kwargs):
     """
     Set axis formatter.
 
@@ -115,11 +118,25 @@ def set_axis_formatter(axis, params=None):
         'major': 'set_major_formatter',
         'minor': 'set_minor_formatter,'
     }
+    instances = {}
+    need_locator_instances = [
+        matplotlib.dates.AutoDateFormatter,
+        matplotlib.dates.ConciseDateFormatter,
+    ]
+    locators = kwargs.get('locators', {})
+
+    def get_locator_instance(locators, on, which):
+        instance = locators.get(on, {}).get(which)
+        if instance is None:
+            raise ChartError("Could'nt find locator instance "
+                             "required for formatter class")
+        return instance
 
     for key, value in config.items():
         if key not in axis_methods:
             continue
         gca = getattr(axis, axis_methods[key])()
+
         for which, data in value.items():
             if which in formatter_methods:
                 tick_format = data.get('format')
@@ -135,21 +152,33 @@ def set_axis_formatter(axis, params=None):
                             'Parameter name is required '
                             'if using non-default formatter')
 
-                    formatter = getattr(matplotlib.ticker, name, None)
-                    if formatter is None:
-                        formatter = getattr(matplotlib.dates, name, None)
+                    for attr in [matplotlib.ticker, matplotlib.dates]:
+                        formatter = getattr(attr, name, None)
+                        if formatter:
+                            break
 
                     if formatter is None:
                         raise ChartError(
                             'Unsupported formatter class {}'.format(name))
 
-                    getattr(gca, formatter_methods[which])(
-                        formatter(*data.get('params', []),
-                                  **data.get('keyword_params', {}))
-                    )
+                    if formatter in need_locator_instances:
+                        locator = get_locator_instance(locators, key, which)
+                        instance = formatter(
+                            locator,
+                            *data.get('params', []),
+                            **data.get('keyword_params', {})
+                        )
+                    else:
+                        instance = formatter(*data.get('params', []),
+                                             **data.get('keyword_params', {}))
+
+                    instances.update({key: {which: instance}})
+                    getattr(gca, formatter_methods[which])(instance)
+
+    return instances
 
 
-def set_axis_legend(axis, params=None):
+def set_axis_legend(axis, params=None, **kwargs):
     """
     Set axis legend.
 
@@ -164,7 +193,7 @@ def set_axis_legend(axis, params=None):
         axis.legend(**config)
 
 
-def set_axis_label(axis, params=None):
+def set_axis_label(axis, params=None, **kwargs):
     """
     Set axis label.
 
@@ -200,7 +229,7 @@ def set_axis_label(axis, params=None):
         method(value.get('text', ''), **value.get('style', {}))
 
 
-def build_secondary_axis(axis, on='x'):
+def build_secondary_axis(axis, on='x', **kwargs):
     """
     Build twin secondary axis.
 
@@ -233,7 +262,7 @@ def build_tertiary_axis(axis, **kwargs):
     return gca
 
 
-def customize_axis(axis, params):
+def customize_axis(axis, params, **kwargs):
     """
     Customize axis based-on given params.
 
