@@ -118,8 +118,7 @@ Example:
 field_options
 -------------
 
-.. note::
-    New in version 0.2.0
+.. versionadded:: 0.2.0
 
 type: dict
 
@@ -360,6 +359,62 @@ Example:
 .. code-block:: python
 
     series = Series(secondary='x')
+
+tertiary
+--------
+
+.. versionadded:: 0.4.0
+
+type: dict
+
+default: {}
+
+Options to plot series on tertiary axis.
+
+Example:
+
+.. code-block:: python
+
+    series = Series(tertiary={
+        'on': 'x',
+        'side': 'right',
+        'position': ('outward', 60)
+    })
+
+The example above will create a tertiary axis on x axis, and the axis spine
+right side will be moved outward by 60 points.
+
+See available options below to customize tertiary axis.
+
+on
+~~
+
+type: str
+
+default: x
+
+Name of axis to twin it. If you set to ``x``, you use x axis as shared axis,
+Otherwise, if you set to ``y``, you use y axis as shared axis.
+
+side
+~~~~
+
+type: str
+
+default: right
+
+On which axis spine side to apply modification. Typical values are ``left``
+and ``right``.
+
+position
+~~~~~~~~
+
+type: str, tuple
+
+default: 'zero'
+
+Set axis spine position. The value will be passed to the Matplotlib axis spine
+``set_position`` method.
 
 title
 -----
