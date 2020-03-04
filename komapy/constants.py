@@ -26,6 +26,7 @@ SUPPORTED_NAMES = [
     'magnitude',
     'slope',
     'users',
+    'meteorology',
 ]
 
 SUPPORTED_TYPES = {

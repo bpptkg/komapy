@@ -1,6 +1,6 @@
 matplotlib>=3.0.0
 pandas>=0.24.2
-bmaclient>=0.2.0
+bmaclient>=0.4.0
 sphinx>=2.0.1
 sphinx_rtd_theme>=0.4.3
 pytest
