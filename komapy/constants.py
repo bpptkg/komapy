@@ -45,6 +45,7 @@ SUPPORTED_TYPES = {
     'barh': 'barh',
     'stem': 'stem',
     'eventplot': 'eventplot',
+    'fill_between': 'fill_between',
 
     # Spectral plotting
     'acorr': 'acorr',
