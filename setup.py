@@ -4,6 +4,8 @@ import os
 
 from setuptools import setup, find_packages
 
+__version__ = '0.4.0'
+
 
 def read(filename):
     """Read file contents."""
@@ -12,7 +14,7 @@ def read(filename):
 
 setup(
     name='komapy',
-    version='0.4.0',
+    version=__version__,
     description='Python library for creating customizable BPPTKG Monitoring API chart',
     long_description=read('README.md'),
     long_description_content_type='text/markdown',
