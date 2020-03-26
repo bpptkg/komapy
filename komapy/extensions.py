@@ -7,6 +7,7 @@ import datetime
 from collections import Callable
 
 from .client import fetch_bma_as_dataframe
+from .decorators import register_as_decorator
 from .exceptions import ChartError
 from .processing import dataframe_or_empty
 from .utils import resolve_timestamp
@@ -16,6 +17,7 @@ __all__ = [
 ]
 
 extension_registers = {
+    # Legacy names.
     'explosion': {
         'resolver': 'plot_explosion_line',
         'label': '',
@@ -24,9 +26,20 @@ extension_registers = {
         'resolver': 'plot_dome_appearance',
         'label': '',
     },
+
+    # Register all functions with namespace prefix.
+    'komapy.extensions.explosion': {
+        'resolver': 'plot_explosion_line',
+        'label': '',
+    },
+    'kompay.extensions.dome': {
+        'resolver': 'plot_dome_appearance',
+        'label': '',
+    },
 }
 
 
+@register_as_decorator
 def register_extension(name, resolver, **kwargs):
     """
     Register extension plot function to the supported extensions data.

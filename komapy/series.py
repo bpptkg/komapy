@@ -7,6 +7,7 @@ from functools import partial
 
 from . import client, processing, transforms, utils
 from .constants import SUPPORTED_NAMES, SUPPORTED_TYPES
+from .decorators import register_as_decorator
 from .exceptions import ChartError
 from .utils import get_validation_methods
 
@@ -15,7 +16,8 @@ addon_registers = {
 }
 
 
-def register_addon(name, resolver):
+@register_as_decorator
+def register_addon(name, resolver, **kwargs):
     """
     Register add-on function.
 

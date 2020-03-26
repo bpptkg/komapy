@@ -7,6 +7,7 @@ from collections import Callable
 import pandas as pd
 
 from .client import fetch_bma_as_dataframe
+from .decorators import register_as_decorator
 from .exceptions import ChartError
 
 __all__ = [
@@ -14,11 +15,16 @@ __all__ = [
 ]
 
 transform_registers = {
+    # Legacy names.
     'slope_correction': 'slope_correction',
+
+    # Register all functions with namespace prefix.
+    'komapy.transforms.slope_correction': 'slope_correction',
 }
 
 
-def register_transform(name, resolver):
+@register_as_decorator
+def register_transform(name, resolver, **kwargs):
     """
     Register data transform function.
 
