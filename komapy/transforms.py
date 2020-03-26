@@ -21,12 +21,19 @@ transform_registers = {
 def register_transform(name, resolver):
     """
     Register data transform function.
+
+    :param name: Name of transform register.
+    :type name: str
+    :param resolver: Transform callable resolver function.
+    :type resolver: :class:`collections.Callable`
     """
     if not isinstance(resolver, Callable):
         raise ChartError('Data transform resolver must be callable')
 
     if name in transform_registers:
-        raise ChartError('Data transform name already exists')
+        raise ChartError(
+            'Data transform {} already exists in the global register names. '
+            'Use different name or use namespace prefix.'.format(name))
 
     transform_registers[name] = resolver
 

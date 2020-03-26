@@ -28,7 +28,9 @@ def register_addon(name, resolver):
         raise ChartError('Add-on resolver must be callable')
 
     if name in addon_registers:
-        raise ChartError('Add-on name already exists')
+        raise ChartError(
+            'Add-on {} already exists in the global register names. '
+            'Use different name or use namespace prefix.'.format(name))
 
     addon_registers[name] = resolver
 

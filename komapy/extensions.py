@@ -30,12 +30,19 @@ extension_registers = {
 def register_extension(name, resolver, **kwargs):
     """
     Register extension plot function to the supported extensions data.
+
+    :param name: Name of extension register.
+    :type name: str
+    :param resolver: Extension callable resolver function.
+    :type resolver: :class:`collections.Callable`
     """
     if not isinstance(resolver, Callable):
         raise ChartError('Extension plot resolver must be callable')
 
     if name in extension_registers:
-        raise ChartError('Extension plot name already exists')
+        raise ChartError(
+            'Extension plot {} already exists in the global register names. '
+            'Use different name or use namespace prefix.'.format(name))
 
     extension_registers[name] = dict(resolver=resolver, **kwargs)
 
