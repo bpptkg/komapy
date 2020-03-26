@@ -21,6 +21,25 @@ class RegisterExtensionsTest(unittest.TestCase):
                 'example', example
             )
 
+    def test_register_extensions_with_decorators(self):
+        name = 'tests.extension.register'
+
+        @extensions.register_extension(name)
+        def example(axis, starttime, endtime, **kwargs):
+            pass
+
+        self.assertTrue(name in extensions.extension_registers)
+
+    def test_unregister_extensions(self):
+        name = 'tests.extensions.unregister'
+
+        @extensions.register_extension(name)
+        def example(axis, starttime, endtime, **kwargs):
+            pass
+
+        extensions.unregister_extension(name)
+        self.assertFalse(name in extensions.extension_registers)
+
 
 if __name__ == '__main__':
     unittest.main()

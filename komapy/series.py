@@ -7,6 +7,7 @@ from functools import partial
 
 from . import client, processing, transforms, utils
 from .constants import SUPPORTED_NAMES, SUPPORTED_TYPES
+from .decorators import register_as_decorator
 from .exceptions import ChartError
 from .utils import get_validation_methods
 
@@ -15,7 +16,8 @@ addon_registers = {
 }
 
 
-def register_addon(name, resolver):
+@register_as_decorator
+def register_addon(name, resolver, **kwargs):
     """
     Register add-on function.
 
@@ -28,9 +30,15 @@ def register_addon(name, resolver):
         raise ChartError('Add-on resolver must be callable')
 
     if name in addon_registers:
-        raise ChartError('Add-on name already exists')
+        raise ChartError(
+            'Add-on {} already exists in the global register names. '
+            'Use different name or use namespace prefix.'.format(name))
 
     addon_registers[name] = resolver
+
+
+def unregister_addon(name):
+    return addon_registers.pop(name, None)
 
 
 class Series(object):
@@ -85,6 +93,8 @@ class Series(object):
         'legend': {},
         'locator': {},
         'name': None,
+        'merge_options': {},
+        'partial': [],
         'plot_params': {},
         'query_params': {},
         'secondary': None,
@@ -134,6 +144,15 @@ class Series(object):
         for method in validation_methods:
             getattr(self, method)()
 
+    def get_dict_config(self):
+        """
+        Get series configurations as dictionary.
+        """
+        config = {}
+        for key in self.available_parameters.keys():
+            config[key] = getattr(self, key)
+        return config
+
     def fetch_resource(self, **kwargs):
         """
         Fetch series resource.
@@ -142,12 +161,10 @@ class Series(object):
         BMA API name. If none of the sources found in the chart series
         configuration, it returns None.
 
-        :param series: KomaPy series config instance.
-        :type series: :class:`komapy.series.Series`
         :return: :class:`pandas.DataFrame` object if using CSV, JSON URL, or
                  BMA API name. Otherwise, it returns None.
         """
-        sources = OrderedDict([
+        DATA_SOURCES = OrderedDict([
             ('csv', {
                 'resolver': processing.read_csv,
                 'options': 'csv_params'
@@ -162,19 +179,30 @@ class Series(object):
             }),
         ])
 
-        for name in sources:
-            source = getattr(self, name, None)
-            if source:
-                resolve = sources[name]['resolver']
-                options = getattr(self, sources[name]['options'], {})
-                break
+        def get_resource(config_dict):
+            for name in DATA_SOURCES:
+                source = config_dict.get(name)
+                if source:
+                    resolve_fn = DATA_SOURCES[name]['resolver']
+                    options = config_dict.get(
+                        DATA_SOURCES[name]['options'], {})
+                    return resolve_fn(source, **options)
+            return None
 
-        if source:
-            resource = resolve(source, **options)
-        else:
-            resource = None
+        if self.partial:
+            data_containers = []
+            for config_dict in self.partial:
+                data_containers.append(get_resource(config_dict))
 
-        return resource
+            # Merge all resource data.
+            merge_options = {
+                'ignore_index': True,
+                'sort': True
+            }
+            merge_options.update(self.merge_options)
+            return processing.merge_dataframe(data_containers, **merge_options)
+
+        return get_resource(self.get_dict_config())
 
     def resolve_data(self, **kwargs):
         """
@@ -189,7 +217,10 @@ class Series(object):
                  name. Otherwise, it returns native object.
         :rtype: list of :class:`pandas.DataFrame` or native object
         """
-        resource = self.fetch_resource(**kwargs)
+        if kwargs.get('resource') is not None:
+            resource = kwargs.get('resource')
+        else:
+            resource = self.fetch_resource(**kwargs)
 
         if resource is not None:
             func = partial(processing.dataframe_or_empty, resource)

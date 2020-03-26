@@ -11,16 +11,6 @@ from six.moves.urllib.request import urlopen
 from . import exceptions, processing
 from .settings import app_settings
 
-__all__ = [
-    'set_api_key',
-    'set_access_token',
-    'set_api_host',
-    'fetch_bma_as_dictionary',
-    'fetch_bma_as_dataframe',
-    'fetch_url_as_dictionary',
-    'fetch_url_as_dataframe',
-]
-
 
 def set_api_key(key):
     """
@@ -126,7 +116,7 @@ def fetch_url_as_dictionary(url, **params):
 def fetch_url_as_dataframe(url, **params):
     """
     Make a request to the URL and return data as Pandas DataFrame.
-    
+
     :param url: URL that returns JSON data.
     :type url: str
     :param params: URL query filtering parameters.

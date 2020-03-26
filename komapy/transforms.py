@@ -7,6 +7,7 @@ from collections import Callable
 import pandas as pd
 
 from .client import fetch_bma_as_dataframe
+from .decorators import register_as_decorator
 from .exceptions import ChartError
 
 __all__ = [
@@ -14,21 +15,37 @@ __all__ = [
 ]
 
 transform_registers = {
+    # Legacy names.
     'slope_correction': 'slope_correction',
+
+    # Register all functions with namespace prefix.
+    'komapy.transforms.slope_correction': 'slope_correction',
 }
 
 
-def register_transform(name, resolver):
+@register_as_decorator
+def register_transform(name, resolver, **kwargs):
     """
     Register data transform function.
+
+    :param name: Name of transform register.
+    :type name: str
+    :param resolver: Transform callable resolver function.
+    :type resolver: :class:`collections.Callable`
     """
     if not isinstance(resolver, Callable):
         raise ChartError('Data transform resolver must be callable')
 
     if name in transform_registers:
-        raise ChartError('Data transform name already exists')
+        raise ChartError(
+            'Data transform {} already exists in the global register names. '
+            'Use different name or use namespace prefix.'.format(name))
 
     transform_registers[name] = resolver
+
+
+def unregister_transform(name):
+    return transform_registers.pop(name, None)
 
 
 def slope_correction(data, config):

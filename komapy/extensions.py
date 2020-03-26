@@ -7,6 +7,7 @@ import datetime
 from collections import Callable
 
 from .client import fetch_bma_as_dataframe
+from .decorators import register_as_decorator
 from .exceptions import ChartError
 from .processing import dataframe_or_empty
 from .utils import resolve_timestamp
@@ -16,6 +17,7 @@ __all__ = [
 ]
 
 extension_registers = {
+    # Legacy names.
     'explosion': {
         'resolver': 'plot_explosion_line',
         'label': '',
@@ -24,20 +26,42 @@ extension_registers = {
         'resolver': 'plot_dome_appearance',
         'label': '',
     },
+
+    # Register all functions with namespace prefix.
+    'komapy.extensions.explosion': {
+        'resolver': 'plot_explosion_line',
+        'label': '',
+    },
+    'kompay.extensions.dome': {
+        'resolver': 'plot_dome_appearance',
+        'label': '',
+    },
 }
 
 
+@register_as_decorator
 def register_extension(name, resolver, **kwargs):
     """
     Register extension plot function to the supported extensions data.
+
+    :param name: Name of extension register.
+    :type name: str
+    :param resolver: Extension callable resolver function.
+    :type resolver: :class:`collections.Callable`
     """
     if not isinstance(resolver, Callable):
         raise ChartError('Extension plot resolver must be callable')
 
     if name in extension_registers:
-        raise ChartError('Extension plot name already exists')
+        raise ChartError(
+            'Extension plot {} already exists in the global register names. '
+            'Use different name or use namespace prefix.'.format(name))
 
     extension_registers[name] = dict(resolver=resolver, **kwargs)
+
+
+def unregister_extension(name):
+    return extension_registers.pop(name, None)
 
 
 def plot_explosion_line(axis, starttime, endtime, **options):
