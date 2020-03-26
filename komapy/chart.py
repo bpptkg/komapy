@@ -49,8 +49,8 @@ from pandas.plotting import register_matplotlib_converters
 
 from . import extensions, utils
 from .axis import (build_secondary_axis, build_tertiary_axis, customize_axis,
-                   fetch_resource, resolve_data, set_axis_formatter,
-                   set_axis_label, set_axis_legend, set_axis_locator)
+                   resolve_data, set_axis_formatter, set_axis_label,
+                   set_axis_legend, set_axis_locator)
 from .cache import ResolverCache
 from .constants import SUPPORTED_TYPES
 from .exceptions import ChartError
@@ -118,25 +118,25 @@ class Chart(object):
         """Get number of subplots."""
         return len(self.layout.data)
 
-    def _fetch_resource(self, series, **kwargs):
-        return fetch_resource(series, **kwargs)
-
     def _resolve_data(self, series, **kwargs):
+        """
+        Resolve series data. Return cached version if use_cache=True.
+        """
         if self.config.get('use_cache', False):
             config = ResolverCache.get_resolver_cache_config(series)
             cached_resolver = ResolverCache(config)
             cache_key = hash(cached_resolver)
             if cache_key in self._cache:
                 data = self._cache[cache_key]
-                plot_data = resolve_data(series, resource=data)
+                plot_data = series.resolve_data(resource=data)
                 return plot_data
 
-            data = self._fetch_resource(series, **kwargs)
-            plot_data = resolve_data(series, resource=data)
+            data = series.fetch_resource(**kwargs)
+            plot_data = series.resolve_data(resource=data)
             self._cache[cache_key] = data
         else:
-            data = self._fetch_resource(series, **kwargs)
-            plot_data = resolve_data(series, resource=data)
+            data = series.fetch_resource(**kwargs)
+            plot_data = series.resolve_data(resource=data)
         return plot_data
 
     def _build_addons(self, axis, addons):

@@ -10,16 +10,6 @@ from matplotlib import cm
 
 from .exceptions import ChartError
 
-__all__ = [
-    'register_aggregation',
-    'dataframe_from_dictionary',
-    'empty_dataframe',
-    'dataframe_or_empty',
-    'read_csv',
-    'read_excel',
-    'get_rgb_color',
-]
-
 supported_aggregations = {
     'cumsum': 'cumsum',
     'add': 'add',
@@ -122,3 +112,21 @@ def power(data, params=None):
     kwargs = params or {}
     factor = kwargs.get('by', 1.0)
     return data ** factor
+
+
+def merge_dataframe(entries, **kwargs):
+    """
+    Merge all Pandas DataFrame objects from list of entries.
+
+    We use pandas.DataFrame.append function to append all entries. Each entry
+    must be an instance of pandas.DataFrame object.
+    """
+    df = pd.DataFrame()
+    for entry in entries:
+        if entry is not None:
+            if not isinstance(entry, pd.DataFrame):
+                raise ChartError(
+                    'Data type to merge must be an instance of '
+                    'pandas.DataFrame object.')
+            df = df.append(entry, **kwargs)
+    return df
