@@ -44,6 +44,10 @@ def register_transform(name, resolver, **kwargs):
     transform_registers[name] = resolver
 
 
+def unregister_transform(name):
+    return transform_registers.pop(name, None)
+
+
 def slope_correction(data, config):
     """
     Apply EDM slope distance correction.

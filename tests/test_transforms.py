@@ -20,6 +20,25 @@ class RegisterTransformsTest(unittest.TestCase):
                 'example', example
             )
 
+    def test_register_transforms_with_decorator(self):
+        name = 'tests.transforms.register'
+
+        @transforms.register_transform(name)
+        def mytransform(data, config, **kwargs):
+            return data
+
+        self.assertTrue(name in transforms.transform_registers)
+
+    def test_unregister_transforms(self):
+        name = 'tests.transforms.unregister'
+
+        @transforms.register_transform(name)
+        def mytransform(data, config, **kwargs):
+            return data
+
+        transforms.unregister_transform(name)
+        self.assertFalse(name in transforms.transform_registers)
+
 
 if __name__ == '__main__':
     unittest.main()

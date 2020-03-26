@@ -60,6 +60,10 @@ def register_extension(name, resolver, **kwargs):
     extension_registers[name] = dict(resolver=resolver, **kwargs)
 
 
+def unregister_extension(name):
+    return extension_registers.pop(name, None)
+
+
 def plot_explosion_line(axis, starttime, endtime, **options):
     """
     Plot Merapi explosion line on current axis.

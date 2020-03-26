@@ -37,6 +37,10 @@ def register_addon(name, resolver, **kwargs):
     addon_registers[name] = resolver
 
 
+def unregister_addon(name):
+    return addon_registers.pop(name, None)
+
+
 class Series(object):
     """
     A series object.
