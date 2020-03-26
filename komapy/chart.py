@@ -49,8 +49,8 @@ from pandas.plotting import register_matplotlib_converters
 
 from . import extensions, utils
 from .axis import (build_secondary_axis, build_tertiary_axis, customize_axis,
-                   resolve_data, set_axis_formatter, set_axis_label,
-                   set_axis_legend, set_axis_locator)
+                   set_axis_formatter, set_axis_label, set_axis_legend,
+                   set_axis_locator)
 from .cache import ResolverCache
 from .constants import SUPPORTED_TYPES
 from .exceptions import ChartError
