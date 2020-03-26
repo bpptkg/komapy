@@ -4,7 +4,7 @@ import os
 
 from setuptools import setup, find_packages
 
-__version__ = '0.4.0'
+__version__ = '0.5.0'
 
 
 def read(filename):
@@ -22,7 +22,7 @@ setup(
     install_requires=[
         'matplotlib>=3.0.0',
         'pandas',
-        'bmaclient>=0.2.0',
+        'bmaclient>=0.6.0',
     ],
     author='Indra Rudianto',
     author_email='indrarudianto.official@gmail.com',
