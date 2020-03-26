@@ -118,6 +118,9 @@ class Chart(object):
         """Get number of subplots."""
         return len(self.layout.data)
 
+    def _fetch_resource(self, series, **kwargs):
+        return series.fetch_resource(**kwargs)
+
     def _resolve_data(self, series, **kwargs):
         """
         Resolve series data. Return cached version if use_cache=True.
@@ -131,11 +134,11 @@ class Chart(object):
                 plot_data = series.resolve_data(resource=data)
                 return plot_data
 
-            data = series.fetch_resource(**kwargs)
+            data = self._fetch_resource(series, **kwargs)
             plot_data = series.resolve_data(resource=data)
             self._cache[cache_key] = data
         else:
-            data = series.fetch_resource(**kwargs)
+            data = self._fetch_resource(series, **kwargs)
             plot_data = series.resolve_data(resource=data)
         return plot_data
 
