@@ -278,6 +278,18 @@ Example:
         }
     )
 
+merge_options
+-------------
+
+.. versionadded:: 0.5.0
+
+type: dict
+
+default: {}
+
+Merge options when using series partial. All arguments will be passed to the
+Pandas DataFrame append function.
+
 name
 ----
 
@@ -292,6 +304,56 @@ Example:
 .. code-block:: python
 
     series = Series(name='seismicity')
+
+partial
+-------
+
+.. versionadded:: 0.5.0
+
+type: list
+
+default: []
+
+Series partial configuration. It is useful if you want to fetch data in partial
+or using multiple data resolvers. For example, fetching BMA data in different
+timespan, but you want to plot in a single figure.
+
+Example:
+
+.. code-block:: python
+
+    series = Series(
+        partial=[
+            {
+                'name': 'edm',
+                'query_params': {
+                    'timestamp__gte': '2011-01-01',
+                    'timestamp__lt': '2019-03-01',
+                    'benchmark': 'BAB0',
+                    'reflector': 'RB2',
+                    'nolimit': True,
+                }
+            },
+            {
+                'name': 'edm',
+                'query_params': {
+                    'start_at': '2019-03-01',
+                    'end_at': '2020-01-01',
+                    'benchmark': 'BAB0',
+                    'reflector': 'RB2',
+                    'ci': True,
+                }
+            },
+        ])
+
+Data from multiple queries in the partial entries will be appended into a single
+DataFrame object. In the above example, we fetch BMA EDM data in different
+timespan, and using different query parameters. Because we have the same query
+name (``edm``), columns with the same name will be appended into a single
+DataFrame object. Note that query ordering matters.
+
+Note that using multiple queries with different plot name will result in
+undefined behaviour.
 
 plot_params
 -----------
