@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 from matplotlib import cm
 
+from .decorators import register_as_decorator
 from .exceptions import ChartError
 
 supported_aggregations = {
@@ -25,17 +26,29 @@ supported_aggregations = {
 }
 
 
-def register_aggregation(name, resolver):
+@register_as_decorator
+def register_aggregation(name, resolver, **kwargs):
     """
     Register data aggregation function.
+
+    :param name: Name of aggregation register.
+    :type name: str
+    :param resolver: Aggregation callable resolver function.
+    :type resolver: :class:`collections.Callable`
     """
     if not isinstance(resolver, Callable):
         raise ChartError('Data aggregation resolver must be callable')
 
     if name in supported_aggregations:
-        raise ChartError('Data aggregation name already exists')
+        raise ChartError(
+            'Data aggregation {} already exists in the global register names. '
+            'Use different name or use namespace prefix.'.format(name))
 
     supported_aggregations[name] = resolver
+
+
+def unregister_aggregation(name):
+    return supported_aggregations.pop(name, None)
 
 
 def dataframe_from_dictionary(entry):

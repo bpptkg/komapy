@@ -10,10 +10,6 @@ from .client import fetch_bma_as_dataframe
 from .decorators import register_as_decorator
 from .exceptions import ChartError
 
-__all__ = [
-    'register_transform',
-]
-
 transform_registers = {
     # Legacy names.
     'slope_correction': 'slope_correction',

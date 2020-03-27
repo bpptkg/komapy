@@ -11,9 +11,7 @@ from .decorators import register_as_decorator
 from .exceptions import ChartError
 from .utils import get_validation_methods
 
-addon_registers = {
-
-}
+addon_registers = {}
 
 
 @register_as_decorator

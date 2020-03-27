@@ -60,11 +60,6 @@ from .settings import app_settings
 
 register_matplotlib_converters()
 
-__all__ = [
-    'Chart',
-]
-
-
 def apply_theme(name):
     """Apply matplotlib plot theme."""
     if name in plt.style.available:

@@ -12,10 +12,6 @@ from .exceptions import ChartError
 from .processing import dataframe_or_empty
 from .utils import resolve_timestamp
 
-__all__ = [
-    'register_extension',
-]
-
 extension_registers = {
     # Legacy names.
     'explosion': {
