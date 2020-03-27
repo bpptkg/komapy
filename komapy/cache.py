@@ -27,11 +27,10 @@ class ResolverCache(object):
     .. code-block:: python
 
         from komapy.series import Series
-        from komapy.axis import resolve_data
 
         series = Series(name='edm', fields=['timestamp', 'slope_distance'],
                         xaxis_date=True)
-        cache = []
+        cache = {}
 
         def cached_resolver(series):
             config = ResolverCache.get_resolver_cache_config(series)
@@ -40,7 +39,7 @@ class ResolverCache(object):
 
             if key in cache:
                 return cache[key]
-            data = resolve_data(series)
+            data = series.resolve_data()
             cache[key] = data
             return data
     """
