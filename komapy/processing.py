@@ -87,41 +87,167 @@ def get_rgb_color(num_sample, index, colormap='tab10'):
 
 
 def cumsum(data, params=None):
-    """Cumulative sum function aggregation."""
+    """
+    Cumulative sum function aggregation.
+
+    Example config:
+
+    .. code-block:: python
+
+        config = {
+            ...
+            'fields': ['timestamp', 'energy'],
+            'aggregations': [
+                {
+                    'func': 'cumsum',
+                    'field': 'energy',
+                    'params': {
+                        'axis': 0
+                    }
+                }
+            ],
+            ...
+        }
+    """
     kwargs = params or {}
     return data.cumsum(**kwargs)
 
 
 def add(data, params=None):
-    """Add function aggregation."""
+    """
+    Add function aggregation.
+
+    Example config:
+
+    .. code-block:: python
+
+        config = {
+            ...
+            'fields': ['timestamp', 'x'],
+            'aggregations': [
+                {
+                    'func': 'add',
+                    'field': 'x',
+                    'params': {
+                        'by': 10
+                    }
+                }
+            ],
+            ...
+        }
+    """
     kwargs = params or {}
     constant = kwargs.get('by', 0)
     return data + constant
 
 
 def subtract(data, params=None):
-    """Subtract function aggregation."""
+    """
+    Subtract function aggregation.
+
+    Example config:
+
+    .. code-block:: python
+
+        config = {
+            ...
+            'fields': ['timestamp', 'x'],
+            'aggregations': [
+                {
+                    'func': 'subtract',
+                    'field': 'x',
+                    'params': {
+                        'by': 10
+                    }
+                }
+            ],
+            ...
+        }
+    """
     kwargs = params or {}
     constant = kwargs.get('by', 0)
     return data - constant
 
 
 def multiply(data, params=None):
-    """Multiply function aggregation."""
+    """
+    Multiply function aggregation.
+
+    Example config:
+
+    .. code-block:: python
+
+        config = {
+            ...
+            'fields': ['timestamp', 'x'],
+            'aggregations': [
+                {
+                    'func': 'multiply',
+                    'field': 'x',
+                    'params': {
+                        'by': 10
+                    }
+                }
+            ],
+            ...
+        }
+    """
     kwargs = params or {}
     factor = kwargs.get('by', 1.0)
     return data * factor
 
 
 def divide(data, params=None):
-    """Divide function aggregation."""
+    """
+    Divide function aggregation.
+
+    Example config:
+
+    .. code-block:: python
+
+        config = {
+            ...
+            'fields': ['timestamp', 'energy'],
+            'aggregations': [
+                {
+                    'func': 'divide',
+                    'field': 'energy',
+                    'params': {
+                        'by': 10
+                    }
+                }
+            ],
+            ...
+        }
+    """
     kwargs = params or {}
     factor = kwargs.get('by', 1.0)
     return data / factor
 
 
 def power(data, params=None):
-    """Power function aggregation."""
+    """
+    Power function aggregation.
+
+    Example config:
+
+    .. code-block:: python
+
+        config = {
+            ...
+            'fields': ['timestamp', 'x'],
+            'aggregations': [
+                {
+                    'func': 'power',
+                    'field': 'x',
+                    'params': {
+                        'by': 2
+                    }
+                }
+            ],
+            ...
+        }
+    """
     kwargs = params or {}
     factor = kwargs.get('by', 1.0)
     return data ** factor
