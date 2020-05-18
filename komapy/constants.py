@@ -1,6 +1,7 @@
 """
 KomaPy contants.
 """
+import datetime
 
 TIME_ZONE = 'Asia/Jakarta'
 
@@ -134,3 +135,15 @@ SUPPORTED_CUSTOMIZERS = {
     'artist_url': 'set_url',
     'zorder': 'set_zorder',
 }
+
+
+def get_phase_dates():
+    return [
+        [datetime.datetime(2012, 7, 15), datetime.datetime(2018, 5, 11), ''],
+        [datetime.datetime(2018, 5, 11), datetime.datetime(2018, 6, 1), 'II'],
+        [datetime.datetime(2018, 6, 1),  datetime.datetime(2018, 7, 1), 'III'],
+        [datetime.datetime(2018, 7, 1),  datetime.datetime(2018, 8, 12), 'IV'],
+        [datetime.datetime(2018, 8, 12), datetime.datetime(2019, 1, 29), 'V'],
+        [datetime.datetime(2019, 1, 29), datetime.datetime(2019, 9, 22), 'VI'],
+        [datetime.datetime(2019, 9, 22), datetime.datetime.now(), 'VII'],
+    ]

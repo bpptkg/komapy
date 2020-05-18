@@ -6,6 +6,7 @@ import uuid
 import datetime
 from collections import Callable
 
+from .constants import get_phase_dates
 from .client import fetch_bma_as_dataframe
 from .decorators import register_as_decorator
 from .exceptions import ChartError
@@ -30,6 +31,14 @@ extension_registers = {
     },
     'kompay.extensions.dome': {
         'resolver': 'plot_dome_appearance',
+        'label': '',
+    },
+    'komapy.extensions.activity_status': {
+        'resolver': 'plot_activity_status',
+        'label': '',
+    },
+    'komapy.extensions.activity_phases_vertical_line': {
+        'resolver': 'plot_activity_phases_vertical_line',
         'label': '',
     },
 }
@@ -159,4 +168,33 @@ def plot_activity_status(axis, starttime, endtime, **options):
     axis.axvspan(starttime, DATE_NORMAL_TO_WASPADA, **normal)
     axis.axvspan(DATE_NORMAL_TO_WASPADA, endtime, **waspada)
     axis.set_xlim(starttime, endtime)
+    return handle
+
+
+def plot_activity_phases_vertical_line(axis, starttime, endtime, **options):
+    """
+    Plot activity phases as vertical line on current axis.
+
+    Plot style can be updated by providing keyword 'style' in the extensions
+    plot entry.
+    """
+    handle = None
+
+    style = {
+        'color': '#272727',
+        'linestyle': '--',
+        'linewidth': 1.5,
+        'zorder': 10,
+    }
+    if options.get('style'):
+        style.update(options.get('style'))
+
+    start = starttime.replace(tzinfo=None)
+    end = endtime.replace(tzinfo=None)
+
+    PHASE_DATES = get_phase_dates()
+    for item in PHASE_DATES:
+        if item[0] >= start and item[0] <= end:
+            axis.axvline(item[0], **style)
+
     return handle
