@@ -103,3 +103,60 @@ def plot_dome_appearance(axis, starttime, endtime, **options):
     if start <= timestamp and timestamp <= end:
         handle = axis.axvline(timestamp, **options)
     return handle
+
+
+def plot_activity_status(axis, starttime, endtime, **options):
+    """
+    Plot activity status color on current axis.
+
+    Date when level status increased from NORMAL to WASPADA is 2018-05-21
+    Asia/Jakarta timezone.
+
+    NORMAL and WASPADA style can be updated by passing 'normal' and/or 'waspada'
+    keywords as dictionary in the series extension options respectively. See
+    example below.
+
+    First register plot function to the KomaPy extension registers: ::
+
+        from komapy.extensions import register_extension, plot_activity_status
+
+        register_extension('activity_status', plot_activity_status)
+
+    Then set options in the extensions entry: ::
+
+        'extensions': {
+            'starttime': '2018-01-01',
+            'endtime': '2020-01-01',
+            'plot': [
+                {
+                    'name': 'activity_status',
+                    'normal': {
+                        'color': 'green',
+                    },
+                    'waspada': {
+                        'color': 'yellow',
+                    },
+                },
+            ]
+        }
+    """
+    DATE_NORMAL_TO_WASPADA = datetime.datetime(2018, 5, 21)
+
+    handle = None
+    normal = {
+        'alpha': 0.4,
+        'color': 'lime',
+        'zorder': 0,
+    }
+    waspada = {
+        'color': '#fff59d',
+        'zorder': 0,
+    }
+    if options.get('normal'):
+        normal.update(options.get('normal'))
+    if options.get('waspada'):
+        waspada.update(options.get('waspada'))
+    axis.axvspan(starttime, DATE_NORMAL_TO_WASPADA, **normal)
+    axis.axvspan(DATE_NORMAL_TO_WASPADA, endtime, **waspada)
+    axis.set_xlim(starttime, endtime)
+    return handle
