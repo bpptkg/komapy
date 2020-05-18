@@ -19,6 +19,7 @@ SUPPORTED_NAMES = [
     'thermal2',
     'tiltmeter',
     'tiltmeter_raw',
+    'tiltmeter_tlr',
     'tiltborehole',
     'seismicity',
     'bulletin',
