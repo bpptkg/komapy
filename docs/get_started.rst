@@ -69,9 +69,7 @@ series data. The default chart layout in KomaPy is column-based layout, but you
 can use grid layout too.
 
 The property ``'name': 'edm'`` tell KomaPy that it should fetch EDM data from
-BMA API, and ``query_params`` holds information about data query filtering:
-
-.. code-block:: python
+BMA API, and ``query_params`` holds information about data query filtering: ::
 
     'query_params': {
         'benchmark': 'BAB0',
@@ -79,7 +77,7 @@ BMA API, and ``query_params`` holds information about data query filtering:
         'start_at': '2019-04-01',
         'end_at': '2019-08-01',
         'ci': True
-    },
+    }
 
 The property ``fields`` is required and it tells KomaPy that it should plot
 field named ``timestamp`` on x axis, and field named ``slope_distance`` on y
