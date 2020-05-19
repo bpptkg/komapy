@@ -47,7 +47,7 @@ from functools import partial
 import matplotlib.pyplot as plt
 from pandas.plotting import register_matplotlib_converters
 
-from . import extensions, utils
+from . import addons, extensions, utils
 from .axis import (build_secondary_axis, build_tertiary_axis, customize_axis,
                    set_axis_formatter, set_axis_label, set_axis_legend,
                    set_axis_locator)
@@ -59,6 +59,7 @@ from .series import Series, addon_registers
 from .settings import app_settings
 
 register_matplotlib_converters()
+
 
 def apply_theme(name):
     """Apply matplotlib plot theme."""
@@ -137,13 +138,22 @@ class Chart(object):
             plot_data = series.resolve_data(resource=data)
         return plot_data
 
-    def _build_addons(self, axis, addons):
-        for addon in addons:
+    def _build_addons(self, axis, addons_entry):
+        for addon in addons_entry:
             if isinstance(addon, dict):
                 name = addon.pop('name', None)
                 if isinstance(name, str):
                     if name in addon_registers:
-                        callback = addon_registers[name]
+                        resolver = addon_registers[name]
+                        if isinstance(resolver, str):
+                            callback = getattr(addons, resolver)
+                        elif isinstance(resolver, Callable):
+                            callback = resolver
+                        else:
+                            raise ChartError(
+                                'Addons resolver must be a string registered '
+                                'in the addons global registry or a callable '
+                                'function')
                         callback(axis, **addon)
                 elif isinstance(name, Callable):
                     callback = name

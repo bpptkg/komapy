@@ -11,7 +11,10 @@ from .decorators import register_as_decorator
 from .exceptions import ChartError
 from .utils import get_validation_methods
 
-addon_registers = {}
+# TODO(indra): Move to the addons module.
+addon_registers = {
+    'komapy.addons.activity_phases': 'plot_activity_phases',
+}
 
 
 @register_as_decorator
