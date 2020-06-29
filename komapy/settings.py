@@ -13,6 +13,7 @@ class AppSettings:
 
     api_key = None
     access_token = None
+    protocol = 'http'
     time_zone = TIME_ZONE
     host = None
 

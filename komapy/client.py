@@ -12,6 +12,19 @@ from . import exceptions, processing
 from .settings import app_settings
 
 
+def set_api_protocol(protocol):
+    """
+    Set BMA API protocol, either http or https.
+
+    :param protocol: BMA API protocol
+    :param protocol: str
+    """
+    if not protocol:
+        raise ValueError('Protocol name cannot be None or empty')
+
+    app_settings.protocol = protocol.lower()
+
+
 def set_api_key(key):
     """
     Set BMA API key to enable accessing the API.
@@ -19,6 +32,9 @@ def set_api_key(key):
     :param key: BMA API key.
     :type key: str
     """
+    if not key:
+        raise ValueError('API key cannot be None or empty')
+
     app_settings.api_key = key
 
 
@@ -29,6 +45,9 @@ def set_access_token(token):
     :param token: BMA API access token.
     :type token: str
     """
+    if not token:
+        raise ValueError('Access token cannot be None or empty')
+
     app_settings.access_token = token
 
 
@@ -39,6 +58,9 @@ def set_timezone(name):
     :param name: Time zone name, e.g. Asia/Jakarta.
     :type name: str
     """
+    if not name:
+        raise ValueError('Timezone name cannot be None or empty')
+
     app_settings.time_zone = name
 
 
@@ -49,6 +71,9 @@ def set_api_host(name):
     :param name: Host name or IP address.
     :type name: str
     """
+    if not name:
+        raise ValueError('API host cannot be None or empty')
+
     app_settings.host = name
 
 
@@ -66,6 +91,8 @@ def fetch_bma_as_dictionary(name, **params):
     api = bmaclient.MonitoringAPI(
         api_key=app_settings.api_key,
         access_token=app_settings.access_token)
+    api.protocol = app_settings.protocol
+
     if app_settings.host:
         api.host = app_settings.host
 
