@@ -88,9 +88,14 @@ def fetch_bma_as_dictionary(name, **params):
     :return: Dictionary of resolved BMA API data.
     :rtype: dict
     """
-    api = bmaclient.MonitoringAPI(
-        api_key=app_settings.api_key,
-        access_token=app_settings.access_token)
+    if app_settings.bma_api_class is not None:
+        api = app_settings.bma_api_class(
+            api_key=app_settings.api_key,
+            access_token=app_settings.access_token)
+    else:
+        api = bmaclient.MonitoringAPI(
+            api_key=app_settings.api_key,
+            access_token=app_settings.access_token)
     api.protocol = app_settings.protocol
 
     if app_settings.host:

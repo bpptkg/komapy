@@ -16,6 +16,7 @@ class AppSettings:
     protocol = 'http'
     time_zone = TIME_ZONE
     host = None
+    bma_api_class = None
 
 
 app_settings = AppSettings()
