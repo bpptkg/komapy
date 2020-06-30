@@ -1,3 +1,4 @@
+import os
 import locale
 
 from komapy import Chart
@@ -6,7 +7,7 @@ from komapy.transforms import register_transform
 
 locale.setlocale(locale.LC_ALL, 'id_ID')
 
-set_api_key('YOUR_API_KEY')
+set_api_key(os.environ['API_KEY'])
 
 
 @register_transform('compute_seismic_energy')

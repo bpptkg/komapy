@@ -1,12 +1,16 @@
+import os
 import pytz
 import datetime
+import locale
 
 from komapy import Chart
 from komapy.client import set_api_key
 from komapy.extensions import register_extension
 from komapy.constants import TIME_ZONE
 
-set_api_key('YOUR_API_KEY')
+locale.setlocale(locale.LC_ALL, 'id_ID')
+
+set_api_key(os.environ['API_KEY'])
 
 DAYS_TIMESPAN = 180
 DATE_FORMAT = r'%Y-%m-%d'

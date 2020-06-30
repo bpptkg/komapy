@@ -1,3 +1,4 @@
+import os
 import locale
 
 from komapy import Chart
@@ -5,7 +6,7 @@ from komapy.client import set_api_key
 
 locale.setlocale(locale.LC_ALL, 'id_ID')
 
-set_api_key('YOUR_API_KEY')
+set_api_key(os.environ['API_KEY'])
 
 chart = Chart({
     'title': 'Magnitudo Letusan 2018-2020',

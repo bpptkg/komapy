@@ -1,4 +1,6 @@
+import os
 import datetime
+import locale
 import pandas as pd
 
 from komapy import Chart
@@ -6,7 +8,9 @@ from komapy.client import set_api_key
 from komapy.transforms import register_transform
 from komapy.series import register_addon
 
-set_api_key('1JPZxKW5.RCpwvwK5O4T5hYFTzfPpSp9o2PdTtRwa')
+locale.setlocale(locale.LC_ALL, 'id_ID')
+
+set_api_key(os.environ['API_KEY'])
 
 starttime = '2019-01-01'
 endtime = '2019-09-01'

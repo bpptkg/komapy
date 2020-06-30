@@ -1,7 +1,9 @@
+import os
+
 from komapy import Chart
 from komapy.client import set_api_key
 
-set_api_key('YOUR_API_KEY')
+set_api_key(os.environ['API_KEY'])
 
 chart = Chart({
     'title': 'RB2',
