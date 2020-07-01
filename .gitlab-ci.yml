@@ -27,7 +27,8 @@ python38:
   stage: test
   script: tox -e py38
 
-test:
+docs:
+  image: python:3.8
   stage: test
   script:
     - pip install -U sphinx sphinx_rtd_theme
@@ -38,6 +39,7 @@ test:
     - master
 
 pages:
+  image: python:3.8
   stage: deploy
   script:
     - pip install -U sphinx sphinx_rtd_theme
