@@ -1,5 +1,6 @@
 stages:
   - test
+  - deploy
 
 before_script:
   - apt-get update -qy
@@ -25,3 +26,24 @@ python38:
   image: python:3.8
   stage: test
   script: tox -e py38
+
+test:
+  stage: test
+  script:
+    - pip install -U sphinx sphinx_rtd_theme
+    - sphinx-build -b html docs public
+  only:
+    - branches
+  except:
+    - master
+
+pages:
+  stage: deploy
+  script:
+    - pip install -U sphinx sphinx_rtd_theme
+    - sphinx-build -b html docs public
+  artifacts:
+    paths:
+      - public
+  only:
+    - master
