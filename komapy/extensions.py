@@ -29,7 +29,7 @@ extension_registers = {
         'resolver': 'plot_explosion_line',
         'label': '',
     },
-    'kompay.extensions.dome': {
+    'komapy.extensions.dome': {
         'resolver': 'plot_dome_appearance',
         'label': '',
     },

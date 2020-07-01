@@ -187,7 +187,7 @@ chart = Chart({
         'endtime': endtime,
         'plot': [
             {
-                'name': 'kompay.extensions.dome',
+                'name': 'komapy.extensions.dome',
                 'label': 'Kubah lava tampak'
             }
         ],

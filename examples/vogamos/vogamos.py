@@ -206,7 +206,7 @@ def config_factory(*args, **kwargs):
                     'color': 'red'
                 },
                 {
-                    'name': 'kompay.extensions.dome',
+                    'name': 'komapy.extensions.dome',
                     'label': 'Kubah lava tampak'
                 }
             ],
