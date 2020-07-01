@@ -1,5 +1,9 @@
+autopep8>=1.5.3
 bmaclient>=0.6.0
+coverage>=5.1
 matplotlib>=3.0.0
 pandas>=0.24.2
+pytest>=5.4.3
 sphinx_rtd_theme>=0.4.3
 sphinx>=2.0.1
+tox>=3.16.0
