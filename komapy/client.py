@@ -96,7 +96,9 @@ def fetch_bma_as_dictionary(name, **params):
         api = bmaclient.MonitoringAPI(
             api_key=app_settings.api_key,
             access_token=app_settings.access_token)
-    api.protocol = app_settings.protocol
+
+    if app_settings.protocol:
+        api.protocol = app_settings.protocol
 
     if app_settings.host:
         api.host = app_settings.host

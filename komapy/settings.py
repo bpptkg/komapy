@@ -11,11 +11,11 @@ class AppSettings:
     access token and other setting parameters.
     """
 
-    api_key = None
-    access_token = None
-    protocol = 'http'
+    api_key = ''
+    access_token = ''
+    protocol = ''
     time_zone = TIME_ZONE
-    host = None
+    host = ''
     bma_api_class = None
 
 
