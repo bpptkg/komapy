@@ -203,6 +203,58 @@ Grid parameters used in grid layout.
 
 TODO: Add example.
 
+index
+-----
+
+type: int | str
+
+default: None
+
+Unique index name to identify certain series. It is useful if you want to get
+instance or data from the series. For example:
+
+.. code-block:: python
+
+    from komapy import Chart
+
+    chart = Chart({
+        'layout': {
+            'data': [
+                {
+                    'series': {
+                        'index': 'series-0',
+                        'fields': [
+                            [1, 2, 3],
+                            [1, 2, 3],
+                        ]
+                    }
+                },
+                {
+                    'series': {
+                        'index': 'series-1',
+                        'fields': [
+                            [3, 4, 5],
+                            [3, 4, 5],
+                        ]
+                    }
+                },
+            ]
+        }
+    })
+    chart.render()
+
+    series1 = chart.get_series(index='series-1')
+    data1 = chart.get_data(index='series-1')
+
+If index is integer, it corresponds to the index in the series or data
+container. For example, if index is 0 in the ``Chart.get_series()`` method, it
+will find the first index of all series in the list. On the other hand, if index
+is string, it will find the series that match the index name.
+
+If index is None, it will return all series or data container. For example, if
+index is not provided the ``Chart.get_series()`` method, it will return all
+series instance.
+
 labels
 ------
 
