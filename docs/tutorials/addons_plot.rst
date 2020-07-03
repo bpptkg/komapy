@@ -96,3 +96,14 @@ Now you can use ``myaddons`` in your chart configuration:
 
     chart.render()
     chart.save('figure.png')
+
+You can also register your own add-on function using decorator. For example:
+
+.. code-block:: python
+
+    from komapy.series import register_addon
+
+    @register_addon('fix_zorder')
+    def fix_zorder(axis):
+        axis.set_zorder(axis.get_zorder() + 100)
+        axis.patch.set_visible(False)

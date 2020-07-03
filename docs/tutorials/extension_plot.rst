@@ -123,3 +123,18 @@ by its registered name:
             }
         ],
     }
+
+You can also register your own extension function using decorator. For example:
+
+.. code-block:: python
+
+    from komapy.extensions import register_extension
+
+    register_extension('custom_extension')
+    def custom_extension_plot(axis, starttime, endtime, **options):
+        """
+        Custom extension plot.
+        """
+        handle = axis.plot(...)
+
+        return handle

@@ -116,3 +116,18 @@ function by its registered name:
             'slope_correction',
         ]
     }
+
+You can also register your own data transformation function using decorator. For
+example:
+
+.. code-block:: python
+
+    from komapy.transforms import register_transform
+
+    @register_transform('compute_seismic_energy')
+    def compute_seismic_energy(data, config):
+        """
+        Compute seismic energy from magnitude. Return energy in MJ unit.
+        """
+        energy = 10**(11.8 + 1.5 * data[1]) / 10**12
+        return [data[0], energy / 10]
