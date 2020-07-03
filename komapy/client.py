@@ -3,8 +3,9 @@ KomaPy data fetcher and reader.
 """
 
 import json
-
 import bmaclient
+
+from uuid import uuid4
 from six.moves.urllib.parse import urlencode
 from six.moves.urllib.request import urlopen
 
@@ -22,7 +23,7 @@ def set_api_protocol(protocol):
     if not protocol:
         raise ValueError('Protocol name cannot be None or empty')
 
-    app_settings.protocol = protocol.lower()
+    app_settings.BMA_API_PROTOCOL = protocol.lower()
 
 
 def set_api_key(key):
@@ -35,7 +36,7 @@ def set_api_key(key):
     if not key:
         raise ValueError('API key cannot be None or empty')
 
-    app_settings.api_key = key
+    app_settings.BMA_API_KEY = key
 
 
 def set_access_token(token):
@@ -48,7 +49,7 @@ def set_access_token(token):
     if not token:
         raise ValueError('Access token cannot be None or empty')
 
-    app_settings.access_token = token
+    app_settings.BMA_ACCESS_TOKEN = token
 
 
 def set_timezone(name):
@@ -61,7 +62,7 @@ def set_timezone(name):
     if not name:
         raise ValueError('Timezone name cannot be None or empty')
 
-    app_settings.time_zone = name
+    app_settings.TIME_ZONE = name
 
 
 def set_api_host(name):
@@ -74,7 +75,7 @@ def set_api_host(name):
     if not name:
         raise ValueError('API host cannot be None or empty')
 
-    app_settings.host = name
+    app_settings.BMA_API_HOST = name
 
 
 def fetch_bma_as_dictionary(name, **params):
@@ -88,20 +89,23 @@ def fetch_bma_as_dictionary(name, **params):
     :return: Dictionary of resolved BMA API data.
     :rtype: dict
     """
-    if app_settings.bma_api_class is not None:
-        api = app_settings.bma_api_class(
-            api_key=app_settings.api_key,
-            access_token=app_settings.access_token)
+    if app_settings.BMA_API_CLASS is not None:
+        api = app_settings.BMA_API_CLASS(
+            api_key=app_settings.BMA_API_KEY,
+            access_token=app_settings.BMA_ACCESS_TOKEN)
     else:
         api = bmaclient.MonitoringAPI(
-            api_key=app_settings.api_key,
-            access_token=app_settings.access_token)
+            api_key=app_settings.BMA_API_KEY,
+            access_token=app_settings.BMA_ACCESS_TOKEN)
 
-    if app_settings.protocol:
-        api.protocol = app_settings.protocol
+    if app_settings.BMA_API_PROTOCOL:
+        api.protocol = app_settings.BMA_API_PROTOCOL
 
-    if app_settings.host:
-        api.host = app_settings.host
+    if app_settings.BMA_API_HOST:
+        api.host = app_settings.BMA_API_HOST
+
+    if app_settings.IGNORE_BMA_REQUEST_CACHE:
+        params.update(rv=uuid4().hex)
 
     method = api.get_fetch_method(name)
     if not method:
