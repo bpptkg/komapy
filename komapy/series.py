@@ -90,6 +90,7 @@ class Series(object):
         'field_options': {},
         'formatter': {},
         'grid': {},
+        'index': None,
         'labels': {},
         'legend': {},
         'locator': {},

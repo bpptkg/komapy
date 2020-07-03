@@ -90,10 +90,66 @@ class Chart(object):
         self.figure = None
         self.axes = []
         self.rendered_axes = []
+        self.series = []
+        self.data = []
 
         self._cache = {}
         self._plotted_axes = []
         self._validate()
+
+    def get_config(self):
+        """
+        Get original chart config.
+        """
+        return self.config
+
+    def get_series(self, index=None):
+        """
+        Get series instance.
+        """
+        if index is not None:
+            if isinstance(index, int):
+                if index > len(self.series):
+                    raise ChartError('Index out of range')
+                return self.series[index]
+            else:
+                for s in self.series:
+                    if s.index == index:
+                        return s
+                return None
+        return self.series
+
+    def get_series_and_data(self, index=None):
+        """
+        Get series and data pair.
+        """
+        if index is not None:
+            if isinstance(index, int):
+                if index > len(self.data):
+                    raise ChartError('Index out of range')
+                return self.data[index]
+            else:
+                for (s, d) in self.data:
+                    if s.index == index:
+                        return (s, d)
+                return None
+        return self.data
+
+    def get_data(self, index=None):
+        """
+        Get series data.
+        """
+        if index is not None:
+            if isinstance(index, int):
+                if index > len(self.data):
+                    raise ChartError('Index out of range')
+                return self.data[index][1]
+            else:
+                for (s, d) in self.data:
+                    if s.index == index:
+                        return d
+                return None
+        return [d for (s, d) in self.data]
 
     def _validate(self):
         self.layout.validate()
@@ -164,10 +220,14 @@ class Chart(object):
 
     def _build_series(self, axis, params):
         series = Series(**params)
+        self.series.append(series)
+
         if isinstance(series.fields, Callable):
+            self.data.append(series, None)
             return series.fields(axis, **series.field_options)
 
         plot_data = self._resolve_data(series)
+        self.data.append((series, plot_data))
 
         if series.axis:
             gca = self._plotted_axes[series.axis]
