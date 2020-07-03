@@ -12,6 +12,7 @@ set_api_key(os.environ['API_KEY'])
 startime = '2018-04-01'
 endtime = '2020-07-01'
 
+
 @register_transform('compute_seismic_energy')
 def compute_seismic_energy(data, config):
     """
