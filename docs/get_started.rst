@@ -22,6 +22,23 @@ or OAuth2 authentication:
 
     set_access_token('ACCESS_TOKEN')
 
+You can set custom BMA API host if the host deployed is different from bmaclient
+library default:
+
+.. code-block:: python
+
+    from komapy.client import set_api_host
+
+    set_api_host('192.168.0.43:800')
+
+You can also set custom BMA API protocol:
+
+.. code-block:: python
+
+    from komapy.client import set_api_protocol
+
+    set_api_protocol('https')
+
 Now you are ready to create a KomaPy chart. Here it is a simple example to plot
 EDM RB2 data:
 
