@@ -9,6 +9,8 @@ locale.setlocale(locale.LC_ALL, 'id_ID')
 
 set_api_key(os.environ['API_KEY'])
 
+startime = '2018-04-01'
+endtime = '2020-07-01'
 
 @register_transform('compute_seismic_energy')
 def compute_seismic_energy(data, config):
@@ -42,8 +44,8 @@ chart = Chart({
                         'name': 'magnitude',
                         'type': 'bar',
                         'query_params': {
-                            'eventdate__gte': '2018-04-01',
-                            'eventdate__lt': '2020-07-01',
+                            'eventdate__gte': startime,
+                            'eventdate__lt': endtime,
                             'eventtype': 'EXPLOSION',
                             'nolimit': True,
                         },
@@ -61,22 +63,14 @@ chart = Chart({
                                 'text': 'Energi Seismik (MJ)'
                             }
                         },
-                        'formatter': {
-                            'x': {
-                                'major': {
-                                    'name': 'DateFormatter',
-                                    'params': ['%b %Y']
-                                }
-                            }
-                        },
                     }
                 ]
             }
         ]
     },
     'extensions': {
-        'starttime': '2018-04-01',
-        'endtime': '2020-07-01',
+        'starttime': startime,
+        'endtime': endtime,
         'plot': [
             {
                 'name': 'komapy.extensions.activity_status'

@@ -8,6 +8,10 @@ locale.setlocale(locale.LC_ALL, 'id_ID')
 
 set_api_key(os.environ['API_KEY'])
 
+starttime = '2018-04-01'
+endtime = '2020-07-01'
+
+
 chart = Chart({
     'title': 'Magnitudo Letusan 2018-2020',
     'tight_layout': {
@@ -31,8 +35,8 @@ chart = Chart({
                         'name': 'magnitude',
                         'type': 'bar',
                         'query_params': {
-                            'eventdate__gte': '2018-04-01',
-                            'eventdate__lt': '2020-07-01',
+                            'eventdate__gte': starttime,
+                            'eventdate__lt': endtime,
                             'eventtype': 'EXPLOSION',
                             'nolimit': True,
                         },
@@ -47,22 +51,14 @@ chart = Chart({
                                 'text': 'Magnitudo'
                             }
                         },
-                        'formatter': {
-                            'x': {
-                                'major': {
-                                    'name': 'DateFormatter',
-                                    'params': ['%b %Y']
-                                }
-                            }
-                        },
                     }
                 ]
             }
         ]
     },
     'extensions': {
-        'starttime': '2018-04-01',
-        'endtime': '2020-07-01',
+        'starttime': starttime,
+        'endtime': endtime,
         'plot': [
             {
                 'name': 'komapy.extensions.activity_status'
