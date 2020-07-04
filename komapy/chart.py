@@ -86,6 +86,7 @@ class Chart(object):
         self.extensions = config.get('extensions', {})
         self.tight_layout = config.get('tight_layout', {})
         self.rc_params = config.get('rc_params', {})
+        self.use_cache = config.get('use_cache', False)
 
         self.figure = None
         self.axes = []
@@ -177,10 +178,8 @@ class Chart(object):
         """
         Resolve series data. Return cached version if use_cache=True.
         """
-        if self.config.get('use_cache', False):
-            config = ResolverCache.get_resolver_cache_config(series)
-            cached_resolver = ResolverCache(config)
-            cache_key = hash(cached_resolver)
+        if self.use_cache:
+            cache_key = ResolverCache.create_key_from_series(series)
             if cache_key in self._cache:
                 data = self._cache[cache_key]
                 plot_data = series.resolve_data(resource=data)
