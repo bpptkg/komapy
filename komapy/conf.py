@@ -1,6 +1,6 @@
 import json
 
-from .settings import AppSettings, app_settings
+from .settings import app_settings
 
 _cached_attrs = {}
 
