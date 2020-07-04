@@ -206,6 +206,8 @@ TODO: Add example.
 index
 -----
 
+.. versionadded:: 0.7.0
+
 type: int | str
 
 default: None
