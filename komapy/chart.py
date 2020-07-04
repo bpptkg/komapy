@@ -223,7 +223,7 @@ class Chart(object):
         self.series.append(series)
 
         if isinstance(series.fields, Callable):
-            self.data.append(series, None)
+            self.data.append((series, None))
             return series.fields(axis, **series.field_options)
 
         plot_data = self._resolve_data(series)
