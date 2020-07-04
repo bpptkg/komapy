@@ -43,6 +43,9 @@ class Settings:
         self.from_dict(dict_settings)
 
     def as_dict(self):
+        """
+        Export all settings as dictionary object.
+        """
         dict_settings = {}
         for key, value in _cached_attrs.items():
             dict_settings[key] = value
