@@ -194,6 +194,16 @@ def plot_activity_phases_vertical_line(axis, starttime, endtime, **options):
 
     Plot style can be updated by providing keyword 'style' in the extensions
     plot entry.
+
+    Default style: ::
+
+        'style': {
+            'color': '#272727',
+            'linestyle': '--',
+            'linewidth': 1.5,
+            'zorder': 10,
+        }
+
     """
     handle = None
 
@@ -226,6 +236,15 @@ def plot_event_label(axis, starttime, endtime, **options):
 
     Plot style can be updated by providing keyword ``style`` in the extensions
     plot entry.
+
+    Default style: ::
+
+        'style': {
+            'label': <eventtype>,
+            'color': <random_color>
+        }
+
+    ``eventtype`` and ``random_color`` are generated automatically on runtime.
     """
     handle = None
     date_format = date_format = r'%Y-%m-%d %H:%M:%S'
