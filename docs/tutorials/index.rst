@@ -20,3 +20,4 @@ engine. So, happy charting.
     extending_plot
     addons_plot
     using_external_configuration
+    set_custom_settings

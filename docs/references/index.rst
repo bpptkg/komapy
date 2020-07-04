@@ -2,6 +2,12 @@
 References
 ==========
 
+Settings
+--------
+
+.. toctree::
+
+    settings
 
 Properties
 ----------
@@ -17,10 +23,12 @@ Modules
 .. toctree::
     :maxdepth: 1
 
+    addons
     axis
     cache
     chart
     client
+    conf
     exceptions
     extensions
     layout
@@ -28,4 +36,3 @@ Modules
     series
     transforms
     utils
-    version
