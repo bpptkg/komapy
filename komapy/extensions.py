@@ -11,7 +11,7 @@ from .client import fetch_bma_as_dataframe
 from .decorators import register_as_decorator
 from .exceptions import ChartError
 from .processing import dataframe_or_empty
-from .utils import resolve_timestamp
+from .utils import generate_random_color, resolve_timestamp
 
 extension_registers = {
     # Legacy names.
@@ -40,6 +40,9 @@ extension_registers = {
     'komapy.extensions.activity_phases_vertical_line': {
         'resolver': 'plot_activity_phases_vertical_line',
         'label': '',
+    },
+    'komapy.extensions.event_label': {
+        'resolver': 'plot_event_label',
     },
 }
 
@@ -210,5 +213,48 @@ def plot_activity_phases_vertical_line(axis, starttime, endtime, **options):
     for item in PHASE_DATES:
         if item[0] >= start and item[0] <= end:
             axis.axvline(item[0], **style)
+
+    return handle
+
+
+def plot_event_label(axis, starttime, endtime, **options):
+    """
+    Plot event label on current axis.
+
+    Provide required ``eventtype`` field in the options to specify which event
+    to plot.
+
+    Plot style can be updated by providing keyword ``style`` in the extensions
+    plot entry.
+    """
+    handle = None
+    date_format = date_format = r'%Y-%m-%d %H:%M:%S'
+
+    eventtype = options.get('eventtype', '')
+    if not eventtype:
+        raise ChartError("Option 'eventtype' is required to plot event label.")
+
+    style = {
+        'label': eventtype,
+        'color': generate_random_color(),
+    }
+    if options.get('style'):
+        style = options.get('style')
+
+    params = {
+        'eventtype': eventtype,
+        'nolimit': True,
+        'eventdate__gte': starttime.strftime(date_format),
+        'eventdate__lt': endtime.strftime(date_format),
+        'rv': uuid.uuid4().hex
+    }
+    data = fetch_bma_as_dataframe('bulletin', **params)
+
+    eventdate = resolve_timestamp(dataframe_or_empty(data, 'eventdate'))
+    if eventdate.empty:
+        return handle
+
+    for timestamp in eventdate:
+        handle = axis.axvline(timestamp, **style)
 
     return handle

@@ -5,6 +5,7 @@ KomaPy utility module.
 import base64
 import re
 import uuid
+import random
 
 import pytz
 from dateutil import parser
@@ -102,3 +103,13 @@ def get_validation_methods(root_class):
             validation_methods.append(method_name)
 
     return validation_methods
+
+
+def generate_random_color():
+    """
+    Generate random color.
+    """
+    r = random.random()
+    g = random.random()
+    b = random.random()
+    return (r, g, b)
