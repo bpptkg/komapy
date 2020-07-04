@@ -148,6 +148,19 @@ def plot_activity_status(axis, starttime, endtime, **options):
                 },
             ]
         }
+
+    Default settings: ::
+
+        'normal': {
+            'alpha': 0.4,
+            'color': 'lime',
+            'zorder': 0,
+        }
+
+        'waspada': {
+            'color': '#fff59d',
+            'zorder': 0,
+        }
     """
     DATE_NORMAL_TO_WASPADA = datetime.datetime(2018, 5, 21)
 
@@ -162,9 +175,10 @@ def plot_activity_status(axis, starttime, endtime, **options):
         'zorder': 0,
     }
     if options.get('normal'):
-        normal.update(options.get('normal'))
+        normal = options.get('normal')
     if options.get('waspada'):
-        waspada.update(options.get('waspada'))
+        waspada = options.get('waspada')
+
     axis.axvspan(starttime, DATE_NORMAL_TO_WASPADA, **normal)
     axis.axvspan(DATE_NORMAL_TO_WASPADA, endtime, **waspada)
     axis.set_xlim(starttime, endtime)
@@ -187,7 +201,7 @@ def plot_activity_phases_vertical_line(axis, starttime, endtime, **options):
         'zorder': 10,
     }
     if options.get('style'):
-        style.update(options.get('style'))
+        style = options.get('style')
 
     start = starttime.replace(tzinfo=None)
     end = endtime.replace(tzinfo=None)
