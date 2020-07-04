@@ -18,7 +18,7 @@ def set_api_protocol(protocol):
     Set BMA API protocol, either http or https.
 
     :param protocol: BMA API protocol
-    :param protocol: str
+    :type protocol: str
     """
     if not protocol:
         raise ValueError('Protocol name cannot be None or empty')
