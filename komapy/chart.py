@@ -76,7 +76,7 @@ class Chart(object):
         self.title = config.get('title')
         self.theme = config.get('theme')
         self.legend = config.get('legend', {})
-        self.timezone = config.get('timezone', app_settings.time_zone)
+        self.timezone = config.get('timezone', app_settings.TIME_ZONE)
 
         config_layout = config.get('layout', {})
         self.layout = Layout(**config_layout)
