@@ -353,8 +353,7 @@ class Chart(object):
         for item in plot:
             name = item.pop('name', None)
             if name is None:
-                raise ChartError(
-                    'Parameter name is required to build extension series')
+                continue
 
             if isinstance(name, Callable):
                 method = name
