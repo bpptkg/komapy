@@ -21,3 +21,4 @@ engine. So, happy charting.
     addons_plot
     using_external_configuration
     set_custom_settings
+    getting_data_from_chart
