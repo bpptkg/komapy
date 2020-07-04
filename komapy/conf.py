@@ -42,18 +42,15 @@ class Settings:
             dict_settings = json.load(fp)
         self.from_dict(dict_settings)
 
-    def reset(self):
-        """
-        Reset settings to default.
-        """
-        _cached_attrs.clear()
-        app_settings = AppSettings()
+    def as_dict(self):
+        dict_settings = {}
+        for key, value in _cached_attrs.items():
+            dict_settings[key] = value
 
-    def clear(self):
-        """
-        Clear cached settings.
-        """
-        _cached_attrs.clear()
+        for key in app_settings.defaults:
+            dict_settings.update({key: getattr(app_settings, key)})
+
+        return dict_settings
 
 
 settings = Settings()
