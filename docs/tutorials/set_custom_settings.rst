@@ -1,7 +1,7 @@
 Set Custom Settings
 ===================
 
-KomaPy now provide an interface to conveniently set custom settings. For
+KomaPy now provides an interface to conveniently set custom settings. For
 example, set BMA API key:
 
 .. code-block:: python
