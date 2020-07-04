@@ -33,7 +33,7 @@ def set_axis_locator(axis, params=None, **kwargs):
                     'params': [],
                     'keyword_params': {
 
-                    } 
+                    }
                 }
             }
         }
@@ -52,13 +52,14 @@ def set_axis_locator(axis, params=None, **kwargs):
     for key, value in config.items():
         if key not in axis_methods:
             continue
+
         for which, data in value.items():
             if which not in formatter_methods:
                 continue
+
             name = data.get('name')
             if name is None:
-                raise ChartError(
-                    'Parameter name is required if using axis locator')
+                continue
 
             for attr in [matplotlib.ticker, matplotlib.dates]:
                 locator = getattr(attr, name, None)
@@ -71,7 +72,11 @@ def set_axis_locator(axis, params=None, **kwargs):
             gca = getattr(axis, axis_methods[key])()
             instance = locator(*data.get('params', []),
                                **data.get('keyword_params', {}))
-            instances.update({key: {which: instance}})
+            try:
+                instances[key].update({which: instance})
+            except KeyError:
+                instances.update({key: {which: instance}})
+
             getattr(gca, formatter_methods[which])(instance)
 
     return instances
@@ -116,7 +121,7 @@ def set_axis_formatter(axis, params=None, **kwargs):
     }
     formatter_methods = {
         'major': 'set_major_formatter',
-        'minor': 'set_minor_formatter,'
+        'minor': 'set_minor_formatter'
     }
     instances = {}
     need_locator_instances = [
@@ -156,9 +161,7 @@ def set_axis_formatter(axis, params=None, **kwargs):
                 else:
                     name = data.get('name')
                     if name is None:
-                        raise ChartError(
-                            'Parameter name is required '
-                            'if using non-default formatter')
+                        continue
 
                     for attr in [matplotlib.ticker, matplotlib.dates]:
                         formatter = getattr(attr, name, None)
@@ -179,8 +182,11 @@ def set_axis_formatter(axis, params=None, **kwargs):
                     else:
                         instance = formatter(*data.get('params', []),
                                              **data.get('keyword_params', {}))
+                    try:
+                        instances[key].update({which: instance})
+                    except KeyError:
+                        instances.update({key: {which: instance}})
 
-                    instances.update({key: {which: instance}})
                     getattr(gca, formatter_methods[which])(instance)
 
     return instances
