@@ -25,23 +25,23 @@ extension_registers = {
     },
 
     # Register all functions with namespace prefix.
-    'komapy.extensions.explosion': {
+    'komapy.extensions.plot_explosion_line': {
         'resolver': 'plot_explosion_line',
         'label': '',
     },
-    'komapy.extensions.dome': {
+    'komapy.extensions.plot_dome_appearance': {
         'resolver': 'plot_dome_appearance',
         'label': '',
     },
-    'komapy.extensions.activity_status': {
+    'komapy.extensions.plot_activity_status': {
         'resolver': 'plot_activity_status',
         'label': '',
     },
-    'komapy.extensions.activity_phases_vertical_line': {
+    'komapy.extensions.plot_activity_phases_vertical_line': {
         'resolver': 'plot_activity_phases_vertical_line',
         'label': '',
     },
-    'komapy.extensions.event_label': {
+    'komapy.extensions.plot_event_label': {
         'resolver': 'plot_event_label',
     },
 }
