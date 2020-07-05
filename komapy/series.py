@@ -12,6 +12,33 @@ from .decorators import register_as_decorator
 from .exceptions import ChartError
 from .utils import get_validation_methods
 
+DATA_SOURCES = OrderedDict([
+    ('csv', {
+        'resolver': processing.read_csv,
+        'options': 'csv_params',
+    }),
+    ('json', {
+        'resolver': processing.read_json,
+        'options': 'json_params',
+    }),
+    ('excel', {
+        'resolver': processing.read_excel,
+        'options': 'excel_params',
+    }),
+    ('sql', {
+        'resolver': processing.read_sql,
+        'options': 'sql_params',
+    }),
+    ('url', {
+        'resolver': client.fetch_url_as_dataframe,
+        'options': 'query_params',
+    }),
+    ('name', {
+        'resolver': client.fetch_bma_as_dataframe,
+        'options': 'query_params',
+    }),
+])
+
 
 @register_as_decorator
 def register_addon(name, resolver, **kwargs):
@@ -82,22 +109,28 @@ class Series(object):
         'axis': None,
         'csv_params': {},
         'csv': None,
-        'fields': [],
+        'excel_params': {},
+        'excel': None,
         'field_options': {},
+        'fields': [],
         'formatter': {},
         'grid': {},
         'index': None,
+        'json_params': {},
+        'json': None,
         'labels': {},
         'legend': {},
         'locator': {},
-        'name': None,
         'merge_options': {},
+        'name': None,
         'partial': [],
         'plot_params': {},
         'query_params': {},
         'secondary': None,
-        'title': None,
+        'sql_params': {},
+        'sql': None,
         'tertiary': {},
+        'title': None,
         'transforms': [],
         'type': 'line',
         'url': None,
@@ -162,20 +195,6 @@ class Series(object):
         :return: :class:`pandas.DataFrame` object if using CSV, JSON URL, or
                  BMA API name. Otherwise, it returns None.
         """
-        DATA_SOURCES = OrderedDict([
-            ('csv', {
-                'resolver': processing.read_csv,
-                'options': 'csv_params'
-            }),
-            ('url', {
-                'resolver': client.fetch_url_as_dataframe,
-                'options': 'query_params'
-            }),
-            ('name', {
-                'resolver': client.fetch_bma_as_dataframe,
-                'options': 'query_params'
-            }),
-        ])
 
         def get_resource(config_dict):
             for name in DATA_SOURCES:
@@ -184,6 +203,9 @@ class Series(object):
                     resolve_fn = DATA_SOURCES[name]['resolver']
                     options = config_dict.get(
                         DATA_SOURCES[name]['options'], {})
+
+                    if isinstance(source, list):
+                        return resolve_fn(*source, **options)
                     return resolve_fn(source, **options)
             return None
 

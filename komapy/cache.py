@@ -72,6 +72,9 @@ class ResolverCache(object):
 
         sources = OrderedDict([
             ('csv', 'csv_params'),
+            ('json', 'json_params'),
+            ('excel', 'excel_params'),
+            ('sql', 'sql_params'),
             ('url', 'query_params'),
             ('name', 'query_params'),
         ])

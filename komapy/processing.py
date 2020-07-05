@@ -67,13 +67,28 @@ def dataframe_or_empty(data, name):
 
 
 def read_csv(*args, **kwargs):
-    """Read csv file."""
+    """Read CSV file."""
     return pd.read_csv(*args, **kwargs)
 
 
 def read_excel(*args, **kwargs):
-    """Read excel file."""
+    """Read Excel file."""
     return pd.read_excel(*args, **kwargs)
+
+
+def read_json(*args, **kwargs):
+    """Read JSON file."""
+    return pd.read_json(*args, **kwargs)
+
+
+def read_hdf(*args, **kwargs):
+    """Read HDF file."""
+    return pd.read_hdf(*args, **kwargs)
+
+
+def read_sql(*args, **kwargs):
+    """Read SQL query or database table."""
+    return pd.read_sql(*args, **kwargs)
 
 
 def get_rgb_color(num_sample, index, colormap='tab10'):
