@@ -440,7 +440,9 @@ class Chart(object):
             self.figure.suptitle(self.title)
         else:
             plt.title(self.title)
-        plt.tight_layout(**self.tight_layout)
+
+        if self.tight_layout:
+            plt.tight_layout(**self.tight_layout)
         plt.savefig(filename, **self.save_options)
 
     def clear(self):
