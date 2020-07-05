@@ -6,15 +6,11 @@ from collections import Callable, OrderedDict
 from functools import partial
 
 from . import client, processing, transforms, utils
+from .addons import addon_registers
 from .constants import SUPPORTED_NAMES, SUPPORTED_TYPES
 from .decorators import register_as_decorator
 from .exceptions import ChartError
 from .utils import get_validation_methods
-
-# TODO(indra): Move to the addons module.
-addon_registers = {
-    'komapy.addons.activity_phases': 'plot_activity_phases',
-}
 
 
 @register_as_decorator
