@@ -77,7 +77,7 @@ class Chart(object):
     """A chart object."""
 
     def __init__(self, config):
-        self.config = copy.deepcopy(config)
+        self.config = config
 
         self.title = config.get('title')
         self.theme = config.get('theme')
