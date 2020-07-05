@@ -2,12 +2,13 @@
 References
 ==========
 
-Settings
---------
+General
+-------
 
 .. toctree::
 
     settings
+    bma_api_names
 
 Properties
 ----------
