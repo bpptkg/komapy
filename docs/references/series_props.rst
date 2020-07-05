@@ -97,23 +97,29 @@ Example:
 
     series = Series(csv='http://api.example.com/data.csv')
 
-fields
-------
+excel_params
+------------
 
-type: list, function
+.. versionadded:: 0.7.0
 
-default: []
+type: dict
 
-Data fields to plot. If using CSV, JSON URL, or BMA API name, fields can be a
-list of column name or JSON field name you want to plot. If you want to plot
-timestamp vs energy, you can write the fields like this: ``['timestamp',
-'energy']``.
+default: {}
 
-Example:
+Excel parameters to be passed to the resolver. Default resolver is
+``pandas.read_excel``. So, all parameters will be passed as keyword arguments to
+the pandas read_excel keyword arguments.
 
-.. code-block:: python
+excel
+-----
 
-    series = Series(name='energy', fields=['timestamp', 'energy'])
+.. versionadded:: 0.7.0
+
+type: str
+
+default: None
+
+Path to the Excel file.
 
 field_options
 -------------
@@ -160,6 +166,24 @@ Example:
             ]
         }
     }
+
+fields
+------
+
+type: list, callable
+
+default: []
+
+Data fields to plot. If using CSV, JSON URL, or BMA API name, fields can be a
+list of column name or JSON field name you want to plot. If you want to plot
+timestamp vs energy, you can write the fields like this: ``['timestamp',
+'energy']``.
+
+Example:
+
+.. code-block:: python
+
+    series = Series(name='energy', fields=['timestamp', 'energy'])
 
 formatter
 ---------
@@ -256,6 +280,30 @@ is string, it will find the series that match the index name.
 If index is None, it will return all series or data container. For example, if
 index is not provided the ``Chart.get_series()`` method, it will return all
 series instance.
+
+json_params
+-----------
+
+.. versionadded:: 0.7.0
+
+type: dict
+
+default: {}
+
+JSON parameters to be passed to the JSON resolver. Default JSON resolver is
+``pandas.read_json``. So, all parameters will be passed as keyword arguments to
+the pandas read_json keyword arguments.
+
+json
+----
+
+.. versionadded:: 0.7.0
+
+type: str
+
+default: None
+
+Path to JSON file or JSON URL.
 
 labels
 ------
@@ -475,6 +523,40 @@ Example:
 .. code-block:: python
 
     series = Series(secondary='x')
+
+sql_params
+----------
+
+.. versionadded:: 0.7.0
+
+type: dict
+
+default: {}
+
+SQL parameters to be passed to the resolver. Default resolver is
+``pandas.read_sql``. So, all parameters will be passed as keyword arguments to
+the pandas read_sql keyword arguments.
+
+sql
+---
+
+.. versionadded:: 0.7.0
+
+type: list
+
+default: []
+
+SQL query and database information to be passed to the resolver. The first
+element in the list must be SQL query to be executed, and the second element
+must be SQLAlchemy connectable (engine/connection). For example:
+
+.. code-block:: python
+
+    from sqlalchemy import create_engine
+
+    engine = create_engine('sqlite://./db.sqlite3')
+    query = "select `timestamp`, `slope_distance` from `rb2` order by `timestamp` asc"
+    sql = [query, engine]
 
 tertiary
 --------
