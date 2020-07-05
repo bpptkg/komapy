@@ -58,7 +58,7 @@ CSV:
         'xaxis_date': True,
     }
 
-Another example of using JSON URL:
+Another example of using generic URL:
 
 .. code-block:: python
 
@@ -74,8 +74,9 @@ Another example of using JSON URL:
     }
 
 If you set multiple data resolver in the series config, KomaPy will resolve the
-data in the following order: CSV, JSON URL, and BMA API name. On it resolved the
-data, the other resolvers will be left untouched.
+data in the following order: CSV, JSON file or URL, Excel file, SQL query,
+generic URL, and BMA API name. One it has resolved the data, the other resolvers
+will be left untouched.
 
 If you want to plot Python object using KomaPy, you can directly pass it to the
 ``fields`` list. For example:
