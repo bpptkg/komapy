@@ -1,8 +1,86 @@
 import copy
 
-from komapy.utils import compute_middletime, time_to_offset, to_pydatetime
-
 from .constants import get_phase_dates
+from .exceptions import ChartError
+from .utils import compute_middletime, time_to_offset, to_pydatetime
+
+addon_registers = {
+    'komapy.addons.plot_activity_phases': 'plot_activity_phases',
+    'komapy.addons.set_axis_xlimit': 'set_axis_xlimit',
+    'komapy.addons.set_axis_ylimit': 'set_axis_ylimit',
+}
+
+
+def set_axis_xlimit(axis, **options):
+    """
+    Set the x-axis view limits. Set ``value`` in add-on entry parameters to
+    particular minimum and maximum value. Set additional ``datetime`` to true
+    if the axis is using date time value.
+
+    Example:
+
+    .. code-block:: python
+
+        from komapy.series import Series
+
+        series = Series(
+            addons=[
+                {
+                    'name': 'xlimit',
+                    'value': ['2019-04-01', '2019-08-01'],
+                    'datetime': True,
+                }
+            ]
+        )
+    """
+    value = options.get('value')
+    if not value:
+        raise ChartError(
+            'Parameter value is required if xlimit add-ons is enabled')
+    if len(value) < 2:
+        raise ChartError('Unsufficient parameter value length')
+
+    timezone = options.get('timezone')
+    if options.get('datetime'):
+        x1 = to_pydatetime(value[0], timezone=timezone)
+        x2 = to_pydatetime(value[1], timezone=timezone)
+    axis.set_xlim(x1, x2)
+
+
+def set_axis_ylimit(axis, **options):
+    """
+    Set the y-axis view limits. Set ``value`` in add-on entry parameters to
+    particular minimum and maximum value. Set additional ``datetime`` to true
+    if the axis is using date time value.
+
+    Example:
+
+    .. code-block:: python
+
+        from komapy.series import Series
+
+        series = Series(
+            addons=[
+                {
+                    'name': 'ylimit',
+                    'value': ['2019-04-01', '2019-08-01'],
+                    'datetime': True,
+                }
+            ]
+        )
+    """
+    value = options.get('value')
+    if not value:
+        raise ChartError(
+            'Parameter value is required if ylimit add-ons is enabled')
+    if len(value) < 2:
+        raise ChartError('Unsufficient parameter value length')
+
+    timezone = options.get('timezone')
+    if options.get('datetime'):
+        y1 = to_pydatetime(value[0], timezone=timezone)
+        y2 = to_pydatetime(value[1], timezone=timezone)
+    axis.set_ylim(y1, y2)
 
 
 def filter_date_in_range(phase_dates, starttime, endtime):
