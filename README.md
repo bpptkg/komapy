@@ -1,22 +1,18 @@
 # KomaPy
 
-Python library for creating customizable BPPTKG Monitoring API chart.
+KomaPy is Python library for creating customizable BPPTKG Monitoring API chart.
 
 ## Use Cases
 
 KomaPy is suitable for the following applications:
 
-* Building automated static chart figure
-* Embedding into a web application for generating predefined chart configuration
+* Building automated static chart figures
+* Embedding into a web application for generating predefined chart
+  configurations
 * Quick data analysis and visualization
 * Data correlation and processing
-* Generating high quality chart for publication
+* Generating high quality chart for publications
 * Many more
-
-## Requirements
-
-KomaPy depends on Python 3.5+ and several packages. You can see them in
-`requirements.txt` file.
 
 ## Installation
 
@@ -40,20 +36,18 @@ chart = Chart({
     'layout': {
         'data': [
             {
-                'series': [
-                    {
-                        'name': 'edm',
-                        'query_params': {
-                            'benchmark': 'BAB0',
-                            'reflector': 'RB2',
-                            'start_at': '2019-04-01',
-                            'end_at': '2019-08-01',
-                            'ci': True
-                        },
-                        'fields': ['timestamp', 'slope_distance'],
-                        'xaxis_date': True
-                    }
-                ]
+                'series': {
+                    'name': 'edm',
+                    'query_params': {
+                        'benchmark': 'BAB0',
+                        'reflector': 'RB2',
+                        'start_at': '2019-04-01',
+                        'end_at': '2019-08-01',
+                        'ci': True
+                    },
+                    'fields': ['timestamp', 'slope_distance'],
+                    'xaxis_date': True
+                }
             }
         ]
     }
