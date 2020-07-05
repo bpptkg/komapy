@@ -187,7 +187,7 @@ chart = Chart({
         'endtime': endtime,
         'plot': [
             {
-                'name': 'komapy.extensions.dome',
+                'name': 'komapy.extensions.plot_dome_appearance',
                 'label': 'Kubah lava tampak'
             }
         ],

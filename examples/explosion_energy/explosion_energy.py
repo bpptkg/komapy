@@ -74,7 +74,7 @@ chart = Chart({
         'endtime': endtime,
         'plot': [
             {
-                'name': 'komapy.extensions.activity_status'
+                'name': 'komapy.extensions.plot_activity_status'
             }
         ]
     }

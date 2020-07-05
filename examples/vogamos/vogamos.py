@@ -198,15 +198,15 @@ def config_factory(*args, **kwargs):
             'endtime': endtime,
             'plot': [
                 {
-                    'name': 'komapy.extensions.activity_status'
+                    'name': 'komapy.extensions.plot_activity_status'
                 },
                 {
-                    'name': 'komapy.extensions.explosion',
+                    'name': 'komapy.extensions.plot_explosion_line',
                     'label': 'Letusan',
                     'color': 'red'
                 },
                 {
-                    'name': 'komapy.extensions.dome',
+                    'name': 'komapy.extensions.plot_dome_appearance',
                     'label': 'Kubah lava tampak'
                 }
             ],
