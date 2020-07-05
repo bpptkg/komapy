@@ -128,7 +128,7 @@ class Series(object):
         'query_params': {},
         'secondary': None,
         'sql_params': {},
-        'sql': None,
+        'sql': [],
         'tertiary': {},
         'title': None,
         'transforms': [],
