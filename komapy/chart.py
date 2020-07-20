@@ -411,7 +411,12 @@ class Chart(object):
         plt.rcParams.update(self.rc_params)
 
     def render(self):
-        """Render chart object."""
+        """
+        Render chart object.
+
+        It builds figure, layout, series, fetchs resource from data sources,
+        renders matplotlib axes objects, and performs other tasks.
+        """
 
         self._update_rc_params()
         apply_theme(self.theme)
