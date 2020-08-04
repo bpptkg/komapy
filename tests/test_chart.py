@@ -16,7 +16,7 @@ class ChartTest(unittest.TestCase):
         chart.render()
         self.assertDictEqual(chart.config, {})
         self.assertEqual(chart.num_subplots, 0)
-        self.assertEqual(len(chart.axes), 0)
+        self.assertEqual(len(chart.axes), 1)
         self.assertEqual(len(chart.rendered_axes), 0)
 
     def test_chart_title(self):
@@ -45,14 +45,14 @@ class ChartTest(unittest.TestCase):
             'figure_options': {
                 'num': 2,
                 'figsize': [6, 8],
-                'dpi': '96'
+                'dpi': 96
             }
         })
         chart.render()
         self.assertDictEqual(chart.figure_options, {
             'num': 2,
             'figsize': [6, 8],
-            'dpi': '96'
+            'dpi': 96
         })
 
     def test_chart_save_options(self):
