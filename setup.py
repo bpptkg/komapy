@@ -21,7 +21,7 @@ setup(
     license='MIT',
     install_requires=[
         'matplotlib>=3.0.0',
-        'pandas',
+        'pandas>=0.24,<1.1',
         'bmaclient>=0.6.0',
     ],
     author='Indra Rudianto',
