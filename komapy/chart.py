@@ -338,9 +338,13 @@ class Chart(object):
         else:
             num_columns = 1
             options = self.layout.options
+            if self.num_subplots == 0:
+                num_rows = 1
+            else:
+                num_rows = self.num_subplots
 
             self.figure, self.axes = plt.subplots(
-                self.num_subplots, num_columns, **options)
+                num_rows, num_columns, **options)
 
     def _build_extension_series(self, axis, starttime, endtime):
         if not starttime:
@@ -427,10 +431,7 @@ class Chart(object):
         self._build_figure()
         self._build_axes()
 
-        if not self.num_subplots:
-            return
-
-        if self.num_subplots == 1:
+        if self.num_subplots < 2:
             self.axes = [self.axes]
 
         for axis, layout in zip(self.axes, self.layout.data):
