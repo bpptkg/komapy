@@ -21,7 +21,7 @@ def resolve_timestamp(data):
         return data
 
     data = pd.to_datetime(data)
-    return data
+    return data.dt.date
 
 
 def to_pydatetime(*args, **kwargs):
