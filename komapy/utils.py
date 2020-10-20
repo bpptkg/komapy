@@ -113,3 +113,9 @@ def generate_random_color():
     g = random.random()
     b = random.random()
     return (r, g, b)
+
+
+def get_matplotlib_version():
+    import matplotlib
+    version = matplotlib.__version__.split('.')
+    return (int(version[0]), int(version[1]), int(version[0]))

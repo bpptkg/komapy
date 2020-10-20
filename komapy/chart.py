@@ -43,7 +43,6 @@ from collections import Callable
 from functools import partial
 
 import matplotlib.pyplot as plt
-from pandas.plotting import register_matplotlib_converters
 
 from . import addons, extensions, utils
 from .axis import (
@@ -62,7 +61,9 @@ from .layout import Layout
 from .series import Series, addon_registers
 from .settings import app_settings
 
-register_matplotlib_converters()
+if utils.get_matplotlib_version() < (3, 3):
+    from pandas.plotting import register_matplotlib_converters
+    register_matplotlib_converters()
 
 
 def apply_theme(name):
