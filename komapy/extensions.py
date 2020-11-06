@@ -121,12 +121,15 @@ def plot_activity_status(axis, starttime, endtime, **options):
     """
     Plot activity status color on current axis.
 
-    Date when level status increased from NORMAL to WASPADA is 2018-05-21
+    Date when the level status increases from NORMAL to WASPADA is 2018-05-21
     Asia/Jakarta timezone.
 
-    NORMAL and WASPADA style can be updated by passing 'normal' and/or 'waspada'
-    keywords as dictionary in the series extension options respectively. See
-    example below.
+    Date when the level status increases from WASPADA to SIAGA is 2020-11-05
+    Asia/Jakarta timezone.
+
+    NORMAL, WASPADA, and SIAGA style can be updated by passing 'normal',
+    'waspada' and/or 'siaga' keywords as dictionary in the series extension
+    options respectively. See example below.
 
     First register plot function to the KomaPy extension registers: ::
 
@@ -164,8 +167,15 @@ def plot_activity_status(axis, starttime, endtime, **options):
             'color': '#fff59d',
             'zorder': 0,
         }
+
+        'siaga': {
+            'alpha': 0.7,
+            'color': 'orange',
+            'zorder': 0,
+        }
     """
     DATE_NORMAL_TO_WASPADA = datetime.datetime(2018, 5, 21)
+    DATE_WASPADA_TO_SIAGA = datetime.datetime(2020, 11, 5)
 
     handle = None
     normal = {
@@ -177,13 +187,21 @@ def plot_activity_status(axis, starttime, endtime, **options):
         'color': '#fff59d',
         'zorder': 0,
     }
+    siaga = {
+        'alpha': 0.7,
+        'color': 'orange',
+        'zorder': 0,
+    }
     if options.get('normal'):
         normal = options.get('normal')
     if options.get('waspada'):
         waspada = options.get('waspada')
+    if options.get('siaga'):
+        siaga = options.get('siaga')
 
     axis.axvspan(starttime, DATE_NORMAL_TO_WASPADA, **normal)
-    axis.axvspan(DATE_NORMAL_TO_WASPADA, endtime, **waspada)
+    axis.axvspan(DATE_NORMAL_TO_WASPADA, DATE_WASPADA_TO_SIAGA, **waspada)
+    axis.axvspan(DATE_WASPADA_TO_SIAGA, endtime, **siaga)
     axis.set_xlim(starttime, endtime)
     return handle
 
