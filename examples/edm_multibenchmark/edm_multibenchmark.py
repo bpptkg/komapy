@@ -68,7 +68,13 @@ def create_series(benchmark, reflector):
                 'major': {
                     'name': 'MonthLocator'
                 }
-            }
+            },
+            'y': {'major': {
+                'name': 'LinearLocator',
+                'keyword_params': {
+                    'numticks': 4
+                }
+            }},
         },
     }
 
