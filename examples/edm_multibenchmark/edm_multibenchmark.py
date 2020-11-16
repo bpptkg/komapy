@@ -12,7 +12,7 @@ settings.BMA_API_KEY = os.environ['API_KEY']
 end = datetime.datetime.now()
 start = datetime.datetime(2020, 6, 1, 0, 0, 0)
 START_TIME = start.strftime('%Y-%m-%d %H:%M:%S')
-END_TIME = end.strftime('%Y-%m-%d %H:%M:%S')
+END_TIME = end.strftime('%Y-%m-%d 08:00:00')
 
 print(START_TIME)
 print(END_TIME)
