@@ -39,7 +39,7 @@ Example:
 """
 
 import copy
-from collections import Callable
+from collections.abc import Callable
 from functools import partial
 
 import matplotlib.pyplot as plt
@@ -459,6 +459,7 @@ class Chart(object):
         if self.figure:
             plt.close(self.figure)
 
+        plt.cla()
         plt.clf()
         plt.close('all')
 

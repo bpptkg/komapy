@@ -2,7 +2,8 @@
 KomaPy chart series.
 """
 
-from collections import Callable, OrderedDict
+from collections import OrderedDict
+from collections.abc import Callable
 from functools import partial
 
 from . import client, processing, transforms, utils

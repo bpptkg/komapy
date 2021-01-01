@@ -2,7 +2,7 @@
 KomaPy processing engine.
 """
 
-from collections import Callable
+from collections.abc import Callable
 
 import numpy as np
 import pandas as pd

@@ -2,7 +2,7 @@
 KomaPy data transforms module.
 """
 
-from collections import Callable
+from collections.abc import Callable
 
 import pandas as pd
 

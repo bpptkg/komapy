@@ -2,7 +2,8 @@
 Matplotlib axes customization wrapper.
 """
 
-from collections import Callable, OrderedDict
+from collections import OrderedDict
+from collections.abc import Callable
 from functools import partial
 
 import matplotlib.dates

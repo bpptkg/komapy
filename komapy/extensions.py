@@ -4,7 +4,7 @@ KomaPy extension plots.
 
 import uuid
 import datetime
-from collections import Callable
+from collections.abc import Callable
 
 from .constants import get_phase_dates
 from .client import fetch_bma_as_dataframe
