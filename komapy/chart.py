@@ -435,18 +435,25 @@ class Chart(object):
         if self.num_subplots < 2:
             self.axes = [self.axes]
 
+        index = 0
         for axis, layout in zip(self.axes, self.layout.data):
             subplot_axes = self._build_layout(axis, layout)
+            if index == 0 and len(subplot_axes) > 0:
+                if utils.get_matplotlib_version() >= (3, 3):
+                    axis.set_title(self.title)
             self.rendered_axes.append(subplot_axes)
             self._build_extension_plot(axis)
+
+            index += 1
 
     def save(self, filename):
         """Export chart object to file."""
 
-        if self.num_subplots > 1:
-            self.figure.suptitle(self.title)
-        else:
-            plt.title(self.title)
+        if utils.get_matplotlib_version() < (3, 3):
+            if self.num_subplots > 1:
+                self.figure.suptitle(self.title)
+            else:
+                plt.title(self.title)
 
         if self.tight_layout:
             plt.tight_layout(**self.tight_layout)
