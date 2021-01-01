@@ -452,6 +452,7 @@ class Chart(object):
         if self.tight_layout:
             plt.tight_layout(**self.tight_layout)
         plt.savefig(filename, **self.save_options)
+        plt.close(plt.gcf())
 
     def clear(self):
         """Clear all chart axes and figures."""
