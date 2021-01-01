@@ -45,15 +45,9 @@ from functools import partial
 import matplotlib.pyplot as plt
 
 from . import addons, extensions, utils
-from .axis import (
-    build_secondary_axis,
-    build_tertiary_axis,
-    customize_axis,
-    set_axis_formatter,
-    set_axis_label,
-    set_axis_legend,
-    set_axis_locator,
-)
+from .axis import (build_secondary_axis, build_tertiary_axis, customize_axis,
+                   set_axis_formatter, set_axis_label, set_axis_legend,
+                   set_axis_locator)
 from .cache import ResolverCache
 from .constants import SUPPORTED_TYPES
 from .exceptions import ChartError
