@@ -21,7 +21,8 @@ def resolve_timestamp(data):
         return data
 
     data = pd.to_datetime(data)
-    return data
+    # Ignore any time zone information.
+    return data.dt.tz_localize(None)
 
 
 def to_pydatetime(*args, **kwargs):
