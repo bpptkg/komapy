@@ -65,6 +65,10 @@ def slope_correction(data, config):
     if err_data.empty:
         return data
 
+    # Convert timezone aware datetime to naive timestamp.
+    err_data['timestamp'] = pd.to_datetime(
+        err_data['timestamp']).dt.tz_localize(None)
+
     slope_data = pd.DataFrame()
     slope_data['timestamp'] = data[0]
     slope_data['slope_distance'] = data[1]
