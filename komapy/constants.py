@@ -7,6 +7,7 @@ TIME_ZONE = 'Asia/Jakarta'
 
 SUPPORTED_NAMES = [
     'bulletin',
+    'csdr',
     'doas',
     'doas2',
     'edm',
@@ -22,6 +23,8 @@ SUPPORTED_NAMES = [
     'rsam_infrasound',
     'rsam_seismic_band',
     'rsam_seismic',
+    'seismicity_archive',
+    'seismicity_cluster',
     'seismicity',
     'slope',
     'thermal',
@@ -30,6 +33,7 @@ SUPPORTED_NAMES = [
     'tiltmeter_raw',
     'tiltmeter_tlr',
     'tiltmeter',
+    'topo_profile',
     'topo',
     'users',
     'windrose',
