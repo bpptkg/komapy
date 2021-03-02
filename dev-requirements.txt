@@ -1,5 +1,5 @@
 autopep8>=1.5.3
-bmaclient>=0.6.0
+bmaclient>=0.11.1
 coverage>=5.1
 matplotlib>=3.0.0
 pandas>=0.24.2,<1.1
