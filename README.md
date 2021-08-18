@@ -1,6 +1,6 @@
 # KomaPy
 
-KomaPy is Python library for creating customizable BPPTKG Monitoring API chart.
+KomaPy is Python library for creating customizable BPPTKG Monitoring APIs chart.
 
 ## Use Cases
 
@@ -66,20 +66,12 @@ build the documentation by running these commands:
     pip install -r requirements.txt
     sphinx-build -b html docs/ /path/to/build/
 
-You can also view online version at the following
-[link](https://bpptkg.gitlab.io/komapy/).
-
 ## Contributing
 
 See `CONTRIBUTING.md` to learn how to contribute to this project.
 
-## Support
-
-This project is maintained by Indra Rudianto. If you have any question about
-this project, you can contact him at <indrarudianto.official@gmail.com>.
-
 ## License
 
 By contributing to the project, you agree that your contributions will be
-licensed under its MIT license.
-See [LICENSE](https://gitlab.com/bpptkg/komapy/blob/master/LICENSE) for details.
+licensed under its MIT license. See
+[LICENSE](https://github.com/bpptkg/komapy/blob/master/LICENSE) for details.

@@ -24,9 +24,9 @@ setup(
         'pandas>=0.24',
         'bmaclient>=0.11.1',
     ],
-    author='Indra Rudianto',
-    author_email='indrarudianto.official@gmail.com',
-    url='https://gitlab.com/bpptkg/komapy',
+    author='BPPTKG',
+    author_email='bpptkg@esdm.go.id',
+    url='https://github.com/bpptkg/komapy',
     zip_safe=False,
     packages=find_packages(exclude=['docs', 'examples', 'tests']),
     classifiers=[

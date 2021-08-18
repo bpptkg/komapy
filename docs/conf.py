@@ -19,8 +19,8 @@ sys.path.insert(0, os.path.abspath('..'))
 # -- Project information -----------------------------------------------------
 
 project = 'KomaPy'
-copyright = '{}, BPPTKG'.format(datetime.datetime.now().year)
-author = 'Indra Rudianto'
+copyright = '2019-{}, BPPTKG'.format(datetime.datetime.now().year)
+author = 'BPPTKG'
 release = '0.7.3'
 
 # -- General configuration ---------------------------------------------------
